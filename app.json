@@ -28,6 +28,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "ADM_CLOUD_KEY" : "c3VwZXJ2aXNpb252aWxsYWp1YW5hQGdtYWlsLmNvbTpnVFNTVVBFUlZJU0lPTjQ1Nioq",
+      "API_KEY" : "33d98bf4-cf54-4101-981b-621300529a65",
+      "APPID" : "e2d164c8-2894-4944-d14f-08dae93589fc",
+      "ROLE_ID" : "23d4ea59-12a8-47d4-6b60-08daddd98ef5",
+      "ROLE_NAME" : "Cliente%20-%20Inventario"
     }
   }
 }
