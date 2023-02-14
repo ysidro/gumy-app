@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet,TouchableOpacity } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { useDispatch } from "react-redux";
 import base64 from "react-native-base64";
@@ -15,6 +15,7 @@ import Spash from "../Spash";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passVisible, setPassVisible] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -106,15 +107,21 @@ export default function Login() {
       <CustomInput label={"Email"} value={email} onChangeText={setEmail} />
       <CustomInput
         label={"Password"}
-        secureTextEntry
+        secureTextEntry={!passVisible}
         value={password}
         onChangeText={setPassword}
       />
+      <TouchableOpacity onPress={ ()=> setPassVisible(!passVisible) } >
+        <Text style={styles.btnShowPassword}>Ver Password</Text>
+      </TouchableOpacity>
+      
       {alert ? <Alert /> : ""}
+      
       <CustomButtons
         title={"Login"}
         onPress={() => admAuth({ email, password })}
       />
+    
     </View>
   );
 }
@@ -129,6 +136,11 @@ const styles = StyleSheet.create({
   },
   textAlert: {
     color: Colors.ligth,
+  },
+  btnShowPassword:{
+    padding:10,
+    fontWeight: "bold",
+    color: Colors.secundary,
   },
   errorAlert: {
     color: Colors.ligth,

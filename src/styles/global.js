@@ -28,7 +28,7 @@ export const globalStyles = StyleSheet.create({
         marginBottom:8,
         marginHorizontal:10,
         paddingHorizontal:10,
-        paddingVertical:10,
+        paddingVertical:12,
     },
     contentSkeleton:{
         width:"100%",

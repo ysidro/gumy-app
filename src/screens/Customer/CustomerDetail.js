@@ -9,12 +9,13 @@ import { MotiView } from 'moti';
 import { restoreToken } from '../../features/auth/auth'
 import { Colors } from '../../constants/Colors';
 
-export default function CustomerDetail({ route }) {
+export default function CustomerDetail({ route,navigation }) {
   const customerID = route.params.customerID
   const [customerData, setCustomerData] = useState([]);
   const [loadingData, setLoadingData] = useState(null);
   const [mapStyle, setMapStyle] = useState([style.mapLink, 'Ver Google Map'])
   const dispatch = useDispatch()
+
   useEffect(() => {
     getValueFor('uToken', customerID)
   }, [])
@@ -83,6 +84,7 @@ export default function CustomerDetail({ route }) {
               <Text style={style.listTitle}>Teléfono</Text>
               <Text style={style.listTitleText}>{customerData.Phone1}</Text>
             </View> : ""}
+
             {customerData.Addresses[0]?.Contact ? <View style={style.cartItems}>
               <Text style={style.listTitle}>Contacto</Text>
               <Text style={style.listTitleText}>{customerData.Addresses[0]?.Contact}</Text>
@@ -97,33 +99,55 @@ export default function CustomerDetail({ route }) {
               <Text style={style.listTitle}>{customerData?.SalesRep?.FirstName} </Text>
               <Text style={style.listTitleText}>{customerData?.SalesRep?.LastName}</Text>
             </View>
+
             {customerData.Notes ? <View style={style.cartItems}>
               
               <TouchableOpacity onPress={() => openMap(customerData.Notes)} style={mapStyle[0]}>
                 <Text style={style.mapLinkText}>{mapStyle[1]}</Text>
               </TouchableOpacity>
             </View> : ""}
+            <View style={style.cartItems}>
+              <TouchableOpacity onPress={() => navigation.navigate('HistoricoCompras',{customerID : customerData.ID}) } style={style.regularButton}>
+                <Text style={style.mapLinkText} >Historico de Compras</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View> :
         <View style={style.contentSkeleton}>
         <Skeleton width={"100%"} colorMode={'ligth'} height={35} />
         <View style={style.cartContent}>
-        <Spacer height={30}/>
-          <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
-          <Spacer height={5}/>
-          <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
-          <Spacer height={10}/>
-          <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
-          <Spacer height={5}/>
-          <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
-          <Spacer height={10}/>
-          <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
-          <Spacer height={5}/>
-          <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
-          <Spacer height={10}/>
-          <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
-          <Spacer height={5}/>
-          <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+          <View style={style.cartItems}>
+            <Spacer height={30}/>
+            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+          </View>
+          <View style={style.cartItems}>
+            <Spacer height={5}/>
+            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            </View>
+          <View style={style.cartItems}>
+            <Spacer height={10}/>
+            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+          <View style={style.cartItems}>
+            <Spacer height={5}/>
+            <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
+            </View>
+          <View style={style.cartItems}>
+            <Spacer height={10}/>
+            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+          <View style={style.cartItems}>
+            <Spacer height={5}/>
+            <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
+            </View>
+          <View style={style.cartItems}>
+            <Spacer height={10}/>
+            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+          <View style={style.cartItems}>
+            <Spacer height={5}/>
+            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+          </View>
         </View>
       </View>
       }
@@ -138,12 +162,14 @@ const style = StyleSheet.create({
     width: "100%",
   },
   cartContent: {
-    paddingVertical: 16,
+    paddingVertical: 18,
+    margin:8,
+    backgroundColor: Colors.white,
+    borderRadius:12,
   },
   cartItems: {
     paddingHorizontal: 18,
     paddingVertical: 6,
-    backgroundColor: Colors.white,
   },
   title: {
     fontSize: 28,
@@ -167,21 +193,27 @@ const style = StyleSheet.create({
   mapLink:{
     backgroundColor: Colors.primary,
     borderRadius: 8,
-    padding:8,
+    padding:16,
   },
   mapLinkWarning:{
     backgroundColor: Colors.red,
     borderRadius: 8,
-    padding:8,
+    padding:16,
   },
   mapLinkText:{
     color: Colors.Blueligth,
     textAlign:'center',
+    fontWeight: 'bold',
+  },
+  regularButton:{
+    backgroundColor: Colors.secundary,
+    borderRadius: 8,
+    padding:14,
   },
   contentSkeleton:{
     justifyContent: 'center',
     width: "100%",
-    padding:15,
+    padding:16,
   }
 
 })

@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import { View, Text,FlatList,SafeAreaView,StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text,FlatList,SafeAreaView,StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native'
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
@@ -10,11 +10,20 @@ import { globalStyles } from '../../styles/global'
 
 export default function Customer({navigation}) {
   const [customerData,setCustomerData] = useState([]);
+  const [customerPagination, setCustomerPagination] = useState(0);
   const [loadingData,setLoadingData] = useState(null);
   const dispatch = useDispatch()
+
   useEffect(() =>{
-      getValueFor('uToken')
+
+    getValueFor('uToken')
   },[])
+
+  function loadMoreDate()
+  {
+    //setCustomerPagination(customerPagination + 1);
+    getValueFor('uToken');
+  }
 
   async function getValueFor(key) {
     try{
@@ -30,12 +39,15 @@ export default function Customer({navigation}) {
           redirect: 'follow'
         };
       
-        fetch(`https://api.admcloud.net/api/Customers?token=${result}&skip=0`, requestOptions)
+        fetch(`https://api.admcloud.net/api/Customers?token=${result}&skip=${customerPagination}`, requestOptions)
         .then(response => response.json())
         .then(result => {
-              setCustomerData(result.data)
-              setLoadingData(true)
-             
+          const newData = result.data.filter(item => !customerData.find(i => i.id === item.id));
+          console.log(result.data.length)
+          setCustomerData(prevItems => [...prevItems, ...newData]);
+          setCustomerPagination(prevPage => prevPage + 1);
+          setLoadingData(true)
+          
         })
         .catch(error => console.log('error', error));
       } else {
@@ -64,6 +76,8 @@ export default function Customer({navigation}) {
         data={customerData}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
+        
+        ListFooterComponent={  <TouchableOpacity style={globalStyles.touchList} onPress={() => loadMoreDate() }><Text>Cargar más {customerPagination}</Text></TouchableOpacity>}
       
       /> :  <View style={style.contentSkeleton}> 
               <Skeleton width={"95%"} colorMode={'ligth'}  height={310} /> 

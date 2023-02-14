@@ -3,6 +3,7 @@ import {
   View, 
   Text, 
   SafeAreaView, 
+  StyleSheet,
   FlatList,
   ScrollView,
 } from 'react-native'
@@ -13,12 +14,14 @@ import { Skeleton } from 'moti/skeleton'
 import { restoreToken } from '../../features/auth/auth'
 import { globalStyles, salesResume } from '../../styles/global'
 import CustomButtons from '../../components/CustomButtons'
-
+import { Colors } from "../../constants/Colors";
 
 export default function Sales({navigation}) {
+  
   const [salesData, setSalesData] = useState([]);
   const [loadingData, setLoadingData] = useState(null);
   const dispatch = useDispatch()
+
   useEffect(() => {
     getValueFor('uToken')
   }, [])
@@ -60,8 +63,8 @@ export default function Sales({navigation}) {
   return (
     <SafeAreaView >
       <ScrollView >
-        <View >
-            <Text style={globalStyles.title}>Sales</Text>
+        <View style={ SalesStyle.titleContent}>
+            <Text style={ SalesStyle.title}>Sales</Text>
         </View>
         <View style={salesResume.salesRerportcontent}>
         
@@ -123,3 +126,15 @@ export default function Sales({navigation}) {
   )
 }
 
+
+const SalesStyle = StyleSheet.create({
+  title:{
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.primary,
+   
+  },
+  titleContent:{
+    marginBottom:25,
+  }
+})

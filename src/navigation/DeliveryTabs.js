@@ -1,24 +1,23 @@
 import {TouchableOpacity} from 'react-native'
 import { createStackNavigator } from "@react-navigation/stack"
 import {AntDesign, FontAwesome} from "@expo/vector-icons"
-const CustomerStack = createStackNavigator();
+const DeliveryStack = createStackNavigator();
 
 import {Colors} from "../constants/Colors"
-import Customer from "../screens/Customer/Customer"
-import CustomerDetails from "../screens/Customer/CustomerDetail"
-import CustomerShopHistory from "../screens/Customer/CustomerShopHistory"
-export default function CustomerTabs({navigation}) {
+import Delivery from "../screens/Delivery/Delivery"
+import DeliveryDetails from "../screens/Delivery/DeliveryDetails"
+
+export default function DeliveryTabs({navigation}) {
     const screenParams = {
         headerTitleAlign:"center",
-
         headerShown: true,
     }
   return (
-    <CustomerStack.Navigator
+    <DeliveryStack.Navigator
         screenOptions={screenParams}
         
     >
-        <CustomerStack.Screen name="Clientes" component={Customer} 
+        <DeliveryStack.Screen name="Mensajeria" component={Delivery} 
         options={{
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer() }>
@@ -30,9 +29,9 @@ export default function CustomerTabs({navigation}) {
           )
         }} />
 
-        <CustomerStack.Screen name="Cliente" component={CustomerDetails} />
-        <CustomerStack.Screen name="HistoricoCompras" component={CustomerShopHistory} />
+        <DeliveryStack.Screen name="Detalle" component={DeliveryDetails} />
+      
 
-    </CustomerStack.Navigator>
+    </DeliveryStack.Navigator>
   )
 }

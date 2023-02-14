@@ -1,71 +1,86 @@
-import React,{useEffect,useState} from 'react'
-import { View, Text,FlatList,SafeAreaView,StyleSheet, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, SafeAreaView, StyleSheet, Linking, TouchableOpacity,FlatList } from 'react-native'
+
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
 
+
 import { restoreToken } from '../../features/auth/auth'
+import { Colors } from '../../constants/Colors';
 import { globalStyles } from '../../styles/global'
 
-export default function Stock() {
-  const [stockData,setStockData] = useState([]);
-  const [loadingData,setLoadingData] = useState(null);
-  const dispatch = useDispatch()
 
-  useEffect(() =>{
-      getValueFor('uToken')
-  },[])
+export default function CustomerShopHistory({route}) {
 
-  async function getValueFor(key) {
-    try{
+    const customerID = route.params.customerID
+    const [customerData, setCustomerData] = useState([]);
+    const [loadingData, setLoadingData] = useState(null);
 
-      let result = await SecureStore.getItemAsync(key);
-      if (result !== null) {
-        dispatch(restoreToken(key))
-        var raw = "";
+    const dispatch = useDispatch()
 
-        var requestOptions = {
-          method: 'GET',
-          body: raw,
-          redirect: 'follow'
-        };
+    useEffect(() => {
+        getValueFor('uToken', customerID)
+    }, [])
+
+    async function getValueFor(key, customerID) {
+        try {
+
+        let result = await SecureStore.getItemAsync(key);
+        if (result !== null) {
+            dispatch(restoreToken(key))
+            var raw = "";
+
+            var requestOptions = {
+            method: 'GET',
+            body: raw,
+            redirect: 'follow'
+            };
+
+            fetch(`https://api.admcloud.net/api/Sales/SalesByItemDetailed/?token=${result}&customerID=${customerID}`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                setCustomerData(result.data)
+                setLoadingData(true)
+
+            })
+            .catch(error => console.log('error', error));
+        } else {
+            dispatch(restoreToken(null))
+            console.log('no data');
+        }
+        }
+        catch (err) {
+        console.error('any fail.', err);
+        }
+    }
+
+     const Item = ({data}) => (
+        <View style={globalStyles.touchList}>
+        <View style={globalStyles.rowBetween}>
+        <Text style={globalStyles.lisLabel}> {data.item.DocumentTypeName}</Text>
+        <Text style={globalStyles.lisLabel}>{data.item.DocID}</Text>
+        </View>
+        <View style={globalStyles.raw}>
+            <Text style={globalStyles.listContentText}> {data.item.ItemName}</Text>
+            <Text style={globalStyles.listContentText}> {data.item.CurrencyID} {data.item.NetAmountLocal}</Text>
+        </View>
+        <View style={globalStyles.rowBetween}>
+          
+         
+        
+          <Text style={globalStyles.lisLabel}> SKU {data.item.SKU}</Text>
+          <Text style={globalStyles.lisLabel}>{data.item.DocDate}</Text>
       
-        fetch(`https://api.admcloud.net/api/Stock?token=${result}&skip=0`, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-              setStockData(result.data)
-              setLoadingData(true)
-             
-        })
-        .catch(error => console.log('error', error));
-      } else {
-        dispatch(restoreToken(null))
-        console.log('no data');
-      }
-    }
-    catch(err){
-      console.error('any fail.', err);
-    }
-  }
-  const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
-  const Item = ({data}) => (
-    <View style={globalStyles.touchList}>
-      <Text style={globalStyles.listTitleText}>{data.item.Name}</Text>
-      <View style={globalStyles.rowBetween}>
-        <View style={globalStyles.row5}>
-          <Text style={globalStyles.lisLabel}>{data.item.SKU}</Text>
         </View>
-        <View style={globalStyles.row5}>
-          <Text style={globalStyles.listContentText}>{data.item.Stock} </Text>
+        <View style={globalStyles.row}>
+          
         </View>
       </View>
-      <View style={globalStyles.row}>
-        <Text style={globalStyles.subTitle}>$ {data.item.TotalCost} </Text>
-      </View>
-    </View>
   );
 
+  const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
   const SkeletonLoda = () =>(
     <View style={style.contentSkeleton}> 
       <View style={globalStyles.touchList}>
@@ -133,11 +148,12 @@ export default function Stock() {
       </View>
     </View> 
   )
+
   return (
     <SafeAreaView style={style.content}>
     
     { loadingData ? <FlatList
-        data={stockData}
+        data={customerData}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
       
