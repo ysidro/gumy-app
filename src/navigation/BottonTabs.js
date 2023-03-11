@@ -43,7 +43,7 @@ export default function BottonTabs() {
         name="Sales" 
         component={Sales}
         options={{
-          tabBarBadge:3,
+          tabBarBadge:0,
           tabBarBadgeStyle:{
             backgroundColor: Colors.secundary,
             color:Colors.Blueligth,

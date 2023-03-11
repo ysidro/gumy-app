@@ -63,9 +63,7 @@ export default function Sales({navigation}) {
   return (
     <SafeAreaView >
       <ScrollView >
-        <View style={ SalesStyle.titleContent}>
-            <Text style={ SalesStyle.title}>Sales</Text>
-        </View>
+     
         <View style={salesResume.salesRerportcontent}>
         
           <View style={salesResume.constentList}>
@@ -119,6 +117,7 @@ export default function Sales({navigation}) {
         </View>
         <View>
           <CustomButtons title='Ordenes' onPress={() => navigation.navigate('Order') } />
+          <CustomButtons title='Crear Nueva Orden' onPress={() => navigation.navigate('CrearOrden') } />
           <CustomButtons title='Reporte de Ventas' onPress={() => navigation.navigate('ViewsReport') } />
         </View>
       </ScrollView>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, SafeAreaView, StyleSheet } from 'react-native'
+import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native'
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
@@ -8,7 +8,7 @@ import { restoreToken } from '../../features/auth/auth'
 import CustomFormartDate from '../../components/CustomFormartDate'
 import { globalStyles } from '../../styles/global'
 
-export default function Order() {
+export default function Order({navigation}) {
   const [salesData, setSalesData] = useState([]);
   const [loadingData, setLoadingData] = useState(null);
   const dispatch = useDispatch()
@@ -29,7 +29,7 @@ export default function Order() {
           redirect: 'follow'
         };
 
-        fetch(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=0`, requestOptions)
+        fetch(`https://api.admcloud.net/api/PurchaseOrders?token=${result}&skip=0`, requestOptions)
           .then(response => response.json())
           .then(result => {
             setSalesData(result.data)
@@ -53,24 +53,27 @@ export default function Order() {
     const date = new Date(data.item.DocDate);
     const formattedDate = date.toLocaleDateString();
     return(
-    <View style={globalStyles.touchList}>
+      <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('OrderDetails',{orderID : data.item.ID}) }>
+
        <View style={globalStyles.rowBetween}>
-        <Text style={globalStyles.listContentText}>{data.item.RelationshipName}</Text>
+        <Text style={globalStyles.listContentText}>{data.item.Name}</Text>
       </View>
       
       <View style={globalStyles.rowBetween}>
         <Text style={globalStyles.listTitleText}>${data.item.CurrencyID} {data.item.TotalAmount.toLocaleString()}</Text>
         <CustomFormartDate DocDate={data.item.DocDate}/>
+        <Text>Días {data.item.Days} </Text>
       </View>
 
       <View style={globalStyles.rowBetween}>
-       {data.item.EmployeeName ?  <Text>{data.item.EmployeeName}</Text> : ""}
-       {data.item.DispatchStatusDesc ?  <Text>{data.item.DispatchStatusDesc}</Text> : ""}
+       {data.item.LocationName ?  <Text>{data.item.LocationName}</Text> : ""}
+       {data.item.DocumentTypeName ?  <Text>{data.item.DocumentTypeName}</Text> : ""}
+       {data.item.AuthorizationStatusDesc ?  <Text>{data.item.AuthorizationStatusDesc}</Text> : ""}
       </View> 
       
       
-    </View>
-  )};
+    </TouchableOpacity>  
+    )};
 
 
   return (
@@ -85,7 +88,9 @@ export default function Order() {
           keyExtractor={item => item.ID}
 
         /> : <View style={globalStyles.contentSkeleton}>
-          <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
+          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
+          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
+          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
         </View>
         }
       </SafeAreaView>

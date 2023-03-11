@@ -12,13 +12,13 @@ export default function ServicesSales() {
     
   const [salesData,setSalesData] = useState([]);
   const [loadingData,setLoadingData] = useState(null);
+  
   const dispatch = useDispatch()
     useEffect(() =>{
         getValueFor('uToken')
     },[])
 
-    
-      async function getValueFor(key) {
+    async function getValueFor(key) {
         try{
           let result = await SecureStore.getItemAsync(key);
         if (result !== null) {
