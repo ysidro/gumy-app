@@ -6,7 +6,7 @@ import { globalStyles } from "../../styles/global";
 import CustomInput from "../../components/CustomInputs";
 //import CustomFormartDate from '../../components/CustomFormartDate';
 import Currencies from "../../components/Currencies"
-import ListVendors from '../../components/ListVendors';
+import ListCustomers from '../../components/ListCustomers';
 import CustomDropDown from '../../components/CustomDropDown';
 
 import InputDate from "../../components/CustomInputDate";
@@ -28,6 +28,8 @@ export default function CrearOrder({ navigation }) {
 
     const [currencies, setCurrencies] = useState([]);
     const [listProveedor, setListProveedor] = useState([]);
+    const [listItems, setListItems] = useState([]);
+
     const [proveedorSelected, setProveedorSelected] = useState(null);
 
     const [proveedor, setProveedor] = useState("");
@@ -48,6 +50,7 @@ export default function CrearOrder({ navigation }) {
     const [proyecto, setProyecto] = useState("");
     const [documentoOrigen, setDocumentoOrigen] = useState("");
     const [direccionEnvio, setDireccionEnvio] = useState("");
+    const [vendedor, setVendedor] = useState("");
 
 
     const [articulo, setArticulo] = useState("");
@@ -71,7 +74,7 @@ export default function CrearOrder({ navigation }) {
 
       useEffect(() => {
           getCurrency('uToken')
-          getVendros('uToken')
+          getCustomers('uToken')
       }, [])
       
       useEffect(() => {
@@ -109,7 +112,7 @@ export default function CrearOrder({ navigation }) {
           }
         }
 
-        async function getVendros(key) {
+        async function getCustomers(key) {
             try {
               let result = await SecureStore.getItemAsync(key);
               if (result !== null) {
@@ -122,9 +125,10 @@ export default function CrearOrder({ navigation }) {
                   redirect: 'follow'
                 };
         
-                fetch(`https://api.admcloud.net/api/Vendors?skip=0&token=${result}`, requestOptions)
+                fetch(`https://api.admcloud.net/api/Customers?skip=0&token=${result}`, requestOptions)
                   .then(response => response.json())
                   .then(result => {
+                    console.log()
                     setListProveedor(result.data)
                     setLoadingData(true)
       
@@ -156,7 +160,7 @@ export default function CrearOrder({ navigation }) {
                 fetch(`https://api.admcloud.net/api/ItemsServices/GetListWithLastUpdateDate?skip=0&token=${result}`, requestOptions)
                   .then(response => response.json())
                   .then(result => {
-                    setListProveedor(result.data)
+                    setListItems(result.data)
                     setLoadingData(true)
       
                   })
@@ -252,9 +256,10 @@ export default function CrearOrder({ navigation }) {
 
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Proveedor</Text>
-                            <ListVendors 
+                            <ListCustomers 
                                 listProveedor={listProveedor} 
                                 currencies={currencies} 
+                                setVendedor={setVendedor}
                                 currency={currency} 
                                 setCurrency={setCurrency} 
                                 setNameCurrency={setNameCurrency}

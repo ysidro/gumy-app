@@ -40,6 +40,7 @@ export default function Customer({ navigation }) {
         fetch(`https://api.admcloud.net/api/Customers?token=${result}&skip=${customerPagination}`, requestOptions)
           .then(response => response.json())
           .then(result => {
+            
             const newData = result.data.filter(item => !customerData.find(i => i.id === item.id));
    
             setCustomerData(prevItems => [...prevItems, ...newData]);

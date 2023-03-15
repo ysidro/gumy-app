@@ -1,7 +1,6 @@
 import React, { useState,use } from 'react';
 import { View, TextInput,Text, StyleSheet, Platform,Button } from 'react-native';
-
-import DatePicker from 'react-native-date-picker'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { Colors } from '../constants/Colors';
 
@@ -18,7 +17,7 @@ const InputDate =  ({
   const onChange = (event, selectedDate) => {
 
     const currentDate = selectedDate;
-    onChangeText(currentDate);
+    onChangeText(currentDate.toDateString("Es-es"));
     setShow(false);
   };
 
@@ -39,26 +38,25 @@ const InputDate =  ({
       
       <TextInput
          placeholder={label}
-         value={value.toLocaleString()}
+         value={value}
          onChangeText={onChangeText}
          secureTextEntry={secureTextEntry}
          onPressIn={showDatepicker}
       />
-      <DatePicker
-        modal
-        open={show}
-        date={value}
-        mode={'date'}
-        onConfirm={(value) => {
-          setShow(false)
-          setDate(date)
-        }}
-        minuteInterval={new Date()}
-        onCancel={() => {
-          setShow(false)
-        }}
-      />
-
+      {show && (
+        <View style={styles.callendar}>
+        <DateTimePicker
+          locale="es-ES"
+          display="spinner"
+          testID="dateTimePicker"
+          value={value}
+          mode={mode}
+          is24Hour={false}
+          minimumDate={new Date()}
+          onChange={onChange}
+        />
+        </View>
+      )}
     </View>
   );
 };
@@ -68,7 +66,6 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 45,
     justifyContent: 'center',
-    zIndex: 100,
     margin: 10,
     padding: 10,
     backgroundColor: Colors.ligth,
@@ -78,9 +75,12 @@ const styles = StyleSheet.create({
   },
   callendar:{
     backgroundColor: Colors.ligth,
-    position:"absolute",
-    zIndex:100,
-    
+    height: 320,
+    position: 'absolute', 
+    flexDirection: 'row',
+    left:10,
+    bottom:0,
+    justifyContent: 'space-between'
   }
 });
 

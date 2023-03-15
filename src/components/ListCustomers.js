@@ -7,22 +7,25 @@ import { Colors } from "../constants/Colors";
 
 
 
-export default function ListVendors({
+export default function ListCustomers({
     onChangeText,
     listProveedor,
-    setVendedor,
     currencies,
     currency,
     setNameCurrency,
     setCurrency,
+    setVendedor,
     setProveedorSelected,
   }){
+
+  
 
     const [proveedorSelect, setProveedorSelect] = useState([])
     useEffect(() => {
       const getCurrency = currencies.filter(coint => coint.ID === proveedorSelect.CurrencyID);
       setCurrency(getCurrency[0]?.ExchangeRate)
       setNameCurrency(getCurrency[0]?.Name)
+      setVendedor(getCurrency[0]?.SalesRepName)
 
     },[proveedorSelect])
     
@@ -34,31 +37,33 @@ export default function ListVendors({
             buttonStyle={style.dropdown2BtnStyle}
             search
             renderCustomizedRowChild={(item,index) => {
+              console.log('item', item)
               return (
                 <View style={style.dropdown3RowChildStyle}>
                   
                   <Text style={style.dropdown3RowTxt}>{item.Name}</Text>
-                  <Text style={style.dropdown3RowTxt}>{item.FiscalID}</Text>
+               
                 </View>
               );
             }}
-            searchPlaceHolder={'Buscar Proveedor'}
+            searchPlaceHolder={'Buscar Cliente'}
             searchPlaceHolderColor={'#F8F8F8'}
             searchInputStyle={style.dropdown3searchInputStyleStyle}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-
-        
+              
+                
                 setProveedorSelect(selectedItem)
                 onChangeText(selectedItem.Name)
                 setProveedorSelected(true)
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {
+              console.log(selectedItem)
               return (
                 <View style={style.dropdown3BtnChildStyle}>
-                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : 'Buscar Proveedor'}</Text>
+                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.CreatedByName : 'Buscar Cliente'}</Text>
                 </View>
               );
             }}
