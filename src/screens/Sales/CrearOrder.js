@@ -9,6 +9,8 @@ import Currencies from "../../components/Currencies"
 import ListCustomers from '../../components/ListCustomers';
 import CustomDropDown from '../../components/CustomDropDown';
 
+import { updateFormField } from '../../redux/FormSlice'
+
 import InputDate from "../../components/CustomInputDate";
 import CustomButtons from "../../components/CustomButtons";
 import { restoreToken } from "../../features/auth/auth";
@@ -21,39 +23,15 @@ export default function CrearOrder({ navigation }) {
 
 
     const dispatch = useDispatch()
+    const form = useSelector((state) => state.form);
+
+    //const [formState, setFormState] = useState(initialState);
     const [loadingData, setLoadingData] = useState(null);
-
-    const [date, setDate] = useState(new Date());
     const [showAddItems, setShowAddItems] = useState(false);
-
     const [currencies, setCurrencies] = useState([]);
-    const [listProveedor, setListProveedor] = useState([]);
+    const [listCustomer, setListCustomer] = useState([]);
     const [listItems, setListItems] = useState([]);
 
-    const [proveedorSelected, setProveedorSelected] = useState(null);
-
-    const [proveedor, setProveedor] = useState("");
-    const [departamento, setDepartamento] = useState("");
-    const [lineaDeNegocio, setLineaDeNegocio] = useState("");
-    const [fechaEstimada, setFechaEstimada] = useState(new Date());
-    const [ubicacion, setUbicacion] = useState("");
-    const [observaciones, setObservaciones] = useState("");
-    const [consignatario, setConsignatario] = useState("");
-    const [contactoConsignatario, setContactConsignatario] = useState("");
-    const [prioridad, setPrioridad] = useState("");
-    const [notasInternas, setNotasInternas] = useState("");
-    const [referencia, setReferencia] = useState("");
-    const [metodoEnvio, setMetodoEnvio] = useState("");
-    const [terminos, setTerminos] = useState("");
-    const [currency, setCurrency] = useState("");
-    const [nameCurrency, setNameCurrency] = useState("");
-    const [proyecto, setProyecto] = useState("");
-    const [documentoOrigen, setDocumentoOrigen] = useState("");
-    const [direccionEnvio, setDireccionEnvio] = useState("");
-    const [vendedor, setVendedor] = useState("");
-
-
-    const [articulo, setArticulo] = useState("");
 
     const handlerDShowAddItems = () => {
         setShowAddItems(true);
@@ -61,119 +39,130 @@ export default function CrearOrder({ navigation }) {
     const handlerHiddenAddItems = () => {
         setShowAddItems(false);
     }
-   
-    const handleDateChange = (event, selectedDate) => {
-        setShowDatePicker(false);
-        if (selectedDate) {
-            setFechaEstimada(selectedDate)
-          //setFormData({ ...formData, birthDate: selectedDate });
+
+    const handleInputChange = (fieldName, value) => {
+        console.log(fieldName, value)
+        dispatch(updateFormField({"fieldName": fieldName, "value": value}));
+        if(fieldName === "Relationship"){
+            dispatch(updateFormField({"fieldName": "CurrencyID", "value": value.CurrencyID}));
         }
-      };
+    };
+    const handleDateChange = (value) => {
+        const valueArray = value.split('/');
+        dispatch(updateFormField({ "fieldName": "DocDate", "value": `${valueArray[1]}/${valueArray[0]}/${valueArray[2]}` }));
+    };
 
- 
+    const handleItemInputChange = (index, fieldName, value) => {
+        const itemsCopy = [...form.Items];
+        itemsCopy[index] = { ...itemsCopy[index], [fieldName]: value };
+        setFormState({ ...form, Items: itemsCopy });
+    };
 
-      useEffect(() => {
-          getCurrency('uToken')
-          getCustomers('uToken')
-      }, [])
-      
-      useEffect(() => {
-          ItemsServices('uToken')
-      }, [showAddItems])
-  
-      async function getCurrency(key) {
-          try {
+
+
+    useEffect(() => {
+        getCurrency('uToken')
+        getCustomers('uToken')
+
+    }, [])
+
+    useEffect(() => {
+        ItemsServices('uToken')
+    }, [showAddItems])
+
+    async function getCurrency(key) {
+        try {
             let result = await SecureStore.getItemAsync(key);
             if (result !== null) {
-              dispatch(restoreToken(key))
-              var raw = "";
-      
-              var requestOptions = {
-                method: 'GET',
-                body: raw,
-                redirect: 'follow'
-              };
-      
-              fetch(`https://api.admcloud.net/api/Currencies/?token=${result}`, requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                  setCurrencies(result.data)
-                  setLoadingData(true)
-    
-                })
-                .catch(error => console.log('error', error));
+                dispatch(restoreToken(key))
+                var raw = "";
+
+                var requestOptions = {
+                    method: 'GET',
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                fetch(`https://api.admcloud.net/api/Currencies/?token=${result}`, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        setCurrencies(result.data)
+                        setLoadingData(true)
+
+                    })
+                    .catch(error => console.log('error', error));
             } else {
-              dispatch(restoreToken(null))
-              console.log('no data');
+                dispatch(restoreToken(null))
+                console.log('no data');
             }
-          }
-          catch (err) {
-            console.error('any fail.', err);
-          }
         }
+        catch (err) {
+            console.error('any fail.', err);
+        }
+    }
 
-        async function getCustomers(key) {
-            try {
-              let result = await SecureStore.getItemAsync(key);
-              if (result !== null) {
+    async function getCustomers(key) {
+        try {
+            let result = await SecureStore.getItemAsync(key);
+            if (result !== null) {
                 dispatch(restoreToken(key))
                 var raw = "";
-        
+
                 var requestOptions = {
-                  method: 'GET',
-                  body: raw,
-                  redirect: 'follow'
+                    method: 'GET',
+                    body: raw,
+                    redirect: 'follow'
                 };
-        
+
                 fetch(`https://api.admcloud.net/api/Customers?skip=0&token=${result}`, requestOptions)
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log()
-                    setListProveedor(result.data)
-                    setLoadingData(true)
-      
-                  })
-                  .catch(error => console.log('error', error));
-              } else {
+                    .then(response => response.json())
+                    .then(result => {
+
+                        setListCustomer(result.data)
+                        setLoadingData(true)
+
+                    })
+                    .catch(error => console.log('error', error));
+            } else {
                 dispatch(restoreToken(null))
                 console.log('no data');
-              }
             }
-            catch (err) {
-              console.error('any fail.', err);
-            }
-          }
+        }
+        catch (err) {
+            console.error('any fail.', err);
+        }
+    }
 
-          async function ItemsServices(key) {
-            try {
-              let result = await SecureStore.getItemAsync(key);
-              if (result !== null) {
+    async function ItemsServices(key) {
+        try {
+            let result = await SecureStore.getItemAsync(key);
+            if (result !== null) {
                 dispatch(restoreToken(key))
                 var raw = "";
-        
+
                 var requestOptions = {
-                  method: 'GET',
-                  body: raw,
-                  redirect: 'follow'
+                    method: 'GET',
+                    body: raw,
+                    redirect: 'follow'
                 };
-        
+
                 fetch(`https://api.admcloud.net/api/ItemsServices/GetListWithLastUpdateDate?skip=0&token=${result}`, requestOptions)
-                  .then(response => response.json())
-                  .then(result => {
-                    setListItems(result.data)
-                    setLoadingData(true)
-      
-                  })
-                  .catch(error => console.log('error', error));
-              } else {
+                    .then(response => response.json())
+                    .then(result => {
+                        setListItems(result.data)
+                        setLoadingData(true)
+
+                    })
+                    .catch(error => console.log('error', error));
+            } else {
                 dispatch(restoreToken(null))
                 console.log('no data');
-              }
             }
-            catch (err) {
-              console.error('any fail.', err);
-            }
-          }
+        }
+        catch (err) {
+            console.error('any fail.', err);
+        }
+    }
 
     if (showAddItems) {
         return (
@@ -248,30 +237,42 @@ export default function CrearOrder({ navigation }) {
         )
     }
 
+
     return (
         <View style={globalStyles.screenContainer}>
             <SafeAreaView >
                 <View style={globalStyles.content}>
                     <ScrollView>
-
                         <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Proveedor</Text>
-                            <ListCustomers 
-                                listProveedor={listProveedor} 
-                                currencies={currencies} 
-                                setVendedor={setVendedor}
-                                currency={currency} 
-                                setCurrency={setCurrency} 
-                                setNameCurrency={setNameCurrency}
-                                setProveedorSelected={setProveedorSelected}
-                                onChangeText={setProveedor} label={"Proveedor"} 
+                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Fecha</Text>
+
+                            <InputDate
+                                value={form.DocDate}
+                                onChangeText={(value) => handleDateChange(value)}
+                                label={"Fecha"} />
+
+                        </View>
+                        <View >
+                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Cliente {form.CurrencyID}</Text>
+                            <ListCustomers
+                                listCustomer={listCustomer}
+                                value={form.Relationship}
+                                onChange={(value) => handleInputChange('Relationship',value)}
+                                label={"Cliente"}
                             />
 
                         </View>
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Departamento</Text>
-                            <CustomInput value={departamento} onChangeText={setDepartamento} label={"Departamento"} />
+                            <CustomInput 
+                                label={"Departamento"} 
+                                value={form.ubicacion}
+                                onChangeText={(value) => handleInputChange('ubicacion', value)}
+
+                                />
                         </View>
+                        {/*
+                        
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Línea de Negocio</Text>
                             <CustomInput 
@@ -279,15 +280,7 @@ export default function CrearOrder({ navigation }) {
                             onChangeText={setLineaDeNegocio} 
                             label={"Línea de Negocio"} />
                         </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Fecha Estimada  </Text>
-                    
-                                <InputDate
-                                value={fechaEstimada} 
-                                onChangeText={setFechaEstimada} 
-                                label={"Fecha Estimada "} />
-
-                        </View>
+                        
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Ubicación</Text>
                             <CustomInput value={ubicacion} onChangeText={setUbicacion} label={"Ubicación"} />
@@ -349,11 +342,11 @@ export default function CrearOrder({ navigation }) {
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Dirección de Envío</Text>
                             <CustomInput value={direccionEnvio} onChangeText={setDireccionEnvio} label={"Dirección de Envío"} />
-                        </View>
-                            <CustomButtons
-                                title={"Agregar Artículos"}
-                                onPress={proveedorSelected ? handlerDShowAddItems : null }
-                            />
+                        </View> */}
+                        <CustomButtons
+                            title={"Agregar Artículos"}
+                            onPress={form.Relationship ? handlerDShowAddItems : null}
+                        />
                     </ScrollView>
                 </View>
 
@@ -379,6 +372,6 @@ const style = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: Colors.primary,
-      },
+    },
 
 })

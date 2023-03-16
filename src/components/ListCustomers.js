@@ -8,62 +8,40 @@ import { Colors } from "../constants/Colors";
 
 
 export default function ListCustomers({
-    onChangeText,
-    listProveedor,
-    currencies,
-    currency,
-    setNameCurrency,
-    setCurrency,
-    setVendedor,
-    setProveedorSelected,
+    listCustomer,
+    onChange,
+    label,
   }){
 
-  
-
-    const [proveedorSelect, setProveedorSelect] = useState([])
-    useEffect(() => {
-      const getCurrency = currencies.filter(coint => coint.ID === proveedorSelect.CurrencyID);
-      setCurrency(getCurrency[0]?.ExchangeRate)
-      setNameCurrency(getCurrency[0]?.Name)
-      setVendedor(getCurrency[0]?.SalesRepName)
-
-    },[proveedorSelect])
     
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
-            data={listProveedor}
-            defaultButtonText={'Proveedores'}
+            data={listCustomer}
+            defaultButtonText={label}
             buttonStyle={style.dropdown2BtnStyle}
             search
             renderCustomizedRowChild={(item,index) => {
-              console.log('item', item)
               return (
                 <View style={style.dropdown3RowChildStyle}>
-                  
                   <Text style={style.dropdown3RowTxt}>{item.Name}</Text>
-               
                 </View>
               );
             }}
-            searchPlaceHolder={'Buscar Cliente'}
+            searchPlaceHolder={`Buscar ${label}`}
             searchPlaceHolderColor={'#F8F8F8'}
             searchInputStyle={style.dropdown3searchInputStyleStyle}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-              
-                
-                setProveedorSelect(selectedItem)
-                onChangeText(selectedItem.Name)
-                setProveedorSelected(true)
+              onChange(selectedItem)
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {
-              console.log(selectedItem)
+            
               return (
                 <View style={style.dropdown3BtnChildStyle}>
-                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.CreatedByName : 'Buscar Cliente'}</Text>
+                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar ${label}`}</Text>
                 </View>
               );
             }}

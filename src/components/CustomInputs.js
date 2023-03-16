@@ -1,4 +1,4 @@
-import { View, StyleSheet,TextInput } from 'react-native'
+import { View, StyleSheet, TextInput } from 'react-native'
 import React from 'react'
 
 import { Colors } from '../constants/Colors';
@@ -12,12 +12,12 @@ export default function Inputs({
   return (
     <View style={styles.container}>
       <TextInput
-         placeholder={label}
-         style={styles.input}
-         value={value}
-         onChangeText={onChangeText}
-         secureTextEntry={secureTextEntry}
-       
+        placeholder={label}
+        style={styles.input}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
+
       />
     </View>
   )
