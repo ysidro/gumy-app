@@ -7,23 +7,23 @@ import { Colors } from "../constants/Colors";
 export default function Currencies({
     onChangeText,
     currencies,
-    nameCurrency,
+    value,
   }) {
 
-   
-
+    const filteredCurrencies = currencies.filter(currency => currency.ID === value);
+ 
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
             data={currencies}
-            defaultButtonText={ nameCurrency ? nameCurrency : 'Moneda'}
+            defaultButtonText={ value ? filteredCurrencies[0]?.Name : 'Moneda'}
             buttonStyle={style.dropdown2BtnStyle}
-            value={nameCurrency}
+            value={value}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-                onChangeText(selectedItem.ExchangeRate)
+              onChangeText(selectedItem.ExchangeRate)
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
                 return  selectedItem.Name;
@@ -40,7 +40,7 @@ export default function Currencies({
 const style = StyleSheet.create({
 
     dropdown2BtnStyle: {
-        width: '90%',
+        width: '95%',
         height: 45,
         justifyContent: 'center',
         margin: 10,

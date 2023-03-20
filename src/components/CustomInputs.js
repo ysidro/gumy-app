@@ -1,4 +1,4 @@
-import { View, StyleSheet, TextInput } from 'react-native'
+import { View, StyleSheet, TextInput,Dimensions } from 'react-native'
 import React from 'react'
 
 import { Colors } from '../constants/Colors';
@@ -25,7 +25,7 @@ export default function Inputs({
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
+    width: "95%",
     height: 45,
     justifyContent: 'center',
     margin: 10,

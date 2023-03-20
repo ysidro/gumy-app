@@ -17,7 +17,7 @@ return (
   <View style={style.inputContainer}>
         <SelectDropdown
           data={data}
-          defaultButtonText={ value ? getSelected.label : 'Seleccone Prioridad'}
+          defaultButtonText={ value ? getSelected.label : label}
           buttonStyle={style.dropdown2BtnStyle}
           value={value}
           dropdownStyle={style.dropdown2DropdownStyle}
@@ -41,7 +41,7 @@ return (
 const style = StyleSheet.create({
 
   dropdown2BtnStyle: {
-      width: '90%',
+      width: '95%',
       height: 45,
       justifyContent: 'center',
       margin: 10,

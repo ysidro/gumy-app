@@ -99,6 +99,7 @@ export const salesResume = StyleSheet.create({
         width: "100%",
         flexDirection: 'row',
         flexWrap: 'wrap',
+        marginTop: 30,
       },
       contentSkeleton: {
         width: "100%",
@@ -114,7 +115,7 @@ export const salesResume = StyleSheet.create({
         marginRight: 10,
         flexDirection: 'column',
         borderRadius: 12,
-        width:"44%",
+        width:"43%",
       },
       listTitle: {
         fontWeight: "bold",

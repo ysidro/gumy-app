@@ -65,55 +65,78 @@ export default function Sales({navigation}) {
       <ScrollView >
      
         <View style={salesResume.salesRerportcontent}>
-        
+        {salesData.data?.P1 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Enero</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P1.toLocaleString()}</Text>
           </View>
+        : ""}
+        {salesData.data?.P2 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Febrero</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P2.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P3 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Marzo</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P3.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P4 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Abril</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P4.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P5 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Mayo</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P5.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P6 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Junio</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P6.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P7 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Julio</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P7.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P8 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Agosto</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P8.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P9 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Septiembre</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P9.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P10 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Octubre</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P10.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P11 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Noviembre</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P11.toLocaleString()}</Text>
           </View>
+          : ""}
+        {salesData.data?.P12 >0 ? 
           <View style={salesResume.constentList}>
             <Text style={salesResume.listTitleText}>Diciembre</Text>
             <Text style={salesResume.lisstTotals}>$RD {salesData.data?.P12.toLocaleString()}</Text>
           </View>
+          : ""}
         </View>
         <View>
           <CustomButtons title='Ordenes' onPress={() => navigation.navigate('Order') } />

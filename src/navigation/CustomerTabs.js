@@ -10,7 +10,7 @@ import CustomerShopHistory from "../screens/Customer/CustomerShopHistory"
 export default function CustomerTabs({navigation}) {
     const screenParams = {
         headerTitleAlign:"center",
-
+        headerBackTitleVisible: false,
         headerShown: true,
     }
   return (

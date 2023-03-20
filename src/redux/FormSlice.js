@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState ={
-            DocDate: new Date().toLocaleDateString(),
+            DocDate: new Date().toISOString(),
             ubicacion:"",
             LocationID:"",
             Reference:"",
@@ -17,6 +17,7 @@ const initialState ={
             Notes:"",
             DepartmentID:"",
             InternalNotes:"",
+            SourceTransactionID:"",
             Items:[
               {
                 ItemSKU:"",

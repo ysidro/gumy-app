@@ -11,6 +11,7 @@ export default function DeliveryTabs({navigation}) {
     const screenParams = {
         headerTitleAlign:"center",
         headerShown: true,
+        headerBackTitleVisible: false,
     }
   return (
     <DeliveryStack.Navigator

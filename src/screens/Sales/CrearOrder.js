@@ -7,6 +7,7 @@ import CustomInput from "../../components/CustomInputs";
 //import CustomFormartDate from '../../components/CustomFormartDate';
 import Currencies from "../../components/Currencies"
 import ListCustomers from '../../components/ListCustomers';
+import ListArticles from '../../components/ListItems';
 import CustomDropDown from '../../components/CustomDropDown';
 
 import { updateFormField } from '../../redux/FormSlice'
@@ -31,7 +32,7 @@ export default function CrearOrder({ navigation }) {
     const [currencies, setCurrencies] = useState([]);
     const [listCustomer, setListCustomer] = useState([]);
     const [listItems, setListItems] = useState([]);
-
+    const [step, setStep] = useState(0);
 
     const handlerDShowAddItems = () => {
         setShowAddItems(true);
@@ -41,24 +42,25 @@ export default function CrearOrder({ navigation }) {
     }
 
     const handleInputChange = (fieldName, value) => {
-        console.log(fieldName, value)
-        dispatch(updateFormField({"fieldName": fieldName, "value": value}));
-        if(fieldName === "Relationship"){
-            dispatch(updateFormField({"fieldName": "CurrencyID", "value": value.CurrencyID}));
+
+        dispatch(updateFormField({ "fieldName": fieldName, "value": value }));
+        if (fieldName === "Relationship") {
+            dispatch(updateFormField({ "fieldName": "CurrencyID", "value": value.CurrencyID }));
         }
     };
     const handleDateChange = (value) => {
-        const valueArray = value.split('/');
-        dispatch(updateFormField({ "fieldName": "DocDate", "value": `${valueArray[1]}/${valueArray[0]}/${valueArray[2]}` }));
+
+        dispatch(updateFormField({ "fieldName": "DocDate", "value": value.toISOString() }));
     };
 
     const handleItemInputChange = (index, fieldName, value) => {
-        const itemsCopy = [...form.Items];
-        itemsCopy[index] = { ...itemsCopy[index], [fieldName]: value };
-        setFormState({ ...form, Items: itemsCopy });
+        console.log(value,form,fieldName)
+        // const itemsCopy = [...form.Items];
+        // itemsCopy[index] = { ...itemsCopy[index], [fieldName]: value };
+        // setFormState({ ...form, Items: itemsCopy });
     };
 
-
+ 
 
     useEffect(() => {
         getCurrency('uToken')
@@ -165,12 +167,13 @@ export default function CrearOrder({ navigation }) {
     }
 
     if (showAddItems) {
+       
         return (
             <View style={globalStyles.screenContainer}>
                 <SafeAreaView style={style.content}>
                     <Text style={globalStyles.title}>Agregar Artículos</Text>
                     <ScrollView>
-                        <View style={globalStyles.touchList}>
+                        {/* <View style={globalStyles.touchList}>
 
                             <Text style={globalStyles.listContentText}>Cemento tip top azul 650g 710ml</Text>
                             <View style={globalStyles.rowBetween}>
@@ -186,8 +189,21 @@ export default function CrearOrder({ navigation }) {
                                 <Text>20%</Text>
                                 <Text>12,618.40</Text>
                             </View>
+                        </View> */}
+
+                        
+<View >
+                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Articulos</Text>
+                            <ListArticles
+                                    listItems={listItems}
+                                    value={form.Items}
+                                    onChange={(value) => handleItemInputChange(1 , 'Items', value)}
+                                    label={"Productos"}
+                                />
+
+                           
                         </View>
-                        <View >
+                        {/* <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Articulo</Text>
                             <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
                         </View>
@@ -218,7 +234,7 @@ export default function CrearOrder({ navigation }) {
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Precio</Text>
                             <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
-                        </View>
+                        </View> */}
                         <View >
                             <CustomButtons
                                 title={"Agregar"}
@@ -244,109 +260,197 @@ export default function CrearOrder({ navigation }) {
                 <View style={globalStyles.content}>
                     <ScrollView>
                         <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Fecha</Text>
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Fecha</Text>
 
-                            <InputDate
-                                value={form.DocDate}
-                                onChangeText={(value) => handleDateChange(value)}
-                                label={"Fecha"} />
+                                <InputDate
+                                    value={form.DocDate}
+                                    onChangeText={(value) => handleDateChange(value)}
+                                    label={"Fecha"} />
 
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Cliente {form.CurrencyID}</Text>
-                            <ListCustomers
-                                listCustomer={listCustomer}
-                                value={form.Relationship}
-                                onChange={(value) => handleInputChange('Relationship',value)}
-                                label={"Cliente"}
-                            />
+                            </View>
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Cliente</Text>
+                                <ListCustomers
+                                    listCustomer={listCustomer}
+                                    value={form.Relationship}
+                                    onChange={(value) => handleInputChange('Relationship', value)}
+                                    label={"Cliente"}
+                                />
 
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Departamento</Text>
-                            <CustomInput 
-                                label={"Departamento"} 
-                                value={form.ubicacion}
-                                onChangeText={(value) => handleInputChange('ubicacion', value)}
+                            </View>
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Referencia</Text>
+                                <CustomInput
+                                    label={"Referencia"}
+                                    value={form.Referencia}
+                                    onChangeText={(value) => handleInputChange('Reference', value)}
 
                                 />
+                            </View>
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Departamento</Text>
+                                <CustomInput
+                                    label={"Departamento"}
+                                    value={form.DepartmentID}
+                                    onChangeText={(value) => handleInputChange('DepartmentID', value)}
+
+                                />
+                            </View>
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Ubicación</Text>
+                                <CustomInput
+                                    label={"Ubicación"}
+                                    value={form.LocationID}
+                                    onChangeText={(value) => handleInputChange('LocationID', value)}
+
+                                />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Vendedor</Text>
+                                <CustomInput
+                                    label={"Vendedor"}
+                                    value={form.EmployeeID}
+                                    onChangeText={(value) => handleInputChange('EmployeeID', value)}
+
+                                />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Terminos</Text>
+
+                                <CustomDropDown value={form.PaymentTermID}
+                                    onChangeSelect={(value) => handleInputChange('PaymentTermID', value)}
+                                    label={"Terminos"} data={[
+                                        { "value": "", "label": "Terminos" },
+                                        { "value": "fd42c2ff-5df1-4d31-6f80-08d590021182", "label": "15 Días" },
+                                        { "value": "7456a472-f38a-4aeb-6f81-08d590021182", "label": "30 Días" },
+                                        { "value": "d744ec9c-10f2-4db7-8d80-08d97dcd420d", "label": "45 Días" },
+                                        { "value": "eeff9536-b62f-4288-f20c-08da13df3d24", "label": "60 Días" },
+                                        { "value": "b1010983-43f0-4e5d-1cb1-08d7ccdbf164", "label": "Contado" }
+                                    ]} />
+                            </View>
+
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Observaciones</Text>
+                                <CustomInput
+                                    label={"Observaciones"}
+                                    value={form.Notes}
+                                    onChangeText={(value) => handleInputChange('Notes', value)}
+
+                                />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Notas Internas</Text>
+                                <CustomInput
+                                    label={"Notas Internas"}
+                                    value={form.InternalNotes}
+                                    onChangeText={(value) => handleInputChange('InternalNotes', value)}
+
+                                />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Observaciones</Text>
+                                <CustomInput
+                                    label={"Observaciones"}
+                                    value={form.Notes}
+                                    onChangeText={(value) => handleInputChange('Notes', value)}
+
+                                />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Moneda</Text>
+                                <Currencies
+                                    onChangeText={(value) => handleInputChange('CurrencyID', value)}
+                                    currencies={currencies}
+                                    label={"Moneda"}
+                                    value={form.CurrencyID} />
+
+                            </View>
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Proyecto</Text>
+                                <CustomInput
+                                    label={"Proyecto"}
+                                    value={form.ProjectID}
+                                    onChangeText={(value) => handleInputChange('ProjectID', value)}
+
+                                />
+
+
+                            </View>
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Estapa de Venta</Text>
+
+                                <CustomDropDown value={form.SourceTransactionID}
+                                    onChangeSelect={(value) => handleInputChange('SourceTransactionID', value)}
+                                    label={"Estapa de Venta"} data={[
+                                        { "value": "", "label": "Terminos" },
+                                        { "value": "8b6ab1d5-1052-4071-b868-9f10f0f30c53", "label": "Cerrada Aceptada" },
+                                        { "value": "26b48994-8ca8-4a8e-90e0-236a5efee766", "label": "Cerrada No Respuesta" },
+                                        { "value": "7c9ff81d-f21b-4f2a-aaec-917ed01d6cc0", "label": "Cerrada Otro" },
+                                        { "value": "1c3e93a0-83c9-47a8-b89f-fb848c507426", "label": "Cerrada Perdida" },
+                                        { "value": "ea5d4d8f-698d-42fa-9c0b-947bef24fdca", "label": "Cliente Contactado" },
+                                        { "value": "13f15c46-2090-4400-9fce-8ad9ca5e2342", "label": "Cliente no Contactado" },
+                                        { "value": "261d0f83-eeda-47cd-8e36-d7f510e2e508", "label": "Propuesta Presentada" }
+                                    ]} />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Transacción</Text>
+                                <CustomInput
+                                    label={"Transacción"}
+                                    value={form.SourceTransactionID}
+                                    onChangeText={(value) => handleInputChange('SourceTransactionID', value)}
+
+                                />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Dirección de Envio</Text>
+                                <CustomInput
+                                    label={"Dirección de Envio"}
+                                    value={form.ShipToAddressID}
+                                    onChangeText={(value) => handleInputChange('ShipToAddressID', value)}
+
+                                />
+                            </View>
+
+                            <View >
+                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Dirección de Facturación</Text>
+                                <CustomInput
+                                    label={"Dirección de Facturación"}
+                                    value={form.BillToAddressID}
+                                    onChangeText={(value) => handleInputChange('BillToAddressID', value)}
+
+                                />
+                            </View>
+
                         </View>
-                        {/*
-                        
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Línea de Negocio</Text>
-                            <CustomInput 
-                            value={lineaDeNegocio} 
-                            onChangeText={setLineaDeNegocio} 
-                            label={"Línea de Negocio"} />
-                        </View>
-                        
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Ubicación</Text>
-                            <CustomInput value={ubicacion} onChangeText={setUbicacion} label={"Ubicación"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Observaciones</Text>
-                            <CustomInput value={observaciones} onChangeText={setObservaciones} label={"Observaciones"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Consignatario</Text>
-                            <CustomInput value={consignatario} onChangeText={setConsignatario} label={"Consignatario"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Contacto del Consignatario</Text>
-                            <CustomInput value={contactoConsignatario} onChangeText={setContactConsignatario} label={"Contacto del Consignatario"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Prioridad</Text>
-                            
-                            <CustomDropDown value={prioridad} 
-                            onChangeSelect={setPrioridad} 
-                            label={"Prioridad"} data={[
-                                {"value": "PRIORITY_UNDEFINED","label": ""},
-                                {"value": "PRIORITY_URGENT","label": "Urgente"},
-                                {"value": "PRIORITY_HIGH","label": "Alta"},
-                                {"value": "PRIORITY_MEDIUM","label": "Media"},
-                                {"value": "PRIORITY_LOW","label": "Baja"}
-                            ]} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Notas Internas</Text>
-                            <CustomInput value={notasInternas} onChangeText={setNotasInternas} label={"Notas Internas"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Referencia</Text>
-                            <CustomInput value={referencia} onChangeText={setReferencia} label={"Referencia"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Método de Envío</Text>
-                            <CustomInput value={metodoEnvio} onChangeText={setMetodoEnvio} label={"Método de Envío"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Términos</Text>
-                            <CustomInput value={terminos} onChangeText={setTerminos} label={"Términos"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Moneda</Text>
-                            <Currencies  onChangeText={setCurrency} currencies={currencies} label={"Moneda"} nameCurrency={nameCurrency} />
-                            
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Proyecto</Text>
-                            <CustomInput value={proyecto} onChangeText={setProyecto} label={"Proyecto"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Documento Origen</Text>
-                            <CustomInput value={documentoOrigen} onChangeText={setDocumentoOrigen} label={"Documento Origen"} />
-                        </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Dirección de Envío</Text>
-                            <CustomInput value={direccionEnvio} onChangeText={setDireccionEnvio} label={"Dirección de Envío"} />
-                        </View> */}
+
                         <CustomButtons
-                            title={"Agregar Artículos"}
+                            title={"Siguiente"}
                             onPress={form.Relationship ? handlerDShowAddItems : null}
                         />
+
+                        {/* <View>
+                        <TouchableOpacity style={onPress ? styles.button : styles.buttonNull} onPress={step > 0 ? handlePreview : null}>
+                            <Text style={ styles.buttonText}>{title}</Text>
+                            </TouchableOpacity>
+                        </View> */}
+
+                        {/* <CustomButtons
+                            title={"Regresar"}
+                            onPress={step > 0 ? handlePreview : null}
+                        />
+                        <CustomButtons
+                            title={"Siguiente"}
+                            onPress={step <= 3 ? handleNext : null}
+                        /> */}
                     </ScrollView>
                 </View>
 
@@ -357,15 +461,36 @@ export default function CrearOrder({ navigation }) {
 
 
 const style = StyleSheet.create({
+    floatContainer: {
+        position: 'absolute',
+        top: 40,
+        width: "100%",
+        display: "flex",
+        flex: 1,
+        height: 200,
+        marginHorizontalAlignment: "center",
+        zIndex: 999,
+        backgroundColor: 'blue',
+    },
+    button: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 50,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+
     content: {
-        justifyContent: 'center',
+        //  justifyContent: 'center',
         marginTop: 15,
         width: "100%",
     },
     inputContainer: {
         width: '90%',
         height: 45,
-        justifyContent: 'center',
+        //  justifyContent: 'center',
         margin: 10,
         padding: 10,
         backgroundColor: Colors.ligth,

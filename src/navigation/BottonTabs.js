@@ -19,6 +19,7 @@ export default function BottonTabs() {
         headerTitleAlign:"center",
         presentation: "modal",
         tabBarActiveTinColor: Colors.primary,
+        headerBackTitleVisible: false
     }
   return (
     <ButtonTabsNavs.Navigator

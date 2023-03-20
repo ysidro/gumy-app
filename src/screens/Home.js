@@ -1,20 +1,22 @@
 import React, {useState,useEffect} from 'react'
 import { View, Text } from 'react-native'
-
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
-import { restoreToken } from '../features/auth/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import { restoreToken } from '../features/auth/auth'
+import Onboarding from "./Onboarding"
 import ServicesSales from '../services/Sales'
 import { globalStyles } from '../styles/global'
 
-export default function Home() {
+export default function Home({navigator}) {
 
   const [name, setName] = useState(null);
 
   const { userToken, isLoading } = useSelector(state => state.auth)
   const dispatch = useDispatch()
   useEffect(() =>{
+
     getValueFor('uToken')
   },[])
 
@@ -48,6 +50,16 @@ export default function Home() {
     }
     catch(err){
       console.error('any fail.', err);
+    }
+  }
+
+  async function checkIfFirstLaunch(){
+    const firshLaunch = await AsyncStorage.getItem('@firstLaunch');
+    if(firshLaunch){
+      return;
+    }else{
+      await AsyncStorage.setItem('@firstLaunch', 'true' );
+      navigator.navigate('AsyncStorage');
     }
   }
 

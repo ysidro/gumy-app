@@ -18,6 +18,7 @@ export default function DasboardStack() {
             headerTitleAlign:"center",
             presentation: "modal",
             headerShown: false,
+            headerBackTitleVisible: false
         }
     
   return (

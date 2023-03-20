@@ -4,21 +4,22 @@ import SelectDropdown from 'react-native-select-dropdown'
 
 import { Colors } from "../constants/Colors";
 
-export default function ListCustomers({
-    listCustomer,
+export default function ListArticles({
+    listItems,
     onChange,
+    value,
     label,
   }){
-
-    
+    console.log("ListArticles", listItems)
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
-            data={listCustomer}
+            data={listItems}
             defaultButtonText={label}
             buttonStyle={style.dropdown2BtnStyle}
             search
             renderCustomizedRowChild={(item,index) => {
+              
               return (
                 <View style={style.dropdown3RowChildStyle}>
                   <Text style={style.dropdown3RowTxt}>{item.Name}</Text>
@@ -32,13 +33,14 @@ export default function ListCustomers({
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
+              
               onChange(selectedItem)
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {
             
               return (
                 <View style={style.dropdown3BtnChildStyle}>
-                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar ${label}`}</Text>
+                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar ${label}`} </Text>
                 </View>
               );
             }}
