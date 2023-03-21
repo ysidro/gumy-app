@@ -1,1 +1,0 @@
-# gumy-app
