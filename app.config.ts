@@ -33,7 +33,7 @@ const config: ExpoConfig = {
     roleId: process.env.ROLE_ID,
     roleName: process.env.ROLE_NAME,
     eas: {
-        projectId: process.env.PROJECT_ID
+      projectId: process.env.PROJECT_ID
     }
   }
 };
