@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import React, { useState } from "react";
 
 import { globalStyles } from "../styles/Global";
@@ -12,10 +12,10 @@ export default function Login() {
 
     return (
         <View style={globalStyles.screenContainer}>
-            {/* <Image
-                source={require("../../images/icon.png")}
+            <Image
+                source={require("../../assets/icon.png")}
                 style={globalStyles.img}
-            /> */}
+            />
             <Text style={globalStyles.title}>Login</Text>
             <GumyInput label={"Email"} value={email} onChangeText={setEmail} />
             <GumyInput
