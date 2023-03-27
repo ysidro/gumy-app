@@ -10,51 +10,63 @@ import { MotiView } from 'moti';
 import { restoreToken } from '../../features/auth/auth'
 import { Colors } from '../../constants/Colors';
 import { globalStyles } from '../../styles/global'
-
+import { useFetch } from '../../hooks/useFetch';
 
 export default function CustomerShopHistory({route}) {
 
     const customerID = route.params.customerID
-    const [customerData, setCustomerData] = useState([]);
-    const [loadingData, setLoadingData] = useState(null);
+    let raw = "";
+    var requestOptions = {
+      method: 'GET',
+      body: raw,
+      redirect: 'follow'
+    };
+  
+    const URL_DETAILED = `Sales/SalesByItemDetailed/`
+    const URL_PARAMETER = `customerID=${customerID}`
+    const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
+   
 
-    const dispatch = useDispatch()
+    // const [customerData, setCustomerData] = useState([]);
+    // const [loadingData, setLoadingData] = useState(null);
 
-    useEffect(() => {
-        getValueFor('uToken', customerID)
-    }, [])
+    // const dispatch = useDispatch()
 
-    async function getValueFor(key, customerID) {
-        try {
+    // useEffect(() => {
+    //     getValueFor('uToken', customerID)
+    // }, [])
 
-        let result = await SecureStore.getItemAsync(key);
-        if (result !== null) {
-            dispatch(restoreToken(key))
-            var raw = "";
+    // async function getValueFor(key, customerID) {
+    //     try {
 
-            var requestOptions = {
-            method: 'GET',
-            body: raw,
-            redirect: 'follow'
-            };
+    //     let result = await SecureStore.getItemAsync(key);
+    //     if (result !== null) {
+    //         dispatch(restoreToken(key))
+    //         var raw = "";
 
-            fetch(`https://api.admcloud.net/api/Sales/SalesByItemDetailed/?token=${result}&customerID=${customerID}`, requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                setCustomerData(result.data)
-                setLoadingData(true)
+    //         var requestOptions = {
+    //         method: 'GET',
+    //         body: raw,
+    //         redirect: 'follow'
+    //         };
 
-            })
-            .catch(error => console.log('error', error));
-        } else {
-            dispatch(restoreToken(null))
-            console.log('no data');
-        }
-        }
-        catch (err) {
-        console.error('any fail.', err);
-        }
-    }
+    //         fetch(`https://api.admcloud.net/api/Sales/SalesByItemDetailed/?token=${result}&customerID=${customerID}`, requestOptions)
+    //         .then(response => response.json())
+    //         .then(result => {
+    //             setCustomerData(result.data)
+    //             setLoadingData(true)
+
+    //         })
+    //         .catch(error => console.log('error', error));
+    //     } else {
+    //         dispatch(restoreToken(null))
+    //         console.log('no data');
+    //     }
+    //     }
+    //     catch (err) {
+    //     console.error('any fail.', err);
+    //     }
+    // }
 
      const Item = ({data}) => (
         <View style={globalStyles.touchList}>
@@ -152,10 +164,10 @@ export default function CustomerShopHistory({route}) {
   return (
     <SafeAreaView style={style.content}>
     
-    { loadingData ? <FlatList
-        data={customerData}
+    { !isLoading ? <FlatList
+        data={responseJSON.data}
         renderItem={(item) => <Item data={item} />}
-        keyExtractor={item => item.ID}
+        keyExtractor={item => item.ID }
       
       /> :  <SkeletonLoda/> 
       }

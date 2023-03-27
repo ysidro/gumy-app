@@ -1,56 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { View, Text, SafeAreaView, StyleSheet, Linking, TouchableOpacity } from 'react-native'
 
-import { useSelector, useDispatch } from "react-redux"
-import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
 
-import { restoreToken } from '../../features/auth/auth'
+import { useFetch } from '../../hooks/useFetch';
 import { Colors } from '../../constants/Colors';
 
 export default function CustomerDetail({ route,navigation }) {
-  const customerID = route.params.customerID
-  const [customerData, setCustomerData] = useState([]);
-  const [loadingData, setLoadingData] = useState(null);
+
   const [mapStyle, setMapStyle] = useState([style.mapLink, 'Ver Google Map'])
-  const dispatch = useDispatch()
 
-  useEffect(() => {
-    getValueFor('uToken', customerID)
-  }, [])
+  let raw = "";
+  var requestOptions = {
+    method: 'GET',
+    body: raw,
+    redirect: 'follow'
+  };
 
-  async function getValueFor(key, customerID) {
-    try {
-
-      let result = await SecureStore.getItemAsync(key);
-      if (result !== null) {
-        dispatch(restoreToken(key))
-        var raw = "";
-
-        var requestOptions = {
-          method: 'GET',
-          body: raw,
-          redirect: 'follow'
-        };
-
-        fetch(`https://api.admcloud.net/api/Customers/${customerID}?token=${result}`, requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            setCustomerData(result.data)
-            setLoadingData(true)
-
-          })
-          .catch(error => console.log('error', error));
-      } else {
-        dispatch(restoreToken(null))
-        console.log('no data');
-      }
-    }
-    catch (err) {
-      console.error('any fail.', err);
-    }
-  }
+  const URL_DETAILED = `Customers/${route.params.data}`
+  const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,'', requestOptions)
+ 
 
   const openMap = async (uri) => {
    
@@ -74,40 +44,40 @@ export default function CustomerDetail({ route,navigation }) {
 
   return (
     <SafeAreaView style={style.content}>
-      {loadingData ?
+      {!isLoading ?
         <View>
-          <Text style={style.title}>{customerData.ComercialName}</Text>
+          <Text style={style.title}>{responseJSON.data.ComercialName}</Text>
 
           <View style={style.cartContent}>
 
-            {customerData.Phone1 ? <View style={style.cartItems}>
+            {responseJSON.data.Phone1 ? <View style={style.cartItems}>
               <Text style={style.listTitle}>Teléfono</Text>
-              <Text style={style.listTitleText}>{customerData.Phone1}</Text>
+              <Text style={style.listTitleText}>{responseJSON.data.Phone1}</Text>
             </View> : ""}
 
-            {customerData.Addresses[0]?.Contact ? <View style={style.cartItems}>
+            {responseJSON.data.Addresses[0]?.Contact ? <View style={style.cartItems}>
               <Text style={style.listTitle}>Contacto</Text>
-              <Text style={style.listTitleText}>{customerData.Addresses[0]?.Contact}</Text>
+              <Text style={style.listTitleText}>{responseJSON.data.Addresses[0]?.Contact}</Text>
             </View> : ""}
 
-            {customerData.Addresses[0]?.Address1 ? <View style={style.cartItems}>
+            {responseJSON.data.Addresses[0]?.Address1 ? <View style={style.cartItems}>
               <Text style={style.listTitle}>Dirección</Text>
-              <Text style={style.listTitleText}>{customerData.Addresses[0]?.Address1}</Text>
+              <Text style={style.listTitleText}>{responseJSON.data.Addresses[0]?.Address1}</Text>
             </View> : ""}
 
             <View style={style.cartItems}>
-              <Text style={style.listTitle}>{customerData?.SalesRep?.FirstName} </Text>
-              <Text style={style.listTitleText}>{customerData?.SalesRep?.LastName}</Text>
+              <Text style={style.listTitle}>{responseJSON.data?.SalesRep?.FirstName} </Text>
+              <Text style={style.listTitleText}>{responseJSON.data?.SalesRep?.LastName}</Text>
             </View>
 
-            {customerData.Notes ? <View style={style.cartItems}>
+            {responseJSON.data.Notes ? <View style={style.cartItems}>
               
-              <TouchableOpacity onPress={() => openMap(customerData.Notes)} style={mapStyle[0]}>
+              <TouchableOpacity onPress={() => openMap(responseJSON.data.Notes)} style={mapStyle[0]}>
                 <Text style={style.mapLinkText}>{mapStyle[1]}</Text>
               </TouchableOpacity>
             </View> : ""}
             <View style={style.cartItems}>
-              <TouchableOpacity onPress={() => navigation.navigate('HistoricoCompras',{customerID : customerData.ID}) } style={style.regularButton}>
+              <TouchableOpacity onPress={() => navigation.navigate('HistoricoCompras',{customerID : responseJSON.data.ID}) } style={style.regularButton}>
                 <Text style={style.mapLinkText} >Historico de Compras</Text>
               </TouchableOpacity>
             </View>

@@ -6,11 +6,12 @@ import { Colors } from "../constants/Colors";
 
 export default function ListArticles({
     listItems,
+    customerData,
     onChange,
     value,
     label,
   }){
-    console.log("ListArticles", listItems)
+
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
@@ -33,7 +34,7 @@ export default function ListArticles({
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-              
+             
               onChange(selectedItem)
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {

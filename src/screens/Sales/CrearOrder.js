@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, ScrollView, SafeAreaView, Text, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import { View, ScrollView, SafeAreaView, Text, StyleSheet, ActivityIndicator,FlatList} from 'react-native'
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { globalStyles } from "../../styles/global";
@@ -10,7 +10,7 @@ import ListCustomers from '../../components/ListCustomers';
 import ListArticles from '../../components/ListItems';
 import CustomDropDown from '../../components/CustomDropDown';
 
-import { updateFormField } from '../../redux/FormSlice'
+import { updateFormField,addItem } from '../../redux/FormSlice'
 
 import InputDate from "../../components/CustomInputDate";
 import CustomButtons from "../../components/CustomButtons";
@@ -25,14 +25,15 @@ export default function CrearOrder({ navigation }) {
 
     const dispatch = useDispatch()
     const form = useSelector((state) => state.form);
-
-    //const [formState, setFormState] = useState(initialState);
-    const [loadingData, setLoadingData] = useState(null);
+    const [isAdding, setIsAdding] =  useState(false);
+    const [loadingData, setLoadingData] = useState(false);
     const [showAddItems, setShowAddItems] = useState(false);
     const [currencies, setCurrencies] = useState([]);
     const [listCustomer, setListCustomer] = useState([]);
     const [listItems, setListItems] = useState([]);
-    const [step, setStep] = useState(0);
+    const [selectedItemID, setSelectedItemID] = useState(false);
+    const [selectedItems, setSelectedItems] = useState([]);
+    
 
     const handlerDShowAddItems = () => {
         setShowAddItems(true);
@@ -53,24 +54,41 @@ export default function CrearOrder({ navigation }) {
         dispatch(updateFormField({ "fieldName": "DocDate", "value": value.toISOString() }));
     };
 
-    const handleItemInputChange = (index, fieldName, value) => {
-        console.log(value,form,fieldName)
-        // const itemsCopy = [...form.Items];
-        // itemsCopy[index] = { ...itemsCopy[index], [fieldName]: value };
-        // setFormState({ ...form, Items: itemsCopy });
+    const handlePreseletItemInputChange = (value) => {
+
+        setSelectedItemID(value.ID)
+        setSelectedItems([])
+   
+    };
+    const handleItemInputChange = (value) => {
+
+        dispatch(addItem(selectedItems));
+        setSelectedItems([])
+        setSelectedItemID(false)
+        setLoadingData(false)
     };
 
- 
 
     useEffect(() => {
+        
         getCurrency('uToken')
+       
         getCustomers('uToken')
-
+        
     }, [])
 
     useEffect(() => {
+        setSelectedItems([])
         ItemsServices('uToken')
+       
     }, [showAddItems])
+
+    useEffect(() => {
+       
+        setLoadingData(false)
+        getItem('uToken')
+
+    }, [selectedItemID])
 
     async function getCurrency(key) {
         try {
@@ -89,10 +107,8 @@ export default function CrearOrder({ navigation }) {
                     .then(response => response.json())
                     .then(result => {
                         setCurrencies(result.data)
-                        setLoadingData(true)
-
                     })
-                    .catch(error => console.log('error', error));
+                    .catch(error => console.log(' getCurrency error', error));
             } else {
                 dispatch(restoreToken(null))
                 console.log('no data');
@@ -121,13 +137,69 @@ export default function CrearOrder({ navigation }) {
                     .then(result => {
 
                         setListCustomer(result.data)
-                        setLoadingData(true)
 
                     })
-                    .catch(error => console.log('error', error));
+                    .catch(error => console.log('getCustomers error', error));
             } else {
                 dispatch(restoreToken(null))
                 console.log('no data');
+            }
+        }
+        catch (err) {
+            console.error('any fail.', err);
+        }
+    }
+
+
+    async function getItem(key) {
+        try {
+
+            if(selectedItemID){
+                setIsAdding(true)
+                let result = await SecureStore.getItemAsync(key);
+           
+                if (result !== null) {
+                    dispatch(restoreToken(key))
+                    var raw = "";
+
+                    var requestOptions = {
+                        method: 'GET',
+                        redirect: 'follow'
+                    };
+                
+                    fetch(`https://api.admcloud.net/api/Items/${selectedItemID}?token=${result}`, requestOptions)
+                    .then(response => response.json())
+                    .then(responseData => {
+                        console.log(responseData)
+                        if(responseData.data){
+                        const {ID,SKU,Name,TaxScheduleID} = responseData.data;
+                        const fields = {
+                            ID:ID,
+                            ItemSKU: SKU,
+                            ItemName: Name,
+                            Stock: '',
+                            Quantity: "1",
+                            UMO: [],
+                            TaxScheduleID: TaxScheduleID,
+                            Prices: responseData.data.Prices ? responseData.data.Prices : [],
+                            Price: responseData.data.Prices ? responseData.data.Prices[0].Price.toString() : "0",
+                            DiscountPercent: "0",
+                            Total: "0",
+                            }
+                        setSelectedItems(fields)
+                        setLoadingData(true)
+                        setIsAdding(false)
+                        
+                        }else{
+                            setIsAdding(false)
+                        }
+                    })
+                    .catch(error => console.log('error', error));
+
+                } else {
+                    dispatch(restoreToken(null))
+                    console.log('no data');
+                }
             }
         }
         catch (err) {
@@ -141,18 +213,17 @@ export default function CrearOrder({ navigation }) {
             if (result !== null) {
                 dispatch(restoreToken(key))
                 var raw = "";
-
+                
                 var requestOptions = {
                     method: 'GET',
                     body: raw,
                     redirect: 'follow'
                 };
 
-                fetch(`https://api.admcloud.net/api/ItemsServices/GetListWithLastUpdateDate?skip=0&token=${result}`, requestOptions)
+                fetch(`https://api.admcloud.net/api/ItemsServices/GetListWithLastUpdateDate?skip=0&OnlyActive=true&token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         setListItems(result.data)
-                        setLoadingData(true)
 
                     })
                     .catch(error => console.log('error', error));
@@ -167,78 +238,86 @@ export default function CrearOrder({ navigation }) {
     }
 
     if (showAddItems) {
-       
+    //const Item = ({data}) => console.log(data.item.ItemName)
+        const Item = ({data}) => (<View style={globalStyles.touchList}>
+
+            <Text style={globalStyles.listContentText}>{ data.item.ItemName}</Text>
+            <View style={globalStyles.rowBetween}>
+                <Text style={globalStyles.listTitleText}>{data.item.ItemSKU}</Text>
+                <Text>Cantidad: {data.item.Quantity}</Text>
+                <Text>Unidad</Text>
+            </View>
+            <View style={globalStyles.raw}>
+
+            </View>
+            <View style={globalStyles.rowBetween}>
+                <Text>{data.item.Price}</Text>
+                <Text>{data.item.DiscountPercent}%</Text>
+                <Text>{data.item.Total}</Text>
+            </View>
+        </View>)
+
         return (
             <View style={globalStyles.screenContainer}>
                 <SafeAreaView style={style.content}>
                     <Text style={globalStyles.title}>Agregar Artículos</Text>
                     <ScrollView>
-                        {/* <View style={globalStyles.touchList}>
-
-                            <Text style={globalStyles.listContentText}>Cemento tip top azul 650g 710ml</Text>
-                            <View style={globalStyles.rowBetween}>
-                                <Text style={globalStyles.listTitleText}>G2R5159389</Text>
-                                <Text>Cantidad: 10</Text>
-                                <Text>Unidad</Text>
-                            </View>
-                            <View style={globalStyles.raw}>
-
-                            </View>
-                            <View style={globalStyles.rowBetween}>
-                                <Text>1,261.8400</Text>
-                                <Text>20%</Text>
-                                <Text>12,618.40</Text>
-                            </View>
-                        </View> */}
+                    {form.Items !== [] ? <FlatList
+                            data={form.Items}
+                            renderItem={(item) => <Item data={item} />}
+                            keyExtractor={item => item.ID}
+                            //onEndReached={pushCustomer}
+                            onEndReachedThreshold={.5}
+                            //refreshing={isLoading}
+                            //ListFooterComponent={renderFooter}
+                        /> : ""}
 
                         
 <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Articulos</Text>
+                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Buscar articulos</Text>
                             <ListArticles
                                     listItems={listItems}
+                                    customerData = {form.Relationship}
                                     value={form.Items}
-                                    onChange={(value) => handleItemInputChange(1 , 'Items', value)}
+                                    onChange={(value) => handlePreseletItemInputChange(value)}
                                     label={"Productos"}
                                 />
 
                            
                         </View>
-                        {/* <View >
+                        {loadingData ? <View>
+                        <View>
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Articulo</Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
+                            <CustomInput value={selectedItems.ItemSKU} onChangeText={null} label={"articulo"} />
                         </View>
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Descripción</Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
+                            <CustomInput value={selectedItems.ItemName} onChangeText={null} label={"Descripción"} />
                         </View>
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Cantidad</Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
+                            <CustomInput value={selectedItems.Quantity ? selectedItems.Quantity : "1"} onChangeText={null} label={"Cantidad"} />
                         </View>
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Grupo de Impuesto</Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
+                            <CustomInput value="" onChangeText={null} label={"Grupo de Impuesto"} />
                         </View>
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Precio</Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
+                            <CustomInput value={selectedItems.Price} onChangeText={null} label={"Precio"} />
                         </View>
                         <View >
                             <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>% Descuento </Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
+                            <CustomInput value={selectedItems.DiscountPercent} onChangeText={null} label={"Descuento"} />
                         </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Cuenta</Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
+                        
                         </View>
-                        <View >
-                            <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Precio</Text>
-                            <CustomInput value={articulo} onChangeText={setArticulo} label={"articulo"} />
-                        </View> */}
-                        <View >
+                          : "" }
+                          {isAdding ? <ActivityIndicator size="large"/> : ""}
+                          <View >
                             <CustomButtons
                                 title={"Agregar"}
-                                onPress={null}
+                                onPress={loadingData ? handleItemInputChange : null}
                             />
                         </View>
                         <View >

@@ -18,19 +18,7 @@ const initialState ={
             DepartmentID:"",
             InternalNotes:"",
             SourceTransactionID:"",
-            Items:[
-              {
-                ItemSKU:"",
-                ItemName:"",
-                Stock:"",
-                Quantity:"",
-                UMO:[],
-                TaxScheduleID:"",
-                Price:"",
-                DiscountPercent:"",
-                Total:""
-              }
-            ]
+            Items:[]
 }
 
 
@@ -42,18 +30,20 @@ const createOrderSlice = createSlice({
             const {fieldName,value} = action.payload;
             state[fieldName] = value;
         },
-        addItem(state) {
-          state.Items.push({
-            ItemSKU: '',
-            ItemName: '',
-            Stock: '',
-            Quantity: '',
-            UMO: [],
-            TaxScheduleID: '',
-            Price: '',
-            DiscountPercent: '',
-            Total: '',
-          });
+        addItem(state, action) {
+          console.log(state.Items, action.payload)
+          state.Items.push(action.payload)
+          // state.Items.push({
+          //   ItemSKU: '',
+          //   ItemName: '',
+          //   Stock: '',
+          //   Quantity: '',
+          //   UMO: [],
+          //   TaxScheduleID: '',
+          //   Price: '',
+          //   DiscountPercent: '',
+          //   Total: '',
+          // });
         },
         removeItem(state, action) {
           state.Items.splice(action.payload, 1);

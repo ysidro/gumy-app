@@ -1,86 +1,74 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { useSelector, useDispatch } from "react-redux"
-import * as SecureStore from 'expo-secure-store'
-import { Skeleton } from 'moti/skeleton'
+import React, {useState,useReducer, useEffect} from 'react'
+import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native'
 
-import { restoreToken } from '../../features/auth/auth'
+import { Skeleton } from 'moti/skeleton'
 import { globalStyles } from '../../styles/global'
 
+
+import { useFetch } from '../../hooks/useFetch';
+
 export default function Customer({ navigation }) {
-  const [customerData, setCustomerData] = useState([]);
-  const [customerPagination, setCustomerPagination] = useState(0);
-  const [loadingData, setLoadingData] = useState(null);
-  const dispatch = useDispatch()
+
+  const [index, setIndex] = useState(0)
+  const [data, setData] = useState([]);
+
+  let raw = "";
+  var requestOptions = {
+    method: 'GET',
+    body: raw,
+    redirect: 'follow'
+  };
+
+  const URL_DETAILED = `Customers`
+  const URL_PARAMETER = `&skip=${index}`
+  const {isLoading, error, page, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
 
   useEffect(() => {
+    setData(responseJSON)
+  },[isLoading])
 
-    getValueFor('uToken')
-  }, [])
+  const pushCustomer = () =>{
+    // const sumIndex = index + 1;
+    // setIndex(sumIndex)
+    // alert(`index es igual a ${index}`)
 
-  function loadMoreDate() {
-    //setCustomerPagination(customerPagination + 1);
-    getValueFor('uToken');
   }
 
-  async function getValueFor(key) {
-    try {
-
-      let result = await SecureStore.getItemAsync(key);
-      if (result !== null) {
-        dispatch(restoreToken(key))
-        var raw = "";
-
-        var requestOptions = {
-          method: 'GET',
-          body: raw,
-          redirect: 'follow'
-        };
-
-        fetch(`https://api.admcloud.net/api/Customers?token=${result}&skip=${customerPagination}`, requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            
-            const newData = result.data.filter(item => !customerData.find(i => i.id === item.id));
-   
-            setCustomerData(prevItems => [...prevItems, ...newData]);
-            setCustomerPagination(prevPage => prevPage + 1);
-            setLoadingData(true)
-
-          })
-          .catch(error => console.log('error', error));
-      } else {
-        dispatch(restoreToken(null))
-        console.log('no data');
-      }
-    }
-    catch (err) {
-      console.error('any fail.', err);
-    }
-  }
-
-  const Item = ({ data }) => (
-    <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Cliente', { customerID: data.item.ID })}>
+  console.log(isLoading)
+   const Item = ({ data }) => (
+    
+    <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Cliente', { data : data.item.ID })}>
       <Text style={globalStyles.listTitleText}>{data.item.Name}</Text>
-      <Text style={globalStyles.listContentText}>{data.item.Phone1}</Text>
+      <Text style={globalStyles.listContentText}> {data.item.Phone1}</Text>
     </TouchableOpacity>
   );
 
+ 
+
+  const renderFooter = () => {
+    if (!isLoading) return null;
+    return (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
 
   return (
 
     <SafeAreaView style={style.content}>
 
-      {loadingData ? <FlatList
-        data={customerData}
+      {isLoading ? <View style={style.contentSkeleton}>
+        <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
+      </View>: <FlatList
+        data={responseJSON.data}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
-
-        ListFooterComponent={<TouchableOpacity style={globalStyles.touchList} onPress={() => loadMoreDate()}><Text>Cargar más {customerPagination}</Text></TouchableOpacity>}
-
-      /> : <View style={style.contentSkeleton}>
-        <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
-      </View>
+        onEndReached={pushCustomer}
+        onEndReachedThreshold={.5}
+        refreshing={isLoading}
+        ListFooterComponent={renderFooter}
+      />
       }
 
 
