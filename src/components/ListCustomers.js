@@ -3,18 +3,28 @@ import React  from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
 
 import { Colors } from "../constants/Colors";
+import { useFetch } from '../hooks/useFetch';
 
 export default function ListCustomers({
-    listCustomer,
     onChange,
     label,
   }){
 
-    
+    let raw = "";
+    var requestOptions = {
+        method: 'GET',
+        body: raw,
+        redirect: 'follow'
+    };
+
+    const URL_DETAILED = `Customers`
+    const URL_PARAMETER = `skip=0`
+    const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
+  
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
-            data={listCustomer}
+            data={responseJSON?.data}
             defaultButtonText={label}
             buttonStyle={style.dropdown2BtnStyle}
             search

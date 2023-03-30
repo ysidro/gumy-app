@@ -6,8 +6,10 @@ const initialState ={
             ubicacion:"",
             LocationID:"",
             Reference:"",
-            EmployeeID:"",
+            Employee:"",
+            PaymentTerms:[],
             CurrencyID:"",
+            ExchangeRate:"",
             SalesStageID:"",
             ShipToAddressID:"",
             Relationship:"",
@@ -33,17 +35,6 @@ const createOrderSlice = createSlice({
         addItem(state, action) {
           console.log(state.Items, action.payload)
           state.Items.push(action.payload)
-          // state.Items.push({
-          //   ItemSKU: '',
-          //   ItemName: '',
-          //   Stock: '',
-          //   Quantity: '',
-          //   UMO: [],
-          //   TaxScheduleID: '',
-          //   Price: '',
-          //   DiscountPercent: '',
-          //   Total: '',
-          // });
         },
         removeItem(state, action) {
           state.Items.splice(action.payload, 1);

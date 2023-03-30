@@ -5,11 +5,11 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { useFetch } from '../hooks/useFetch';
 import { Colors } from "../constants/Colors";
 
-export default function Currencies({
+export default function PaymentTerms({
     onChangeText,
+    handlerPaymentTerms,
     value,
-    label,
-
+    
   }) {
 
 
@@ -17,30 +17,30 @@ export default function Currencies({
     var requestOptions = {
         method: 'GET',
         body: raw,
-        redirect: 'follow',
-        
+        redirect: 'follow'
     };
-    let filteredCurrencies = false;
-    const URL_DETAILED = `Currencies`
-    const URL_PARAMETER = ``
+    let filteredPaymentTerms = [];
+    const URL_DETAILED = `PaymentTerms`
+    const URL_PARAMETER = `skip=0`
     const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
-
-    if(!isLoading) {  
-      filteredCurrencies = responseJSON.data.filter(currency => currency.ID === value);  
+    
+    if(!isLoading) {
+    
+      filteredPaymentTerms = responseJSON?.data.filter(filteredPaymentTerm => filteredPaymentTerm.ID === value);
     }
-   
+
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
             data={!isLoading ? responseJSON.data : []}
-            defaultButtonText={ value ? filteredCurrencies[0]?.Name : label}
+            defaultButtonText={ value ? filteredPaymentTerms[0]?.Name : 'Terminos'}
             buttonStyle={style.dropdown2BtnStyle}
             value={value}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-              onChangeText([selectedItem.ExchangeRate,selectedItem.ID])
+              onChangeText(selectedItem.ExchangeRate)
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
                 return  selectedItem.Name;

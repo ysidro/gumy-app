@@ -37,12 +37,12 @@ export function useFetch(url, urlParam, options) {
             if (result == null) return;
             
             dispatch({type: 'loading'});
-            url  = `https://api.admcloud.net/api/${url}?token=${result}&${urlParam}`
+            url  = `https://api.admcloud.net/api/${url}?${urlParam}&token=${result}`
           
             try {
                 const response = await fetch(url,options);
                 const responseJSON = await response.json();
-               
+                //console.log(url,responseJSON);
                 if(shouldCancel) return;
                 dispatch({type: 'success', responseJSON});                
             } catch(error) {

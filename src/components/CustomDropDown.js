@@ -11,26 +11,27 @@ export default function CustomDropDown({
   data
 }) {
 
-  const getSelected = data.filter(data => data.value === value);
+ const getSelected = data.filter(data => data.ID === value);
 
 return (
   <View style={style.inputContainer}>
         <SelectDropdown
           data={data}
-          defaultButtonText={ value ? getSelected.label : label}
+          defaultButtonText={value ? getSelected[0]?.Name : label}
           buttonStyle={style.dropdown2BtnStyle}
           value={value}
           dropdownStyle={style.dropdown2DropdownStyle}
           rowStyle={style.dropdown2RowStyle}
           rowTextStyle={style.dropdown2RowTxtStyle}
           onSelect={(selectedItem, index) => {
-              onChangeSelect(selectedItem.value)
+              onChangeSelect(selectedItem.ID)
           }}
           buttonTextAfterSelection={(selectedItem, index) => {
-              return  selectedItem.label;
+              return  selectedItem.Name;
           }}
           rowTextForSelection={(item, index) => {
-              return item.label;
+            
+              return item.Name;
           }}
         />
 
