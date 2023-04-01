@@ -1,18 +1,12 @@
-import { NavigationContainer } from "@react-navigation/native";
-// import { useSelector } from "react-redux";
+import { NavigationContainer } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
-// import { selectIsLoggedIn } from "../store/modules/auth";
-import AuthStack from "./AuthStack";
+import DrawerNavigator from './DrawerNavigator';
+import { RootState } from '../store';
+import AuthStack from './AuthStack';
 
 export default function Navigator() {
-    // const isLoggedIn = useSelector(selectIsLoggedIn);
-    const isLoggedIn = false;
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
-    return (
-        <NavigationContainer>
-            {
-                isLoggedIn ? <AuthStack /> : <AuthStack />
-            }
-        </NavigationContainer >
-    )
+  return <NavigationContainer>{isLoggedIn ? <DrawerNavigator /> : <AuthStack />}</NavigationContainer>;
 }

@@ -1,111 +1,88 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import React, { useState } from "react";
-import { AxiosResponse } from 'axios'
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import * as SecureStore from 'expo-secure-store';
+import React, { useState } from 'react';
 
-import GumyButton from "../common/Button";
-import GumyInput from "../common/Input";
-
-import { globalStyles } from "../styles/Global";
-import { Colors } from "../styles/Colors";
-import { signIn, Response } from "../api";
-
+import { loginFailed, loginSuccess, setLoading } from '../store/reducers/authReducer';
+import { GumyAlert, GumyButton, GumyInput, GumySpash } from '../common';
+import { globalStyles } from '../styles/Global';
+import { Colors } from '../styles/Colors';
+import { AuthService } from '../service';
+import { RootState } from '../store';
 
 export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passVisible, setPassVisible] = useState(false);
-    const [checkValidEmail, setCheckValidEmail] = useState(false);
-    const [alert, setAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+  const isLoading = useSelector((state: RootState) => state.auth.isLoading);
+  const dispatch = useDispatch();
 
-    const handleCheckEmail = (text: string) => {
-        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const [email, setEmail] = useState('supervisionvillajuana@gmail.com');
+  const [password, setPassword] = useState('gTSSUPERVISION456**');
+  const [passVisible, setPassVisible] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
-        setEmail(text);
+  const isEmailValid = (email: string): boolean => {
+    // Regex pattern for validating email
+    const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return emailPattern.test(email);
+  };
 
-        if (emailRegex.test(text)) {
-            setCheckValidEmail(false);
-        } else {
-            console.log("sdf");
+  async function _signIn() {
+    setAlert(false);
 
-            setCheckValidEmail(true);
-        }
-    };
-
-    function _signIn() {
-        setIsLoading(true);
-        setAlert(false);
-        signIn<string>({ email, password }).then((result: Response<string>) => {
-            console.log(result.data);
-            if (result.success) {
-                console.log(result.data);
-                setIsLoading(false);
-            } else {
-                setAlertMessage(
-                    `Credenciales inválidas, revisar e intentar de nuevo.`
-                );
-                setAlert(true);
-                setIsLoading(false);
-            }
-            // if (result.status == 200) {
-            //     SecureStore.setItemAsync("uToken", result.data?.data);
-            //     dispatch(setCredentials({ ...userData, user }))
-            // }
-        })
+    if (!isEmailValid(email)) {
+      setAlertMessage(`El correo tiene un formato invalido`);
+      setAlert(true);
+      return;
     }
 
-    return (
-        <View style={globalStyles.screenContainer}>
-            <Image
-                source={require("../../assets/icon.png")}
-                style={globalStyles.img}
-            />
-            <Text style={globalStyles.title}>Login</Text>
-            <GumyInput label={"Email"} value={email} onChangeText={text => handleCheckEmail(text)} />
-            {checkValidEmail ? (
-                <Text>Wrong format email</Text>
-            ) : (
-                <Text style={styles.errorAlert}> </Text>
-            )}
-            <GumyInput
-                label={"Password"}
-                secureTextEntry={!passVisible}
-                value={password}
-                onChangeText={setPassword}
-            />
-            <TouchableOpacity onPress={() => setPassVisible(!passVisible)} >
-                <Text style={styles.btnShowPassword}>Ver Password</Text>
-            </TouchableOpacity>
+    if (password === '') {
+      setAlertMessage(`El campo password no debe estar vacio`);
+      setAlert(true);
+      return;
+    }
 
-            {/* {alert ? <Alert /> : ""} */}
+    try {
+      setAlert(false);
+      dispatch(setLoading());
+      const result = await new AuthService().signIn<string>({ email, password });
+      if (result.success && result.data) {
+        setAlert(false);
+        SecureStore.setItemAsync('uToken', result.data);
+        dispatch(loginSuccess(result.data));
+      } else {
+        throw new Error('Credenciales inválidas, revisar e intentar de nuevo.');
+      }
+    } catch (error: any) {
+      console.log(error);
 
-            <GumyButton
-                title={"Login"}
-                onPress={() => _signIn()}
-            />
-        </View>
-    )
+      dispatch(loginFailed(error.message));
+      setAlert(true);
+    }
+  }
+
+  if (isLoading) return <GumySpash />;
+
+  return (
+    <View style={globalStyles.screenContainer}>
+      <Image source={require('../../assets/icon.png')} style={globalStyles.img} />
+      <Text style={globalStyles.title}>Login</Text>
+      <GumyInput label={'Email'} value={email} onChangeText={setEmail} />
+      <GumyInput label={'Password'} secureTextEntry={!passVisible} value={password} onChangeText={setPassword} />
+      <TouchableOpacity onPress={() => setPassVisible(!passVisible)}>
+        <Text style={styles.btnShowPassword}>Ver Password</Text>
+      </TouchableOpacity>
+
+      {alert ? <GumyAlert message={alertMessage} /> : ''}
+
+      <GumyButton title={'Login'} onPress={() => _signIn()} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    contentAlert: {
-        backgroundColor: Colors.red,
-        padding: 10,
-        width: "90%",
-        margin: 10,
-        borderRadius: 8,
-    },
-    textAlert: {
-        color: Colors.light,
-    },
-    btnShowPassword: {
-        padding: 10,
-        fontWeight: "bold",
-        color: Colors.secondary,
-    },
-    errorAlert: {
-        color: Colors.light,
-        fontWeight: "bold",
-    },
+  btnShowPassword: {
+    padding: 10,
+    fontWeight: 'bold',
+    color: Colors.secondary
+  }
 });

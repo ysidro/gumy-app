@@ -1,10 +1,16 @@
-
+// import * as Notification from 'expo-notifications';
 import { Provider } from 'react-redux';
-import React from 'react';
 
-import Navigator from "./src/navigation";
+import Navigator from './src/navigation';
 import store from './src/store';
 
+// Notification.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: true,
+//     shouldSetBadge: true
+//   })
+// });
 
 export default function App() {
   return (

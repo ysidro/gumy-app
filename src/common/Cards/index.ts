@@ -1,0 +1,1 @@
+export { GumySaleResumeCard } from './SaleResumeCard';
