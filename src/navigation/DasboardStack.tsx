@@ -1,6 +1,6 @@
 import { StackNavigationOptions, createStackNavigator } from '@react-navigation/stack';
 
-import BottonTabs from './BottonTabs';
+import { BottonTabs } from './Tabs';
 
 // Screens
 import SettingScreen from '../views/Setting';

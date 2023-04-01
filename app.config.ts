@@ -1,29 +1,29 @@
 import 'dotenv/config';
-import { ExpoConfig } from "expo/config";
+import { ExpoConfig } from 'expo/config';
 
 const config: ExpoConfig = {
-  name: "gumy-app",
-  slug: "gumy-app",
-  orientation: "portrait",
-  icon: "./assets/icon.png",
-  userInterfaceStyle: "light",
+  name: 'gumy-app',
+  slug: 'gumy-app',
+  orientation: 'portrait',
+  icon: './assets/icon.png',
+  userInterfaceStyle: 'light',
   splash: {
-    image: "./assets/splash.png",
-    resizeMode: "contain",
-    backgroundColor: "#ffffff",
+    image: './assets/splash.png',
+    resizeMode: 'contain',
+    backgroundColor: '#ffffff'
   },
-  assetBundlePatterns: ["**/*"],
+  assetBundlePatterns: ['**/*'],
   ios: {
-    supportsTablet: true,
+    supportsTablet: true
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/adaptive-icon.png",
-      backgroundColor: "#ffffff",
-    },
+      foregroundImage: './assets/adaptive-icon.png',
+      backgroundColor: '#ffffff'
+    }
   },
   web: {
-    favicon: "./assets/favicon.png",
+    favicon: './assets/favicon.png'
   },
   extra: {
     apiUrl: process.env.API_URL,

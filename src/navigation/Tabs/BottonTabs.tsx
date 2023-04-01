@@ -3,12 +3,12 @@ import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
-import { Colors } from '../styles/Colors';
+import { Colors } from '../../styles/Colors';
 
 // Screens
-import SettingScreen from '../views/Setting';
-import HomeScreen from '../views/Home';
-import { SalesScreen } from '../views/Sales';
+import SettingScreen from '../../views/Setting';
+import HomeScreen from '../../views/Home';
+import { SalesScreen } from '../../views/Sales';
 
 const Tab = createBottomTabNavigator();
 
@@ -70,4 +70,4 @@ const BottonTabs = () => {
   );
 };
 
-export default BottonTabs;
+export { BottonTabs };
