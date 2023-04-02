@@ -1,9 +1,9 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 
+import { CustomerTabs } from './Tabs/CustomerTabs';
 import { DrawerContent } from './DrawerContent';
 import DasboardStack from './DasboardStack';
-import { CustomerStack } from './CustomerStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -11,11 +11,7 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="Home" component={DasboardStack} options={{ headerShown: false }} />
-      <Drawer.Screen
-        name="CustomerStack"
-        component={CustomerStack}
-        options={{ headerShown: false, title: 'Clientes' }}
-      />
+      <Drawer.Screen name="CustomerTabs" component={CustomerTabs} options={{ headerShown: false, title: 'Clientes' }} />
     </Drawer.Navigator>
   );
 };
