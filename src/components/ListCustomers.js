@@ -1,5 +1,5 @@
 import { View, StyleSheet,Text } from 'react-native'
-import React  from 'react'
+import React, {useEffect,useState}  from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
 
 import { Colors } from "../constants/Colors";
@@ -8,23 +8,37 @@ import { useFetch } from '../hooks/useFetch';
 export default function ListCustomers({
     onChange,
     label,
+    tokenID
   }){
 
-    let raw = "";
-    var requestOptions = {
-        method: 'GET',
-        body: raw,
-        redirect: 'follow'
-    };
+    const [customer,setCustomers] = useState([])
+    const [loadingData,setLoadingData] = useState(false)
+    const [isError,setIsError] = useState(false)
+    
 
     const URL_DETAILED = `Customers`
-    const URL_PARAMETER = `skip=0`
-    const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
-  
+        const URL_PARAMETER = `skip=0`
+        const requestOptions = {
+          method: 'GET',
+          body: '',
+          redirect: 'follow'
+        };
+
+      const {isLoading, error, responseJSON} = useFetch(URL_DETAILED, URL_PARAMETER, requestOptions)
+        
+      useEffect(()=>{
+        
+        if(!isLoading){
+          setCustomers(responseJSON.data)
+        }
+
+      },[isLoading])
+    
+     
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
-            data={responseJSON?.data}
+            data={customer}
             defaultButtonText={label}
             buttonStyle={style.dropdown2BtnStyle}
             search
@@ -37,12 +51,28 @@ export default function ListCustomers({
             }}
             searchPlaceHolder={`Buscar ${label}`}
             searchPlaceHolderColor={'#F8F8F8'}
+            searchInputTxtColor={'#fffa'}
             searchInputStyle={style.dropdown3searchInputStyleStyle}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
+            
             onSelect={(selectedItem, index) => {
+              
               onChange(selectedItem)
+            }}
+            onChangeSearchInputText={(item, index) => {
+
+              var requestOptions = {
+                method: 'GET',
+                redirect: 'follow'
+              };
+              
+              fetch(`https://api.admcloud.net/api/Customers/Extended/?search=${item}&skip=0&token=${tokenID}`, requestOptions)
+                .then(response => response.json())
+                .then(result => setCustomers(result.data))
+                .catch(error => console.log('error', error));
+            
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {
             
@@ -84,6 +114,7 @@ const style = StyleSheet.create({
        
         textAlign: 'center',
         fontWeight: 'bold',
+        
       },
       dropdown2DropdownStyle: {
         backgroundColor: '#fff',

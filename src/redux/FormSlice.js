@@ -33,7 +33,6 @@ const createOrderSlice = createSlice({
             state[fieldName] = value;
         },
         addItem(state, action) {
-          console.log(state.Items, action.payload)
           state.Items.push(action.payload)
         },
         removeItem(state, action) {
@@ -43,9 +42,15 @@ const createOrderSlice = createSlice({
           const { index, field, value } = action.payload;
           state.Items[index][field] = value;
         },
+        clearFormsFields(state){
+         // console.log('clearFormsFields',state,action, initialState)
+         state = initialState;
+
+         console.log('clearFormsFields',state)
+        },
     }
 });
 
-export const { updateFormField, addItem, removeItem, updateItemField } = createOrderSlice.actions;
+export const {clearFormsFields, updateFormField, addItem, removeItem, updateItemField } = createOrderSlice.actions;
 
 export default createOrderSlice.reducer;
