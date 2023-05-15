@@ -6,6 +6,8 @@ export const Colors = {
     Blueligth:'#EAF6F7',
     ligth:'#F9FFFF',
     red:'#C1292E',
+    green:'#5cb85c',
+    orange:'#f0ad4e',
     white:"#ffffff",
     grey:"#6c757d",
 }

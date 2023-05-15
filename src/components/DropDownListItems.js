@@ -5,7 +5,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { Colors } from "../constants/Colors";
 import { useEffect } from 'react'
 
-export default function ListArticles({
+export default function DropDownListItems({
     listItems,
     setListItems,
     onChange,
@@ -31,13 +31,15 @@ export default function ListArticles({
               return (
                 <View style={style.dropdown3RowChildStyle}>
                   <Text style={style.dropdown3RowTxt}>{item.SKU} - {item.Name} </Text>
-
                 </View>
               );
             }}
             searchPlaceHolder={`Buscar ${label}`}
             searchPlaceHolderColor={'#F8F8F8'}
             searchInputTxtColor={'#fffa'}
+            renderDropdownIcon={isOpened => {
+              return <>{isSearching ? <ActivityIndicator/> : null}</>;
+            }}
             searchInputStyle={style.dropdown3searchInputStyleStyle}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
@@ -56,23 +58,30 @@ export default function ListArticles({
                   redirect: 'follow'
                 };
                 
+                
+
                 fetch(`https://api.admcloud.net/api/Items/?sku=${item}&token=${tokenID}`, requestOptions)
                   .then(response => response.json())
                   .then(result => {
-                    console.log(result,item,tokenID)
-
                     
-
-                    if(result.data === null){
-
-                      Alert.alert("Notificación",
-                      `Ha habido un problema con ADM, hemos intentado buscar este productos con el SKU ${item}, pero no hemos tenido respuesta`,)
-
-                    }else{
-                      
-                      //setListItems([result.data])
+                    if(result.success) {
                       setIsSearching(false)
-                      
+                    }
+                    if(result.message !== null)
+                    {
+
+                      Alert.alert("Notificación",`${result.message}`,)
+                      setIsSearching(false)
+
+                    }
+
+                    if(result.data !== null){
+                      setListItems([result.data])
+                    }
+
+                    if(result.data !== null && result.success && result.message !== null){
+                      Alert.alert("Notificación",
+                      "No hemos podido localizar la información de este producto",)
                     }
                     
                   })
@@ -84,7 +93,6 @@ export default function ListArticles({
               return (
                 <View style={style.dropdown3BtnChildStyle}>
                   <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar ${label}`}</Text>
-                  {isSearching ? <ActivityIndicator/> : null}
                 </View>
               );
             }}

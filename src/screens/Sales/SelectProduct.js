@@ -1,16 +1,16 @@
-import { View, ScrollView, SafeAreaView, Text, StyleSheet, ActivityIndicator, FlatList,Alert } from 'react-native'
+import { View, Dimensions, SafeAreaView, Text, StyleSheet, ActivityIndicator, FlatList,Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 
 
-import { clearFormsFields,updateFormField,removeItem, addItem } from '../../redux/FormSlice'
+import { clearFormsFields,removeItem,updateFormField, addItem } from '../../redux/FormSlice'
 import { restoreToken } from "../../features/auth/auth"
 
 import { globalStyles } from "../../styles/global"
 import { Colors } from "../../constants/Colors"
 
-import ListArticles from '../../components/ListItems'
+import DropDownListItems from '../../components/DropDownListItems'
 
 import CustomInput from "../../components/CustomInputs"
 import CustomDropDown from '../../components/CustomDropDown'
@@ -21,6 +21,7 @@ export default function SelectProduct({ route, navigation }) {
 
     const dispatch = useDispatch()
     const form = useSelector((state) => state.form);
+
     const [tokenID, setTokenID] = useState(null)
     const [isAdding, setIsAdding] = useState(false);
     const [listItems, setListItems] = useState([]);
@@ -32,9 +33,11 @@ export default function SelectProduct({ route, navigation }) {
     const [selectedItemID, setSelectedItemID] = useState(false);
 
     useEffect(() => {
-        setSelectedItems([])
+        setLoadingData(true)
+        setSelectedItems([]);
+        setListItems([]);
         ItemsServices('uToken')
-        setLoadingData(false)
+        
         getItem('uToken')
 
     }, [])
@@ -47,20 +50,20 @@ export default function SelectProduct({ route, navigation }) {
     }, [selectedItemID])
 
     useEffect(() => {
+        setListItems([])
         setSelectedItems([])
         ItemsServices('uToken')
 
     }, [showAddItems])
 
     const handlePreseletItemInputChange = (value) => {
-    
+
         setSelectedItemID(value.ID)
         setSelectedItems([])
 
     };
     const handleItemInputChange = (value) => {
 
-        
         dispatch(addItem(selectedItems));
         setCreateOrderActive(true)
         setSelectedItems([])
@@ -70,7 +73,7 @@ export default function SelectProduct({ route, navigation }) {
     };
 
     const handleRemoveCurrentItem = (value) =>{
-        //setCreateOrderActive(false)
+        setCreateOrderActive(false);
         dispatch(removeItem(value));
         form.Items.length >= 2 ? setCreateOrderActive(true) : setCreateOrderActive(false)
 
@@ -79,8 +82,7 @@ export default function SelectProduct({ route, navigation }) {
     const handleCurrentInputChange = (value, fieldName) => {
         setSelectedItems(prevState => ({
             ...prevState,
-            [fieldName]: value,
-        }));
+            [fieldName]: value,}));
 
         if(fieldName === 'Quantity'){
             setSelectedItems(prevState => ({
@@ -91,15 +93,22 @@ export default function SelectProduct({ route, navigation }) {
     };
 
     const handlerDShowAddItems = () => {
-        
         setShowAddItems(true);
-        
     }
 
     const handlerAddOrder = () => {
-        setSelectedItems([]);
-        dispatch(clearFormsFields());
-        navigation.navigate('Sales')
+
+        console.log("form", form);
+
+        // setSelectedItems([]);
+        // setListItems([]);
+        // dispatch(clearFormsFields());
+        // dispatch(updateFormField({ "fieldName": "Items", "value": [] }));
+        // Alert.alert("Notificación", "La orden se a creado exitosamente",)
+        // navigation.navigate('Order')
+
+        
+        
     }
 
     async function ItemsServices(key) {
@@ -120,16 +129,19 @@ export default function SelectProduct({ route, navigation }) {
                     .then(response => response.json())
                     .then(result => {
                         setListItems(result.data)
-
+                        setLoadingData(false)
                     })
                     .catch(error => console.log('error', error));
             } else {
                 dispatch(restoreToken(null))
+                setLoadingData(false)
                 console.log('no data');
             }
         }
         catch (err) {
             console.error('any fail.', err);
+            Alert.alert("Notificación", `Error ${err}`,)
+            setLoadingData(false)
         }
         
     }
@@ -158,7 +170,7 @@ export default function SelectProduct({ route, navigation }) {
                             
                             if (responseData.data) {
                                 const { ID, SKU, Name, TaxScheduleID } = responseData.data;
-                                console.log(responseData.data)
+                            
                                 const fields = {
                                     ID: ID,
                                     ItemSKU: SKU,
@@ -168,19 +180,18 @@ export default function SelectProduct({ route, navigation }) {
                                     UMO: [],
                                     TaxScheduleID: TaxScheduleID,
                                     Prices: responseData.data.Prices ? responseData.data.Prices : [],
-                                    Price: responseData.data.Prices ? responseData.data.Prices[0].Price.toString() : "0",
+                                    Price: responseData.data.Prices[0]?.Price ? responseData.data.Prices[0].Price.toString() : "0" ,
                                     DiscountPercent: "0",
-                                    Total: responseData.data.Prices ? responseData.data.Prices[0].Price.toString() : "0",
-                                    CurrencyID : responseData.data.Prices ? responseData.data.Prices[0].CurrencyID : "DOP"
+                                    Total: responseData.data.Prices[0]?.Price ? responseData.data.Prices[0].Price.toString() : "0",
+                                    CurrencyID : responseData.data.Prices ? responseData.data.Prices[0]?.CurrencyID : "DOP"
                                 }
-                            
+                          
                                 setSelectedItems(fields)
                                 setLoadingData(true)
                                 setIsAdding(false)
 
                             } else {
-                                Alert.alert("Notificación",
-                                            "No hemos podido localizar la información de este producto",)
+                                Alert.alert("Notificación", "No hemos podido localizar la información de este producto",)
                                 setIsAdding(false)
                             }
                         })
@@ -230,40 +241,41 @@ export default function SelectProduct({ route, navigation }) {
         
         
     </View>)}
+    
+    const h = Dimensions.get('window').height > 600 ? 240 : 160;
 
     return (
         <View>
             <SafeAreaView style={style.content}>
-                <Text style={globalStyles.title}>{form.Relationship.Name}</Text>
-                <Text style={{ "marginHorizontal": 15,"marginBottom":15, color:Colors.grey, fontWeight: "bold" , fontSize: 22}}>Agregar Artículos</Text>
-                <ScrollView>
-                    
-                    {form.Items !== [] ? <FlatList
+                
+                
+                                <View style={{ height: Dimensions.get('window').height - h }}>
+                    {form.Items !== [] ? <FlatList 
                         data={form.Items}
                         renderItem={(item) =>  <Item data={item} /> }
                         keyExtractor={item => item.ID}
-                        
-                        //ListHeaderComponent
-                        ListHeaderComponent={() => (
-                            <View >
-                                <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Buscar articulos</Text>
-                                <ListArticles
-                                    listItems={listItems}
-                                    setListItems={setListItems}
-                                    tokenID={tokenID}
-                                    customerData={form.Relationship}
-                                    value={form.Items}
-                                    onChange={(value) => handlePreseletItemInputChange(value)}
-                                    label={"Productos"}
-                                />
-                            </View>
-                        )}
+                        contentContainerStyle={{flexGrow: 1,}} 
                         onEndReachedThreshold={.5}
+                        ListHeaderComponent={()=> {
+                          return  <View>
+                                        <Text style={globalStyles.secundaryTitle}>{form.Relationship.Name}</Text>
+                                        <DropDownListItems
+                                            listItems={listItems}
+                                            setListItems={setListItems}
+                                            tokenID={tokenID}
+                                            customerData={form.Relationship}
+                                            value={form.Items}
+                                            onChange={(value) => handlePreseletItemInputChange(value)}
+                                            label={"Productos"}
+                                        />
+                                        </View>
+                        }}
                         //ListFooterComponent
                         ListFooterComponent={() => (
-                            <View>
+                            <View >
+                                {isAdding ? <ActivityIndicator size="large" /> : ""}
                                 {loadingData ?  
-                                <View  >
+                                <View  style={{ height: Dimensions.get('window').height + 100 }}>
                                     <View>
                                         <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>Articulo</Text>
                                         <CustomInput value={selectedItems.ItemSKU} onChangeText={null} label={"articulo"} />
@@ -305,31 +317,27 @@ export default function SelectProduct({ route, navigation }) {
                                         <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>% Descuento </Text>
                                         <CustomInput value={selectedItems.DiscountPercent} onChangeText={(value) => handleCurrentInputChange(value, "DiscountPercent")} label={"Descuento"} />
                                     </View>
-
-                                </View>
-                                    : ""} 
-                            </View>
-                        )}
-                    /> : ""}
-
-
-
-
-                    {isAdding ? <ActivityIndicator size="large" /> : ""}
-                    <View >
-                        <CustomButtons
+                                    <CustomButtons
                             title={"Agregar"}
                             onPress={loadingData ? handleItemInputChange : null}
                         />
-                    </View>
-                    <View >
-                        <CustomButtons
-                            title={`Crear Orden`}
-                            
-                            onPress={createOrderActive ? () => handlerAddOrder() : null}
-                        />
-                    </View>
-                </ScrollView>
+                                </View>
+                                    : <View style={globalStyles.rowBetween} >
+                                    <CustomButtons
+                                         title={`Crear Orden`}
+                                         
+                                         onPress={createOrderActive ? () => handlerAddOrder() : null}
+                                     />  
+                                 </View>} 
+                            </View>
+                        )}
+                    /> : ""}</View>
+
+                    
+                    
+                    {/* </ScrollView> */}
+                    
+                    
             </SafeAreaView>
         </View>
     )
@@ -358,6 +366,7 @@ const style = StyleSheet.create({
     },
 
     content: {
+    
         //  justifyContent: 'center',
         marginTop: 15,
         width: "100%",

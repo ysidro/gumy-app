@@ -14,15 +14,14 @@ export default function ListCustomers({
     const [customer,setCustomers] = useState([])
     const [loadingData,setLoadingData] = useState(false)
     const [isError,setIsError] = useState(false)
-    
 
-    const URL_DETAILED = `Customers`
-        const URL_PARAMETER = `skip=0`
-        const requestOptions = {
-          method: 'GET',
-          body: '',
-          redirect: 'follow'
-        };
+      const URL_DETAILED = `Customers`
+      const URL_PARAMETER = `skip=0`
+      const requestOptions = {
+      method: 'GET',
+        body: '',
+        redirect: 'follow'
+      };
 
       const {isLoading, error, responseJSON} = useFetch(URL_DETAILED, URL_PARAMETER, requestOptions)
         

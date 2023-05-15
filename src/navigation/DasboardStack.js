@@ -17,7 +17,7 @@ export default function DasboardStack() {
     const screenParams = {
             title:"Gumy Tire Supply",
             headerTitleAlign:"center",
-            presentation: "modal",
+            presentation:"modal",
             headerShown: false,
             headerBackTitleVisible: false
         }

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { globalStyles } from "../../styles/global"
 
-import { updateFormField, addItem } from '../../redux/FormSlice'
+import { updateFormField, clearFormsFields } from '../../redux/FormSlice'
 
 import CustomInput from "../../components/CustomInputs"
 import Currencies from "../../components/Currencies"
@@ -30,7 +30,6 @@ export default function CrearOrder({ navigation }) {
     const [employeedID, setEmployeedID] = useState(null)
     const [relationshipID, setRelationshipID] = useState();
 
-    
     const handlerPaymentTerms = (value) => {
         dispatch(updateFormField({ "fieldName": "PaymentTerms", "value": value }));
     }
@@ -43,11 +42,12 @@ export default function CrearOrder({ navigation }) {
         dispatch(updateFormField({ "fieldName": fieldName, "value": value }));
        
         if (fieldName === "Relationship") {
+            
             setRelationshipID(value.ID)
             setEmployeedID(value.SalesRepID)
+
             dispatch(updateFormField({ "fieldName": "LocationID", "value": value.LocationID }));
             dispatch(updateFormField({ "fieldName": "PaymentTermID", "value": value.PaymentTermID }));
-    
             //const filteredCurrencies = form.Currencies.filter(currency => currency.ID === value.CurrencyID);
             dispatch(updateFormField({ "fieldName": "CurrencyID", "value": value.CurrencyID }));
         }
@@ -56,14 +56,17 @@ export default function CrearOrder({ navigation }) {
 
         dispatch(updateFormField({ "fieldName": "DocDate", "value": value.toISOString() }));
     };
-
+    
+    const navigateToSelectProducts = () =>{
+        navigation.navigate('SelectProduct')
+    }
     useEffect(() => {
         getLocations('uToken')
+        dispatch(clearFormsFields());
     }, [])
 
-    
     useEffect(() => {
-        //getEmployee('uToken')
+        getEmployee('uToken')
         getRelationshipData('uToken')
         
     }, [employeedID])
@@ -113,11 +116,10 @@ export default function CrearOrder({ navigation }) {
                     body: raw,
                     redirect: 'follow'
                 };
-              
                 fetch(`https://api.admcloud.net/api/Customers/${relationshipID}?token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        if(result?.data){ 
+                        if(result?.data){
                             dispatch(updateFormField({ "fieldName": "ShipToAddressID", "value": result.data.Addresses[0] ? result.data.Addresses[0].FullName : "" }));
                             dispatch(updateFormField({ "fieldName": "BillToAddressID", "value": result.data.Addresses[0]  ? result.data.Addresses[0].FullName  : ""  }));
                         }
@@ -334,24 +336,9 @@ export default function CrearOrder({ navigation }) {
 
                         <CustomButtons
                             title={"Siguiente"}
-                            onPress={() => navigation.navigate('SelectProduct', { form : form })}
-                            //onPress={form.Relationship ? handlerDShowAddItems : null}
+                            onPress={relationshipID ? () => navigateToSelectProducts() : null}
                         />
 
-                        {/* <View>
-                        <TouchableOpacity style={onPress ? styles.button : styles.buttonNull} onPress={step > 0 ? handlePreview : null}>
-                            <Text style={ styles.buttonText}>{title}</Text>
-                            </TouchableOpacity>
-                        </View> */}
-
-                        {/* <CustomButtons
-                            title={"Regresar"}
-                            onPress={step > 0 ? handlePreview : null}
-                        />
-                        <CustomButtons
-                            title={"Siguiente"}
-                            onPress={step <= 3 ? handleNext : null}
-                        /> */}
                     </ScrollView>
                 </View>
 

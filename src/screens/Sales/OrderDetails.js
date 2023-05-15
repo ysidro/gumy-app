@@ -44,7 +44,7 @@ export default function OrderDetails({ route, navigation }) {
                     redirect: 'follow'
                 };
 
-                fetch(`https://api.admcloud.net/api/PurchaseOrders/${orderID}?token=${result}`, requestOptions)
+                fetch(`https://api.admcloud.net/api/SalesOrders/${orderID}?token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         setOrderData(result.data)

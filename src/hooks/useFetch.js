@@ -42,7 +42,6 @@ export function useFetch(url, urlParam, options) {
             try {
                 const response = await fetch(url,options);
                 const responseJSON = await response.json();
-                //console.log(url,responseJSON);
                 if(shouldCancel) return;
                 dispatch({type: 'success', responseJSON});                
             } catch(error) {

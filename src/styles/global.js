@@ -19,9 +19,16 @@ export const globalStyles = StyleSheet.create({
     },
     subTitle:{
         fontSize: 16,
+        
         fontWeight: 'bold',
         color: Colors.primary,
     },
+    secundaryTitle:{
+      fontSize: 16,
+      marginHorizontal:10,
+      fontWeight: 'bold',
+      color: Colors.primary,
+  },
     touchList:{
         backgroundColor: Colors.white,
         borderRadius:12,
@@ -68,6 +75,27 @@ export const globalStyles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 12,
         color: Colors.grey,
+      },
+      authorizedLabel: {
+        fontWeight: "bold",
+        fontSize: 12,
+        color: Colors.white,
+      },
+      pendingLabel: {
+        fontWeight: "bold",
+        fontSize: 12,
+        color: Colors.white,
+        
+      },
+      authorizedLabelContainer:{
+        borderRadius: 8,
+        backgroundColor: Colors.green,
+        padding:5,
+      },
+      pendingLabelContainer:{
+        borderRadius: 8,
+        padding:5,
+        backgroundColor: Colors.orange,
       },
     img: {
         width: 100,
@@ -130,6 +158,7 @@ export const salesResume = StyleSheet.create({
         color: Colors.secundary,
         fontWeight: "bold",
       },
+      
       lisstTotals: {
         fontWeight: "bold",
       },

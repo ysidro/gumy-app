@@ -10,7 +10,12 @@ import { useFetch } from '../../hooks/useFetch';
 export default function Customer({ navigation }) {
 
   const [index, setIndex] = useState(0)
-  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const pushCustomer = () =>{
+   
+    setIndex(index + 1)
+  }
 
   let raw = "";
   var requestOptions = {
@@ -19,59 +24,39 @@ export default function Customer({ navigation }) {
     redirect: 'follow'
   };
 
+  
   const URL_DETAILED = `Customers`
   const URL_PARAMETER = `&skip=${index}`
   const {isLoading, error, page, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
-
-  useEffect(() => {
-    setData(responseJSON)
-  },[isLoading])
-
-  const pushCustomer = () =>{
-    // const sumIndex = index + 1;
-    // setIndex(sumIndex)
-    // alert(`index es igual a ${index}`)
-
-  }
-
-  console.log(isLoading)
-   const Item = ({ data }) => (
-    
+  //console.log('pushCustomer',isLoading,index,responseJSON)
+  const Item = ({ data }) => (
     <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Cliente', { data : data.item.ID })}>
       <Text style={globalStyles.listTitleText}>{data.item.Name}</Text>
       <Text style={globalStyles.listContentText}> {data.item.Phone1}</Text>
     </TouchableOpacity>
   );
 
- 
-
   const renderFooter = () => {
     if (!isLoading) return null;
     return (
-      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator animating size="large" />
-      </View>
     );
   };
 
   return (
 
     <SafeAreaView style={style.content}>
-
       {isLoading ? <View style={style.contentSkeleton}>
         <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
       </View>: <FlatList
         data={responseJSON.data}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
-        onEndReached={pushCustomer}
+        onEndReached={()=>pushCustomer()}
         onEndReachedThreshold={.5}
-        refreshing={isLoading}
         ListFooterComponent={renderFooter}
       />
       }
-
-
     </SafeAreaView>
 
   )
