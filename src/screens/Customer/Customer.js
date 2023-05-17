@@ -1,4 +1,4 @@
-import React, {useState,useReducer, useEffect} from 'react'
+import React, {useState} from 'react'
 import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native'
 
 import { Skeleton } from 'moti/skeleton'
@@ -10,7 +10,6 @@ import { useFetch } from '../../hooks/useFetch';
 export default function Customer({ navigation }) {
 
   const [index, setIndex] = useState(0)
-  const [loading, setLoading] = useState(false);
 
   const pushCustomer = () =>{
    
@@ -28,7 +27,7 @@ export default function Customer({ navigation }) {
   const URL_DETAILED = `Customers`
   const URL_PARAMETER = `&skip=${index}`
   const {isLoading, error, page, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
-  //console.log('pushCustomer',isLoading,index,responseJSON)
+
   const Item = ({ data }) => (
     <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Cliente', { data : data.item.ID })}>
       <Text style={globalStyles.listTitleText}>{data.item.Name}</Text>

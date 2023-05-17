@@ -2,6 +2,10 @@ import { View, StyleSheet,Text } from 'react-native'
 import React, {useEffect,useState}  from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
 
+import { useSelector, useDispatch } from "react-redux"
+
+import { updateFormField } from '../redux/FormSlice'
+
 import { Colors } from "../constants/Colors";
 import { useFetch } from '../hooks/useFetch';
 
@@ -11,9 +15,10 @@ export default function ListCustomers({
     tokenID
   }){
 
-    const [customer,setCustomers] = useState([])
-    const [loadingData,setLoadingData] = useState(false)
-    const [isError,setIsError] = useState(false)
+    const dispatch = useDispatch()
+    const form = useSelector((state) => state.form);
+
+      const [customer,setCustomers] = useState([])
 
       const URL_DETAILED = `Customers`
       const URL_PARAMETER = `skip=0`
@@ -32,8 +37,38 @@ export default function ListCustomers({
         }
 
       },[isLoading])
+
+      useEffect(()=>{
+          getRelationshipData(tokenID)
+      },[form.RelationshipID])
     
-     
+      async function getRelationshipData(tokenID) {
+        try {
+                var requestOptions = {
+                    method: 'GET',
+                    body: '',
+                    redirect: 'follow'
+                };
+                fetch(`https://api.admcloud.net/api/Customers/${form.RelationshipID}?token=${tokenID}`, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        if(result?.data){
+                            dispatch(updateFormField({ "fieldName": "ShipToAddressID", "value": result.data.Addresses[0] ? result.data.Addresses[0].FullName : "" }));
+                            dispatch(updateFormField({ "fieldName": "BillToAddressID", "value": result.data.Addresses[0]  ? result.data.Addresses[0].FullName  : ""  }));
+                            dispatch(updateFormField({ "fieldName": "EmployeeID", "value": result.data.SalesRepID }));
+                            dispatch(updateFormField({ "fieldName": "PaymentTermID", "value": result.data.PaymentTermID }));
+                            dispatch(updateFormField({ "fieldName": "CurrencyID", "value": result.data.CurrencyID }));
+                        }
+
+                    })
+                    .catch(error => console.log('Customer error', error));
+            
+        }
+        catch (err) {
+            console.error('any fail.', err);
+        }
+    }
+
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
@@ -57,7 +92,9 @@ export default function ListCustomers({
             rowTextStyle={style.dropdown2RowTxtStyle}
             
             onSelect={(selectedItem, index) => {
-              
+            
+              dispatch(updateFormField({ "fieldName": "RelationshipID", "value": selectedItem.ID }));
+              dispatch(updateFormField({ "fieldName": "LocationID", "value": selectedItem.LocationID  }));
               onChange(selectedItem)
             }}
             onChangeSearchInputText={(item, index) => {

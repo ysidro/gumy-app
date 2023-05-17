@@ -47,6 +47,7 @@ export default function OrderDetails({ route, navigation }) {
                 fetch(`https://api.admcloud.net/api/SalesOrders/${orderID}?token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
+                        console.log(result)
                         setOrderData(result.data)
                         setLoadingData(true)
 

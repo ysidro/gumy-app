@@ -13,8 +13,8 @@ import { Colors } from "../../constants/Colors";
 import Spash from "../Spash";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("supervisionvillajuana@gmail.com");
+  const [password, setPassword] = useState("gTSSUPERVISION456**");
   const [passVisible, setPassVisible] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");

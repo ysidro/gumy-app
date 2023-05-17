@@ -7,14 +7,14 @@ const initialState = {
   DocDate: new Date().toISOString(),
   DateTo: "",
   Reference: "",
-  RelationshipID: "92816df9-c1b7-4deb-afcc-08db3ce024da",
+  RelationshipID: "",
   ShipmentMethodID: "",
   DepartmentID: "",
-  LocationID: "48953d27-e203-45b3-037d-08d9a1684f6e",
+  LocationID: "",
   ReceptionLocationID: "",
-  EmployeeID: "34b99dd3-a023-4f0a-7a34-08d94853d4df",
+  EmployeeID: null,
   Priority: "PRIORITY_UNDEFINED",
-  PaymentTermID: "fd42c2ff-5df1-4d31-6f80-08d590021182",
+  PaymentTermID: "",
   Beneficiary: "",
   Notes: "",
   InternalNotes: "",
@@ -65,8 +65,8 @@ const createOrderSlice = createSlice({
       state.Items.splice(action.payload, 1);
     },
     updateItemField(state, action) {
-      const { index, field, value } = action.payload;
-      state.Items[index][field] = value;
+      const { index, field } = action.payload;
+      state.Items[index] = field;
     },
     clearFormsFields(state) {
       // console.log('clearFormsFields',state,action, initialState)

@@ -17,7 +17,6 @@ export default function Inputs({
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
-
       />
     </View>
   )

@@ -1,17 +1,15 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import SelectDropdown from 'react-native-select-dropdown'
+import { useSelector, useDispatch } from "react-redux"
 
+import { updateFormField } from '../redux/FormSlice'
 import { useFetch } from '../hooks/useFetch';
 import { Colors } from "../constants/Colors";
 
-export default function PaymentTerms({
-    onChangeText,
-    handlerPaymentTerms,
-    value,
-    
-  }) {
-
+export default function PaymentTerms() {
+    const dispatch = useDispatch()
+    const form = useSelector((state) => state.form);
 
     let raw = "";
     var requestOptions = {
@@ -26,21 +24,23 @@ export default function PaymentTerms({
     
     if(!isLoading) {
     
-      filteredPaymentTerms = responseJSON?.data.filter(filteredPaymentTerm => filteredPaymentTerm.ID === value);
+      filteredPaymentTerms = responseJSON?.data.filter(filteredPaymentTerm => filteredPaymentTerm.ID === form.PaymentTermID);
+
+     // console.log(filteredPaymentTerms,form)
     }
 
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
             data={!isLoading ? responseJSON.data : []}
-            defaultButtonText={ value ? filteredPaymentTerms[0]?.Name : 'Terminos'}
+            defaultButtonText={ form.PaymentTermID ? filteredPaymentTerms[0]?.Name : 'Terminos'}
             buttonStyle={style.dropdown2BtnStyle}
-            value={value}
+            value={form.PaymentTermID}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-              onChangeText(selectedItem.ExchangeRate)
+              dispatch(updateFormField({ "fieldName": "PaymentTermID", "value": selectedItem.ID }));
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
                 return  selectedItem.Name;

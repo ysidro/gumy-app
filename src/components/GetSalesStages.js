@@ -2,46 +2,46 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import SelectDropdown from 'react-native-select-dropdown'
 import { useSelector, useDispatch } from "react-redux"
+
 import { updateFormField } from '../redux/FormSlice'
 import { useFetch } from '../hooks/useFetch';
 import { Colors } from "../constants/Colors";
 
-export default function Currencies({
-    label,
-  }) {
+export default function GetSalesStages() {
+
     const dispatch = useDispatch()
     const form = useSelector((state) => state.form);
-    
+
     let raw = "";
     var requestOptions = {
         method: 'GET',
         body: raw,
-        redirect: 'follow',
-        
+        redirect: 'follow'
     };
-    let filteredCurrencies = false;
-    const URL_DETAILED = `Currencies`
-    const URL_PARAMETER = ``
+    let filteredPaymentTerms = [];
+    const URL_DETAILED = `SalesStages`
+    const URL_PARAMETER = `skip=0`
     const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
+    
+    if(!isLoading) {
+    
+      filteredPaymentTerms = responseJSON?.data.filter(filteredPaymentTerm => filteredPaymentTerm.ID === form.SourceTransactionID);
 
-    if(!isLoading) {  
-      filteredCurrencies = responseJSON.data.filter(currency => currency.ID === form.CurrencyID);  
+     // console.log(filteredPaymentTerms,form)
     }
-  
+
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
             data={!isLoading ? responseJSON.data : []}
-            defaultButtonText={ form.CurrencyID ? filteredCurrencies[0]?.Name : label}
+            defaultButtonText={ form.SourceTransactionID ? filteredPaymentTerms[0]?.Name : 'Estapa de Venta'}
             buttonStyle={style.dropdown2BtnStyle}
-            value={form.CurrencyID}
+            value={form.SourceTransactionID}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-              dispatch(updateFormField({ "fieldName": "CurrencyID", "value": selectedItem.ID }));
-              dispatch(updateFormField({ "fieldName": "ExchangeRate", "value": selectedItem.ExchangeRate }));
-              
+              dispatch(updateFormField({ "fieldName": "SourceTransactionID", "value": selectedItem.ID }));
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
                 return  selectedItem.Name;
@@ -54,6 +54,7 @@ export default function Currencies({
     </View>
   )
 }
+
 
 const style = StyleSheet.create({
 

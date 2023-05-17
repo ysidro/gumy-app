@@ -53,6 +53,7 @@ export default function Order({navigation}) {
             const newIds = new Set([...ids, ...filteredData.map(item => item.id)]);
             setSalesData([...salesData, ...filteredData]);
             setIds(newIds);
+            
             setLoading(false);
             setLoadingData(true)
 
