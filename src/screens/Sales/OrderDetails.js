@@ -47,7 +47,7 @@ export default function OrderDetails({ route, navigation }) {
                 fetch(`https://api.admcloud.net/api/SalesOrders/${orderID}?token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        console.log(result)
+                        console.log("SalesOrders",result)
                         setOrderData(result.data)
                         setLoadingData(true)
 
@@ -128,7 +128,7 @@ export default function OrderDetails({ route, navigation }) {
                         keyExtractor={item => item.ID}
                     />
                     <View style={globalStyles.rowBetween}>
-                        <CustomButtons title={"Autorizar"} onPress={() => navigation.navigate('Order')} />
+                        <CustomButtons title={"Asignar Encomienda"} onPress={null} />
                     </View>
                 </>
                 :

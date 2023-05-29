@@ -35,6 +35,13 @@
       "APPID": "e2d164c8-2894-4944-d14f-08dae93589fc",
       "ROLE_ID": "23d4ea59-12a8-47d4-6b60-08daddd98ef5",
       "ROLE_NAME": "Cliente%20-%20Inventario",
+      "EXPO_PROYECT_ID" : "dd0b678b-9889-4ac5-b038-81b2f26e086a",
+      "FIREBASE_API" : "AIzaSyAGWf_74xVeRoRMucjYj4QrupxU2U1Rego",
+      "AUTH_DOMAIN" : "gumy-app.firebaseapp.com",
+      "PROYECT_ID" : "gumy-app",
+      "STORE_BUKET" : "gumy-app.appspot.com",
+      "MESSAGIN_SENDER_ID" : "871591234137",
+      "FIREBASE_ID" : "1:871591234137:web:26caf14bdec025cc0abf48",
       "eas": {
         "projectId": "dd0b678b-9889-4ac5-b038-81b2f26e086a"
       }

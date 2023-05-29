@@ -4,6 +4,9 @@ import * as SecureStore from "expo-secure-store";
 import { useDispatch } from "react-redux";
 import base64 from "react-native-base64";
 import Constants from "expo-constants";
+//import { auth } from '../../firebaseConfig';
+//import { GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { globalStyles } from "../../styles/global";
 import CustomInput from "../../components/CustomInputs";
@@ -57,34 +60,82 @@ export default function Login() {
         redirect: "follow",
       };
 
-      await fetch(
+      const resp = await fetch(
         `https://api.admcloud.net/api/Token?Company=${Constants.expoConfig.extra.API_KEY}&RoleID=${Constants.expoConfig.extra.ROLE_ID}&role=${Constants.expoConfig.extra.ROLE_NAME}&appid=${Constants.expoConfig.extra.APPID}`,
         requestOptions
-      )
-        .then((response) => response.text())
-        .then((result) => {
-          if (result) {
-            const r = JSON.parse(result);
-
-            setAlert(false);
-            setIsLoading(false);
+      );
+      const result = await resp.text();
+      if (result) {
+        
+        const r = JSON.parse(result);
+        if(r.success && r.data){
+            //setAlert(false);
+            //setIsLoading(false);
             SecureStore.setItemAsync("uToken", r.data);
-            dispatch(signIn(r.data));
-          } else {
-            setAlertMessage(
-              `Credenciales inválidas, revisar e intentar de nuevo.`
-            );
-            setAlert(true);
-            setIsLoading(false);
-          }
-        })
-        .catch((error) => {
+            const auth = getAuth();
+            signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              // Signed in
+              setIsLoading(false);
+              const user = userCredential.user;
+              //SecureStore.setItemAsync("uToken", user);
+              dispatch(signIn(r.data));
+        
+            })
+            .catch((error) => {
+              setIsLoading(false);
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log("Signed in error",errorCode,errorMessage);
+            });
+            
+           //await signInWithCredential(firebaseCredential);
+            
+            
+           // dispatch(signIn(r.data));
+        }else{
+          setAlertMessage('Credenciales inválidas, revisar e intentar de nuevo.');
+          setAlert(true);
           setIsLoading(false);
-          console.log("error", error);
-        });
+        }
+      
+      }else{
+        setAlertMessage('Credenciales inválidas, revisar e intentar de nuevo.');
+        setAlert(true);
+        setIsLoading(false);
+      }
+      // await fetch(
+      //   `https://api.admcloud.net/api/Token?Company=${Constants.expoConfig.extra.API_KEY}&RoleID=${Constants.expoConfig.extra.ROLE_ID}&role=${Constants.expoConfig.extra.ROLE_NAME}&appid=${Constants.expoConfig.extra.APPID}`,
+      //   requestOptions
+      // )
+      //   .then((response) => response.text())
+      //   .then((result) => {
+      //     if (result) {
+      //       const r = JSON.parse(result);
+
+      
+      //       setAlert(false);
+      //       setIsLoading(false);
+      //       SecureStore.setItemAsync("uToken", r.data);
+      //       const firebaseCredential = auth.GoogleAuthProvider.credential(r.data);
+      //       await auth().signInWithCredential(firebaseCredential);
+      //       dispatch(signIn(r.data));
+      //     } else {
+      //       setAlertMessage(
+      //         `Credenciales inválidas, revisar e intentar de nuevo.`
+      //       );
+      //       setAlert(true);
+      //       setIsLoading(false);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     setIsLoading(false);
+      //     console.log("error", error);
+      //   });
+
     } catch (err) {
       setIsLoading(false);
-      console.log(err);
+      console.log('admAuth',err);
     }
   }
   const Alert = () => (

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 
 
-import { clearFormsFields, removeItem, updateItemField, addItem } from '../../redux/FormSlice'
+import { clearFormsFields, removeItem, updateItemField, addItem , updateFormField} from '../../redux/FormSlice'
 import { restoreToken } from "../../features/auth/auth"
 
 import { globalStyles } from "../../styles/global"
