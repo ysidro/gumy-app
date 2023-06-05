@@ -11,6 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [ "expo-camera" ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },

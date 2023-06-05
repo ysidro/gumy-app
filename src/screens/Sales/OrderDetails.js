@@ -16,6 +16,7 @@ import { globalStyles } from "../../styles/global";
 import { Colors } from '../../constants/Colors';
 import { restoreToken } from '../../features/auth/auth'
 import CustomButtons from "../../components/CustomButtons";
+import BottomModal from '../../components/BottomModal'
 
 export default function OrderDetails({ route, navigation }) {
     const orderID = route.params.orderID
@@ -128,7 +129,8 @@ export default function OrderDetails({ route, navigation }) {
                         keyExtractor={item => item.ID}
                     />
                     <View style={globalStyles.rowBetween}>
-                        <CustomButtons title={"Asignar Encomienda"} onPress={null} />
+                       
+                        <CustomButtons title={"Asignar Encomienda"} onPress={() => navigation.navigate('AsingDelivery')} />
                     </View>
                 </>
                 :
