@@ -30,7 +30,7 @@
     "formik": "^2.2.9",
     "moti": "^0.22.0",
     "react": "18.2.0",
-    "react-native": "0.71.4",
+    "react-native": "0.71.8",
     "react-native-base64": "^0.2.1",
     "react-native-date-picker": "^4.2.9",
     "react-native-gesture-handler": "~2.9.0",

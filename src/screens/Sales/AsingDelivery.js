@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity ,SafeAreaView, FlatList} from 'react-native'
+import React, {useState} from 'react'
+import { View, Text, StyleSheet, TouchableOpacity ,SafeAreaView, FlatList, Alert} from 'react-native'
 import {Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import firebase from 'firebase/app';
 
@@ -23,14 +23,21 @@ const delivery = [
                     },
                 ]
 
-export default function AsingDelivery({navigation}) {
-
+export default function AsingDelivery({navigation, route}) {
+    const [addDelivery,setAddDelivery] = useState(null); 
+    console.log(route.params.order)
+    const saveDeliveryTask = () =>{
+        Alert.alert(`Encomienda asinada a: ${addDelivery.name}`)
+    }
     const Item = ({ data }) => {
-        console.log(data.item);
-        return (<View>
-                    <TouchableOpacity >
-                        <Text>{data.item.name}</Text>
-                        <Text>{data.item.email}</Text>
+       
+        return (<View key={data.index} style={styles.itemDelivery}>
+                    <TouchableOpacity style={styles.itemDeliveryContainer} onPress={() => setAddDelivery(data.item)} >
+                        <MaterialIcons name="delivery-dining" size={24} style={styles.btnIconStyle} color={Colors.primary} />
+                        <View style={styles.itemDeliveryDetail}>
+                            <Text>{data.item.name}</Text>
+                            <Text>{data.item.email}</Text>
+                        </View>
                     </TouchableOpacity>
                 </View>)
     };
@@ -39,6 +46,7 @@ export default function AsingDelivery({navigation}) {
     <SafeAreaView style={styles.content}>
     <View style={styles.modalContainer}>
     <View style={styles.modalContentContainer}>
+        <Text style={styles.title}>{route.params.order.RelationshipName}</Text>
         <Text style={styles.title}>Selecionar Mensajero</Text>
         <View style={styles.rowBetween}>
             <FlatList 
@@ -46,11 +54,12 @@ export default function AsingDelivery({navigation}) {
                 renderItem={(item) => <Item data={item} />}
             />
         </View>
+        
         <View style={styles.rowBetween}>
            
-            <TouchableOpacity style={styles.btnPrimaryStyle}>
+            <TouchableOpacity style={styles.btnPrimaryStyle} onPress={()=> saveDeliveryTask()}>
             <MaterialIcons name="delivery-dining" size={24} style={styles.btnIconStyle} color="white" />
-                <Text style={styles.btnTextStyle}>Asignar</Text>
+                <Text style={styles.btnTextStyle}>Asignar: {addDelivery?.name}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btnSecundaryStyle} onPress={() => navigation.navigate('Camera') }>
                 <Ionicons name="camera-outline" size={24} style={styles.btnIconStyle} color="white" />
@@ -78,7 +87,25 @@ const styles = StyleSheet.create({
         paddingTop: 5,
     },
     btnIconStyle:{
-
+    
+    },
+    itemDelivery:{
+        backgroundColor: 'white',
+        borderColor:Colors.secundary,
+        borderWidth:1,
+        borderRadius: 8,
+        padding: 10,
+        marginBottom:10,
+    },
+    itemDeliveryContainer:{
+        display: "flex",
+        justifyContent: "start",
+        alignContent:"center",
+        flexWrap: "nowrap",
+        flexDirection: "row",
+    },
+    itemDeliveryDetail:{
+        marginLeft:10,
     },
     btnSecundaryStyle:{
         display: "flex",

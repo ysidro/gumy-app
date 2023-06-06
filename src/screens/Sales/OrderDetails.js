@@ -130,7 +130,7 @@ export default function OrderDetails({ route, navigation }) {
                     />
                     <View style={globalStyles.rowBetween}>
                        
-                        <CustomButtons title={"Asignar Encomienda"} onPress={() => navigation.navigate('AsingDelivery')} />
+                        <CustomButtons title={"Asignar Encomienda"} onPress={() => navigation.navigate('AsingDelivery',{order:orderData} )} />
                     </View>
                 </>
                 :
