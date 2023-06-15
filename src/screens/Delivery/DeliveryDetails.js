@@ -54,7 +54,7 @@ export default function DeliveryDetails({ route, navigation }) {
             .catch(error => console.log('error', error));
         } else {
           dispatch(restoreToken(null))
-          console.log('no data');
+          console.log('delivery details no data');
         }
       }
       catch (err) {

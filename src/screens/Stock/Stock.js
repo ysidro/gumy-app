@@ -41,7 +41,7 @@ export default function Stock() {
         .catch(error => console.log('error', error));
       } else {
         dispatch(restoreToken(null))
-        console.log('no data');
+        console.log('no data Stock');
       }
     }
     catch(err){

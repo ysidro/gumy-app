@@ -52,7 +52,7 @@ export default function Delivery({navigation}) {
           .catch(error => console.log('error', error));
       } else {
         dispatch(restoreToken(null))
-        console.log('no data');
+        console.log('Dispatchs no data');
       }
     }
     catch (err) {

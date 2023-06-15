@@ -180,7 +180,7 @@ export default function SelectProduct({ route, navigation }) {
             } else {
                 dispatch(restoreToken(null))
                 setLoadingData(false)
-                console.log('no data');
+                console.log('GetListWithLastUpdateDate no data');
             }
         }
         catch (err) {
@@ -244,7 +244,7 @@ export default function SelectProduct({ route, navigation }) {
 
                 } else {
                     dispatch(restoreToken(null))
-                    console.log('no data');
+                    console.log('Items no data');
                 }
             }
         }

@@ -48,7 +48,7 @@ export default function OrderDetails({ route, navigation }) {
                 fetch(`https://api.admcloud.net/api/SalesOrders/${orderID}?token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        console.log("SalesOrders",result)
+                    
                         setOrderData(result.data)
                         setLoadingData(true)
 
@@ -56,7 +56,7 @@ export default function OrderDetails({ route, navigation }) {
                     .catch(error => console.log('error', error));
             } else {
                 dispatch(restoreToken(null))
-                console.log('no data');
+                console.log('SalesOrders no data');
             }
         }
         catch (err) {

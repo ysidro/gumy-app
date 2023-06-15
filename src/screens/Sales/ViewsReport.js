@@ -48,7 +48,7 @@ export default function ViewsReport() {
         .catch(error => console.log('error', error));
     } else {
       dispatch(restoreToken(null))
-      console.log('no data');
+      console.log('Detailed no data');
     }
     }
     catch(err){

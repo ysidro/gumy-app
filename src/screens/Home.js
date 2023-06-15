@@ -44,7 +44,7 @@ export default function Home({navigator}) {
       } else {
       
         dispatch(restoreToken(null))
-        console.log('no data');
+        console.log('home no data');
       
       }
     }

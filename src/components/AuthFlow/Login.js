@@ -1,23 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet,TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet,TouchableOpacity, Button } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { useDispatch } from "react-redux";
 import base64 from "react-native-base64";
 import Constants from "expo-constants";
-//import { auth } from '../../firebaseConfig';
-//import { GoogleAuthProvider } from "firebase/auth";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { globalStyles } from "../../styles/global";
-import CustomInput from "../../components/CustomInputs";
-import CustomButtons from "../../components/CustomButtons";
+import CustomInput from "../CustomInputs";
+import CustomButtons from "../CustomButtons";
+import { setAuthState } from "../../features/auth/auth";
 import { signIn } from "../../features/auth/auth";
 import { Colors } from "../../constants/Colors";
-import Spash from "../Spash";
+import Spash from "../../screens/Spash";
 
 export default function Login() {
   const [email, setEmail] = useState("supervisionvillajuana@gmail.com");
-  const [password, setPassword] = useState("gTSSUPERVISION456**");
+  const [password, setPassword] = useState("Gtssupervision123");
   const [passVisible, setPassVisible] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -60,82 +58,37 @@ export default function Login() {
         redirect: "follow",
       };
 
-      const resp = await fetch(
+      await fetch(
         `https://api.admcloud.net/api/Token?Company=${Constants.expoConfig.extra.API_KEY}&RoleID=${Constants.expoConfig.extra.ROLE_ID}&role=${Constants.expoConfig.extra.ROLE_NAME}&appid=${Constants.expoConfig.extra.APPID}`,
         requestOptions
-      );
-      const result = await resp.text();
-      if (result) {
-        
-        const r = JSON.parse(result);
-        if(r.success && r.data){
-            //setAlert(false);
-            //setIsLoading(false);
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          if (result) {
+            const r = JSON.parse(result);
+
+            setAlert(false);
+            setIsLoading(false);
+
             SecureStore.setItemAsync("uToken", r.data);
-            const auth = getAuth();
-            signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              // Signed in
-              setIsLoading(false);
-              const user = userCredential.user;
-              //SecureStore.setItemAsync("uToken", user);
-              dispatch(signIn(r.data));
-        
-            })
-            .catch((error) => {
-              setIsLoading(false);
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log("Signed in error",errorCode,errorMessage);
-            });
-            
-           //await signInWithCredential(firebaseCredential);
-            
-            
-           // dispatch(signIn(r.data));
-        }else{
-          setAlertMessage('Credenciales inválidas, revisar e intentar de nuevo.');
-          setAlert(true);
+            SecureStore.setItemAsync("userRoll", "adm");
+            dispatch(setAuthState('adm'));
+            dispatch(signIn(r.data));
+          } else {
+            setAlertMessage(
+              `Credenciales inválidas, revisar e intentar de nuevo.`
+            );
+            setAlert(true);
+            setIsLoading(false);
+          }
+        })
+        .catch((error) => {
           setIsLoading(false);
-        }
-      
-      }else{
-        setAlertMessage('Credenciales inválidas, revisar e intentar de nuevo.');
-        setAlert(true);
-        setIsLoading(false);
-      }
-      // await fetch(
-      //   `https://api.admcloud.net/api/Token?Company=${Constants.expoConfig.extra.API_KEY}&RoleID=${Constants.expoConfig.extra.ROLE_ID}&role=${Constants.expoConfig.extra.ROLE_NAME}&appid=${Constants.expoConfig.extra.APPID}`,
-      //   requestOptions
-      // )
-      //   .then((response) => response.text())
-      //   .then((result) => {
-      //     if (result) {
-      //       const r = JSON.parse(result);
-
-      
-      //       setAlert(false);
-      //       setIsLoading(false);
-      //       SecureStore.setItemAsync("uToken", r.data);
-      //       const firebaseCredential = auth.GoogleAuthProvider.credential(r.data);
-      //       await auth().signInWithCredential(firebaseCredential);
-      //       dispatch(signIn(r.data));
-      //     } else {
-      //       setAlertMessage(
-      //         `Credenciales inválidas, revisar e intentar de nuevo.`
-      //       );
-      //       setAlert(true);
-      //       setIsLoading(false);
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     setIsLoading(false);
-      //     console.log("error", error);
-      //   });
-
+          console.log("error", error);
+        });
     } catch (err) {
       setIsLoading(false);
-      console.log('admAuth',err);
+      console.log("error",err);
     }
   }
   const Alert = () => (
@@ -154,7 +107,7 @@ export default function Login() {
         source={require("../../images/icon.png")}
         style={globalStyles.img}
       />
-      <Text style={globalStyles.title}>Login</Text>
+      <Text style={globalStyles.title}>Gumi ADM</Text>
       <CustomInput label={"Email"} value={email} onChangeText={setEmail} />
       <CustomInput
         label={"Password"}
@@ -172,6 +125,8 @@ export default function Login() {
         title={"Login"}
         onPress={() => admAuth({ email, password })}
       />
+
+      <Button title="Cambiar Delivery" onPress={() => dispatch(setAuthState('firebase')) }/>
     
     </View>
   );

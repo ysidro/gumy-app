@@ -51,7 +51,7 @@ export default function Sales({navigation}) {
           .catch(error => console.log('error', error));
       } else {
         dispatch(restoreToken(null))
-        console.log('no data');
+        console.log('Sales no data');
       }
     }
     catch (err) {

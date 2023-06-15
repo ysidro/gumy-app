@@ -1,4 +1,4 @@
-import Pressable from "react-native";
+
 import { useNavigation } from '@react-navigation/native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import {AntDesign, FontAwesome} from "@expo/vector-icons"
@@ -15,7 +15,6 @@ const ButtonTabsNavs = createBottomTabNavigator()
 export default function BottonTabs() {
     const navigation = useNavigation()
     const screenParams = {
-       
         headerTitleAlign:"center",
         presentation: "modal",
         tabBarActiveTinColor: Colors.primary,

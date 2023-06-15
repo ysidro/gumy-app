@@ -1,12 +1,10 @@
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView } from "@react-navigation/drawer"
 
-import Stock from "../screens/Stock/Stock"
-import Store from "../screens/Store/Store"
-import Admin from "../screens/Admin/Admin"
-import DasboardStack from "./DasboardStack"
 import DeliveryTabs from "./DeliveryTabs"
-import CustomerTabs from "./CustomerTabs"
+import DeliveryHome from "../screens/Delivery/DeliveryHome"
 import Onboarding from "../screens/Onboarding"
+import Settings from "../screens/Settings"
+
 const DrawerNav = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -23,25 +21,19 @@ function CustomDrawerContent(props) {
   );
 }
 
-export default function Drawers() {
+export default function DeliveryDrawers() {
+
   return (
-    <DrawerNav.Navigator 
-    drawerContent={(props) => <CustomDrawerContent {...props} />}
-    >
+    <DrawerNav.Navigator   drawerContent={(props) => <CustomDrawerContent {...props} />}>
       <DrawerNav.Screen name="Home" 
-                        component={DasboardStack}
-                        options={{headerShown:false}} />
-      
-      <DrawerNav.Screen name="ClientesTabs" component={CustomerTabs} 
-                options={{headerShown:false, title: 'Clientes',
-                  }} />
-      <DrawerNav.Screen name="Almacen" component={Stock} />
-      <DrawerNav.Screen name="Tienda" component={Store} />
+                        component={DeliveryHome}
+                        />
+
       <DrawerNav.Screen name="Delivery" component={DeliveryTabs}
       options={{headerShown:false, title: 'Mensajería',
     }} />
 
-      <DrawerNav.Screen name="Admin" component={Admin} />
+      <DrawerNav.Screen name="Settings" component={Settings} />
       <DrawerNav.Screen name="PantallaOculta" 
                         component={Onboarding}
                         options={{headerShown:false}}
@@ -49,5 +41,7 @@ export default function Drawers() {
                         />
     </DrawerNav.Navigator>
   )
+
+
 }
 

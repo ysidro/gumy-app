@@ -38,7 +38,7 @@ export default function CreateOrderForm({navigation}) {
             } else {
                 setTokenID(null);
                 dispatch(restoreToken(null))
-                console.log('no data');
+                console.log('order form no data');
             }
         } catch (err) {
             console.error('any fail.', err);
