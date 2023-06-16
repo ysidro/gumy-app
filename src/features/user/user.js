@@ -13,11 +13,11 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      console.log('action user', action, state)
+
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.email = action.payload.email;
-      //state.photoUrl = action.payload.photoUrl;
+      state.task = action.payload.task;
       state.createdAt = action.payload.createdAt;
     },
     addTodo: (state, action) => {

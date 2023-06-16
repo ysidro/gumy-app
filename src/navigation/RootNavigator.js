@@ -87,11 +87,10 @@ export default function RootNavigator() {
 
     const userRef = doc(collection(db, 'users'),user.id);
     const snapshot = await getDoc(userRef);
-    console.log(snapshot.data().task)
+    
     if(snapshot.exists()){
 
-      
-      dispatch(setAuthState(snapshot.data().task))
+      dispatch(setTodos(snapshot.data().task))
       dispatch(setAuthState('firebase'))
       console.log('get user exist')
       return;
