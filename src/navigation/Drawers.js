@@ -25,7 +25,7 @@ function CustomDrawerContent(props) {
 
 export default function Drawers() {
   return (
-    <DrawerNav.Navigator 
+    <DrawerNav.Navigator  
     drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <DrawerNav.Screen name="Home" 
@@ -42,7 +42,7 @@ export default function Drawers() {
     }} />
 
       <DrawerNav.Screen name="Admin" component={Admin} />
-      <DrawerNav.Screen name="PantallaOculta" 
+      <DrawerNav.Screen name="Onboarding" 
                         component={Onboarding}
                         options={{headerShown:false}}
                       

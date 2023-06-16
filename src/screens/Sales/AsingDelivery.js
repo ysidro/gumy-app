@@ -49,12 +49,14 @@ export default function AsingDelivery({ navigation, route }) {
         }else{
           await setDoc(userRef,addDelivery);
           console.log('save user to data base');
+          saveDeliveryTask();
         }
         
     
     }
     
     const asinDeliveryForTask = (delivery) =>{
+  
         const tasks = delivery.task.length;
         delivery.task[tasks] = route.params.order;
         setAddDelivery(delivery)

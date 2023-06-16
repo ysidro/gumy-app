@@ -1,7 +1,8 @@
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView } from "@react-navigation/drawer"
 
-import DeliveryTabs from "./DeliveryTabs"
+
 import DeliveryHome from "../screens/Delivery/DeliveryHome"
+import UpdateInfo from "../screens/Delivery/Profile/UpdateInfo"
 import Onboarding from "../screens/Onboarding"
 import Settings from "../screens/Settings"
 
@@ -28,12 +29,8 @@ export default function DeliveryDrawers() {
       <DrawerNav.Screen name="Home" 
                         component={DeliveryHome}
                         />
-
-      <DrawerNav.Screen name="Delivery" component={DeliveryTabs}
-      options={{headerShown:false, title: 'Mensajería',
-    }} />
-
       <DrawerNav.Screen name="Settings" component={Settings} />
+      <DrawerNav.Screen name="Actualizar" component={UpdateInfo} />
       <DrawerNav.Screen name="PantallaOculta" 
                         component={Onboarding}
                         options={{headerShown:false}}

@@ -5,7 +5,7 @@ const initialState = {
   name: null,
   email: null,
   createdAt: null,
-  todos: [],
+  task: [],
 };
 
 const userSlice = createSlice({
@@ -13,20 +13,21 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
+      console.log('action user', action, state)
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.email = action.payload.email;
-      state.photoUrl = action.payload.photoUrl;
+      //state.photoUrl = action.payload.photoUrl;
       state.createdAt = action.payload.createdAt;
     },
     addTodo: (state, action) => {
-      state.todos.push(action.payload);
+      state.task.push(action.payload);
     },
     deleteTodo: (state, action) => {
-      state.todos = state.todos.filter(todo => todo.id !== action.payload);
+      state.task = state.task.filter(task => task.id !== action.payload);
     },
     setTodos: (state, action) => {
-      state.todos = action.payload;
+      state.task = action.payload;
     },
   },
 });

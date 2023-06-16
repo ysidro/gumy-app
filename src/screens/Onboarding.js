@@ -12,7 +12,7 @@ export default function Onboarding() {
     function handlePress() {
         registerForPushNotificationsAsync().then(async token => {
             await AsyncStorage.setItem('@pushNotificationToken', token)
-            console.log('Push notification true')
+            console.log('Push notification true',token)
             navigator.navigate('Home')
         }).catch(error => {
             console.error("error", error)

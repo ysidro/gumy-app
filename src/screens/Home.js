@@ -9,14 +9,14 @@ import Onboarding from "./Onboarding"
 import ServicesSales from '../services/Sales'
 import { globalStyles } from '../styles/global'
 
-export default function Home({navigator}) {
+export default function Home({navigation}) {
 
   const [name, setName] = useState(null);
 
   const { userToken, isLoading } = useSelector(state => state.auth)
   const dispatch = useDispatch()
   useEffect(() =>{
-
+    checkIfFirstLaunch()
     getValueFor('uToken')
   },[])
 
@@ -55,14 +55,16 @@ export default function Home({navigator}) {
 
   async function checkIfFirstLaunch(){
     const firshLaunch = await AsyncStorage.getItem('@firstLaunch');
+    console.log(firshLaunch)
     if(firshLaunch){
+      //await AsyncStorage.setItem('@firstLaunch','false');
       return;
-    }else{
-      await AsyncStorage.setItem('@firstLaunch', 'true' );
-      navigator.navigate('AsyncStorage');
     }
+      await AsyncStorage.setItem('@firstLaunch', 'true' );
+      navigation.navigate('Onboarding');
+    
   }
-
+  
   return (
     <View style={globalStyles.screenContainer}>
       <Text style={globalStyles.title}>Home</Text>
