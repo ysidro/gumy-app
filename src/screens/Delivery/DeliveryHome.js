@@ -13,7 +13,7 @@ export default function DeliveryHome({navigation}) {
   const dispatch = useDispatch()
   const delivery = useSelector(state => state.user);
   React.useEffect(() => {
-    console.log("delivery",delivery)
+   // console.log("delivery",delivery)
 
 },[])
 
@@ -41,7 +41,7 @@ React.useEffect(() => {
 },[])
 
   const Item = ({data}) =>  (
-    <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Detalle',{deliveryID : data.item.ID, locationID : data.item.LocationID }) }>
+    <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Detalle',{task : data.item, items: data.item.Items }) }>
     <View style={globalStyles.touchList}>
       <Text style={globalStyles.listTitleText}>Cliente: {data.item.RelationshipName}</Text>
       <View style={globalStyles.rowBetween}>
@@ -60,7 +60,6 @@ React.useEffect(() => {
     </View>
     </TouchableOpacity>
   ); 
-
 
   return (
     <SafeAreaView style={style.content}>
