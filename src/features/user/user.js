@@ -4,6 +4,7 @@ const initialState = {
   id: null,
   name: null,
   email: null,
+  notifications:null,
   createdAt: null,
   task: [],
 };
@@ -16,6 +17,7 @@ const userSlice = createSlice({
 
       state.id = action.payload.id;
       state.name = action.payload.name;
+      state.notifications = action.payload.notifications,
       state.email = action.payload.email;
       state.task = action.payload.task;
       state.createdAt = action.payload.createdAt;
@@ -29,8 +31,11 @@ const userSlice = createSlice({
     setTodos: (state, action) => {
       state.task = action.payload;
     },
+    setNotificationToken: (state, action) => {
+      state.notifications = action.payload;
+    },
   },
 });
 
-export const { setUser, addTodo, deleteTodo, setTodos } = userSlice.actions;
+export const { setUser, addTodo, deleteTodo, setTodos, setNotificationToken } = userSlice.actions;
 export default userSlice.reducer;

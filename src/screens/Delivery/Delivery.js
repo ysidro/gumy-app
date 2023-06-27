@@ -56,7 +56,7 @@ export default function Delivery({navigation}) {
       }
     }
     catch (err) {
-      console.error('any fail.', err);
+      console.error('Dispatchs any fail.', err);
     }
   }
 

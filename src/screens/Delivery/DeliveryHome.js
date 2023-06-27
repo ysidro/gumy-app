@@ -1,15 +1,47 @@
 import * as React from 'react'
-import { View, Text,FlatList, SafeAreaView,StyleSheet} from 'react-native'
+import { View, Text,FlatList, SafeAreaView,StyleSheet,TouchableOpacity} from 'react-native'
+import * as SecureStore from 'expo-secure-store';
 import { useSelector, useDispatch } from "react-redux"
+import { db, auth } from '../../firebaseConfig';
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { collection, addDoc, setDoc,onSnapshot, doc, updateDoc, getDocs } from 'firebase/firestore';
+import { signOut } from '../../features/auth/auth'
 
 import { globalStyles } from '../../styles/global'
-export default function DeliveryHome() {
 
+export default function DeliveryHome({navigation}) {
+  const dispatch = useDispatch()
   const delivery = useSelector(state => state.user);
-  //const dispatch = useDispatch();
+  React.useEffect(() => {
+    console.log("delivery",delivery)
 
+},[])
+
+React.useEffect(() => {
+
+  try {
+    
+    onAuthStateChanged(auth, (user) => {
+      
+      if (!user) {
+       
+        SecureStore.deleteItemAsync('uToken')
+        SecureStore.deleteItemAsync('userRoll')
+         dispatch(signOut())
+        console.log('No user is currently signed in.',user);
+      }
+    });
+  } catch (err) {
+    Alert.error("Hubo un problema al obtener la información del servidor, favor revisar tu coneccción")
+    console.error('Failed to get the current user:', err);
+  }
+// Call the getCurrentUser function whenever you want to check the current user
+
+
+},[])
 
   const Item = ({data}) =>  (
+    <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Detalle',{deliveryID : data.item.ID, locationID : data.item.LocationID }) }>
     <View style={globalStyles.touchList}>
       <Text style={globalStyles.listTitleText}>Cliente: {data.item.RelationshipName}</Text>
       <View style={globalStyles.rowBetween}>
@@ -26,18 +58,24 @@ export default function DeliveryHome() {
         </View>
       
     </View>
+    </TouchableOpacity>
   ); 
+
 
   return (
     <SafeAreaView style={style.content}>
 
-     <FlatList
+     { delivery.task.length > 0 ? <FlatList
         data={delivery.task}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
       
       />
-      
+      :  
+      <View style={style.content}>
+        <Text  style={style.title}>No hay delivery</Text> 
+      </View>  
+    }
 
     </SafeAreaView>
   )
@@ -49,5 +87,12 @@ const style = StyleSheet.create({
       marginTop:15,
       width:"100%",
   },
+  title:{
+    textAlign: 'center',
+    width:"100%",
+    fontSize:18,
+    fontWeight:700
+   
+  }
   
 })

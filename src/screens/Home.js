@@ -5,6 +5,7 @@ import * as SecureStore from 'expo-secure-store'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { restoreToken } from '../features/auth/auth'
+import { setNotificationToken } from '../features/user/user'
 import Onboarding from "./Onboarding"
 import ServicesSales from '../services/Sales'
 import { globalStyles } from '../styles/global'
@@ -49,15 +50,17 @@ export default function Home({navigation}) {
       }
     }
     catch(err){
-      console.error('any fail.', err);
+      console.error('home any fail.', err);
     }
   }
 
   async function checkIfFirstLaunch(){
     const firshLaunch = await AsyncStorage.getItem('@firstLaunch');
-    console.log(firshLaunch)
+    
+    //console.log("firshLaunch",firshLaunch, pushNotificationToken)
     if(firshLaunch){
-      //await AsyncStorage.setItem('@firstLaunch','false');
+      const pushNotificationToken = await AsyncStorage.getItem('@pushNotificationToken')
+      dispatch(setNotificationToken(pushNotificationToken))
       return;
     }
       await AsyncStorage.setItem('@firstLaunch', 'true' );

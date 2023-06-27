@@ -1,11 +1,9 @@
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView } from "@react-navigation/drawer"
 
 
-import DeliveryHome from "../screens/Delivery/DeliveryHome"
-import UpdateInfo from "../screens/Delivery/Profile/UpdateInfo"
 import Onboarding from "../screens/Onboarding"
 import Settings from "../screens/Settings"
-
+import MensajeriaTabs from "./MensajeriaTabs"
 const DrawerNav = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -27,10 +25,11 @@ export default function DeliveryDrawers() {
   return (
     <DrawerNav.Navigator   drawerContent={(props) => <CustomDrawerContent {...props} />}>
       <DrawerNav.Screen name="Home" 
-                        component={DeliveryHome}
+                        component={MensajeriaTabs}
+                        options={{headerShown:false}}
                         />
       <DrawerNav.Screen name="Settings" component={Settings} />
-      <DrawerNav.Screen name="Actualizar" component={UpdateInfo} />
+      
       <DrawerNav.Screen name="PantallaOculta" 
                         component={Onboarding}
                         options={{headerShown:false}}

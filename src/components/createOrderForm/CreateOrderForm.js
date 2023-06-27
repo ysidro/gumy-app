@@ -41,7 +41,7 @@ export default function CreateOrderForm({navigation}) {
                 console.log('order form no data');
             }
         } catch (err) {
-            console.error('any fail.', err);
+            console.error('getTokenID any fail.', err);
         }
     }
 

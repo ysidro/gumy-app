@@ -29,7 +29,7 @@ export default function GetEmployee({tokenID}) {
                     .catch(error => console.log('Employee error', error));
         }
         catch (err) {
-            console.error('any fail.', err);
+            console.error('getEmployee any fail.', err);
         }
     }
 

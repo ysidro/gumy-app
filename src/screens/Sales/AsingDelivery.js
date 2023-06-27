@@ -9,12 +9,37 @@ import { Colors } from '../../constants/Colors'
 export default function AsingDelivery({ navigation, route }) {
     const [addDelivery, setAddDelivery] = useState(null);
     const [delivery, setDelivery] = useState([]);
+    const [notification, setNotification] = useState(
+        {
+            to: '',
+            sound: 'default',
+            title: '',
+            body: '',
+            data: {},
+          }
+    );
 
     useEffect(() => {
         getAllUsersFormDatabase()
     },[])
     
-   
+    useEffect(() => {
+        sendPushNotification()
+    },[notification])
+    
+
+    async function sendPushNotification() {
+        console.log('Push Notification',notification)
+        await fetch('https://exp.host/--/api/v2/push/send', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Accept-encoding': 'gzip, deflate',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(notification),
+        });
+      }
 
     async function getAllUsersFormDatabase() {
         try {
@@ -34,34 +59,68 @@ export default function AsingDelivery({ navigation, route }) {
     }
 
     async function getUserFrontDatabase(){
-
-       
-        
-        console.log(addDelivery.id);
-
         collection(db, 'users');
         const userRef = doc(db,'users', addDelivery.id);
-
+        console.log(addDelivery)
+        setNotification({
+            to: addDelivery.notifications,
+            sound: 'default',
+            title: 'Notificación de GUMI',
+            body: `Ha sido asignado un encargo, Doc ID: ${addDelivery.DocID} `,
+            data: {},
+          });
         if(userRef.exists){
             await updateDoc(userRef,addDelivery);
             console.log('get user exist')
             saveDeliveryTask();
         }else{
-          await setDoc(userRef,addDelivery);
-          console.log('save user to data base');
-          saveDeliveryTask();
+           await setDoc(userRef,addDelivery);
+            console.log('save user to data base');
+            saveDeliveryTask();
         }
-        
-    
     }
     
     const asinDeliveryForTask = (delivery) =>{
-  
+
         const tasks = delivery.task.length;
-        delivery.task[tasks] = route.params.order;
+        delivery.task[tasks] = {"AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
+        "BillingStatusDesc" : route.params.order.BillingStatusDesc, 
+        "CalculatedNetAmount" : route.params.order.CalculatedNetAmount, 
+        "CalculatedTaxAmount" : route.params.order.CalculatedTaxAmount, 
+        "CalculatedTotalAmount" : route.params.order.CalculatedTotalAmount, 
+        "CalculatedTotalAmountBeforeRetentions" : route.params.order.CalculatedTotalAmountBeforeRetentions, 
+        "CurrencyID" : route.params.order.CurrencyID, 
+        "DocDate" : route.params.order.DocDate, 
+        "DocID" : route.params.order.DocID, 
+        "DocType" : route.params.order.DocType, 
+        "DocumentTypeName" : route.params.order.DocumentTypeName, 
+        "Documents" : route.params.order.Documents, 
+        "EmployeeID" : route.params.order.EmployeeID, 
+        "ID" : route.params.order.ID, 
+        "InternalPriorityColor" : route.params.order.InternalPriorityColor, 
+        "InternalPriorityDesc" : route.params.order.InternalPriorityDesc, 
+        "Items" : route.params.order.Items, 
+        "LineBasedAuthorizationStatusDesc" : route.params.order.LineBasedAuthorizationStatusDesc, 
+        "LocationID" : route.params.order.LocationID, 
+        "PaymentTermID" : route.params.order.PaymentTermID, 
+        "RelationshipID" : route.params.order.RelationshipID, 
+        "RelationshipName" : route.params.order.RelationshipName, 
+        "Status" : route.params.order.Status, 
+        "StatusDesc" : route.params.order.StatusDesc, 
+        "TaxAmount" : route.params.order.TaxAmount, 
+        "TextAmount" : route.params.order.TextAmount, 
+        "TotalAmount" : route.params.order.TotalAmount};
+
         setAddDelivery(delivery)
     }
     const saveDeliveryTask = () => {
+        setNotification({
+            to: addDelivery.notification,
+            sound: 'default',
+            title: 'Notificación de GUMI',
+            body: `se te a asignado un encargo `,
+            data: {},
+          });
         Alert.alert(`Encomienda asinada a: ${addDelivery.name}`)
     }
     const Item = ({ data }) => {

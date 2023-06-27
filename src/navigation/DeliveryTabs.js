@@ -7,6 +7,7 @@ import {Colors} from "../constants/Colors"
 import Delivery from "../screens/Delivery/Delivery"
 import DeliveryDetails from "../screens/Delivery/DeliveryDetails"
 
+
 export default function DeliveryTabs({navigation}) {
     const screenParams = {
         headerTitleAlign:"center",

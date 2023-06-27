@@ -43,8 +43,9 @@ export default function Onboarding() {
                 alert('fail to get token');
                 return;
             }
-            token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.EXPO_PROYECT_ID })).data;
-            console.log('token', token);
+            token = (await Notifications.getExpoPushTokenAsync()).data;
+            
+            
 
         } else {
             return;

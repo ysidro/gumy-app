@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, SafeAreaView, StyleSheet, ScrollView,FlatList } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, } from 'react-native'
 
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
@@ -58,7 +58,7 @@ export default function DeliveryDetails({ route, navigation }) {
         }
       }
       catch (err) {
-        console.error('any fail.', err);
+        console.error('delivery any fail.', err);
       }
     }
 
