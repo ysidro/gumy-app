@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "gumi-app",
-    "slug": "gumy-app",
+    "slug": "gumi-app",
     "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ysidro.gumyapp",
-      "buildNumber":"2"
+      "buildNumber":"4"
     },
     "android": {
       "adaptiveIcon": {

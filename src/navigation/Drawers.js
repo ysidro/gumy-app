@@ -12,7 +12,7 @@ const DrawerNav = createDrawerNavigator();
 function CustomDrawerContent(props) {
   const { state, ...rest } = props;
   const filteredScreens = state.routes.filter(
-    (route) => route.name !== 'PantallaOculta'
+    (route) => route.name !== 'Onboarding'
   );
   props.state.routes = filteredScreens
  

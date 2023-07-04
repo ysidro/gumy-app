@@ -92,7 +92,7 @@ export default function ListCustomers({
             rowTextStyle={style.dropdown2RowTxtStyle}
             
             onSelect={(selectedItem, index) => {
-            
+        
               dispatch(updateFormField({ "fieldName": "RelationshipID", "value": selectedItem.ID }));
               dispatch(updateFormField({ "fieldName": "LocationID", "value": selectedItem.LocationID  }));
               onChange(selectedItem)

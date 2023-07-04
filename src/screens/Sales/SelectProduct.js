@@ -132,6 +132,7 @@ export default function SelectProduct({ route, navigation }) {
                     redirect: 'follow'
                 };
 
+
                 fetch(`https://api.admcloud.net/api/SalesOrders/?token=${tokenID}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
@@ -208,6 +209,8 @@ export default function SelectProduct({ route, navigation }) {
                         method: 'GET',
                         redirect: 'follow'
                     };
+
+                    console.log(tokenID);
 
                     fetch(`https://api.admcloud.net/api/Items/${selectedItemID}?token=${result}`, requestOptions)
                         .then(response => response.json())

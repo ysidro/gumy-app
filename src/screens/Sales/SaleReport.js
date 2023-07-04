@@ -60,7 +60,7 @@ export default function SaleReport() {
   return (
     <>
       <View >
-        <Text style={globalStyles.title}>Sales</Text>
+        <Text style={globalStyles.title}>Ventas</Text>
       </View>
       <SafeAreaView style={style.content}>
         {loadingData ? <FlatList

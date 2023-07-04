@@ -36,7 +36,6 @@ export default function Stock() {
         .then(result => {
               setStockData(result.data)
               setLoadingData(true)
-             
         })
         .catch(error => console.log('error', error));
       } else {

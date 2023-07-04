@@ -30,7 +30,7 @@ export default function ServicesSales() {
   const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
   return (
     <SafeAreaView style={style.content}>
-      <Text style={globalStyles.listTitle}>Resument de Ventas</Text>
+      <Text style={globalStyles.listTitle}>Resumen de Ventas</Text>
 
       {!isLoading ? <FlatList
         data={Object.values(responseJSON.data.reduce((acc, curr) => {

@@ -56,11 +56,12 @@ export default function Onboarding() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Bienvenido a Gummy</Text>
+            <Text style={styles.subTitle}>Bienvenido a</Text>
+            <Text style={styles.title}>GUMI TIRE SUPPLY SRL</Text>
             <View style={styles.featureContainer}>
                 <MaterialCommunityIcons name="check-all" size={42} color={Colors.primary} />
                 <View style={{ flex: 1, marginLeft: 16 }}>
-                    <Text style={styles.subTitle}>Manegar Tareas Diarias</Text>
+                    <Text style={styles.subTitle}>Manejo de Tareas Diarias</Text>
                     <Text style={styles.subHeadLine}>Esta app te noficará cuando pasen cosas importantes dentro del sistema.</Text>
                 </View>
             </View>
@@ -86,13 +87,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: "flex",
-        backgroundColor: Colors.ligth,
+        backgroundColor: Colors.primaryText,
         alignItems: 'center',
         justifyContent: 'center',
 
     },
     title: {
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: 'bold',
         marginBottom: iphoneHeight > 800 ? 20 : 50,
         color: Colors.secundary,
