@@ -9,6 +9,7 @@ import { Colors } from '../../constants/Colors'
 export default function AsingDelivery({ navigation, route }) {
     const [addDelivery, setAddDelivery] = useState(null);
     const [delivery, setDelivery] = useState([]);
+    const [btnLabel, setBtnLabel] = useState("Asignar a ");
     const [notification, setNotification] = useState(
         {
             to: '',
@@ -51,7 +52,7 @@ export default function AsingDelivery({ navigation, route }) {
                 users.push({ id: doc.id, ...doc.data() });
             });
             setDelivery(users);
-            //console.log("Users:", users);
+           // console.log("Users:", users);
 
         } catch (err) {
             console.error('any fail.', err)
@@ -61,29 +62,30 @@ export default function AsingDelivery({ navigation, route }) {
     async function getUserFrontDatabase(){
         collection(db, 'users');
         const userRef = doc(db,'users', addDelivery.id);
-        console.log(addDelivery)
-        setNotification({
-            to: addDelivery.notifications,
-            sound: 'default',
-            title: 'Notificación de GUMI',
-            body: `Ha sido asignado un encargo, Doc ID: ${addDelivery.DocID} `,
-            data: {},
-          });
+        //console.log(addDelivery)
+        // setNotification({
+        //     to: addDelivery.notifications,
+        //     sound: 'default',
+        //     title: 'Notificación de GUMI',
+        //     body: `Ha sido asignado un encargo, Doc ID: ${addDelivery.DocID} `,
+        //     data: {},
+        //   });
+
         if(userRef.exists){
             await updateDoc(userRef,addDelivery);
-            console.log('get user exist')
+            //console.log('asing delivery, get user exist')
             saveDeliveryTask();
         }else{
            await setDoc(userRef,addDelivery);
-            console.log('save user to data base');
+           // console.log('asing delivery, save user to data base');
             saveDeliveryTask();
         }
     }
     
-    const asinDeliveryForTask = (delivery) =>{
-
-        const tasks = delivery.task.length;
-        delivery.task[tasks] = {"AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
+    const asinDeliveryForTask = (deliveryTarget) =>{
+       
+        const tasks = deliveryTarget.task.length;
+        deliveryTarget.task[tasks] = {"AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
         "BillingStatusDesc" : route.params.order.BillingStatusDesc, 
         "CalculatedNetAmount" : route.params.order.CalculatedNetAmount, 
         "CalculatedTaxAmount" : route.params.order.CalculatedTaxAmount, 
@@ -110,21 +112,37 @@ export default function AsingDelivery({ navigation, route }) {
         "TaxAmount" : route.params.order.TaxAmount, 
         "TextAmount" : route.params.order.TextAmount, 
         "TotalAmount" : route.params.order.TotalAmount};
-
-        setAddDelivery(delivery)
+        console.log(deliveryTarget)
+        setAddDelivery(deliveryTarget)
     }
     const saveDeliveryTask = () => {
         setNotification({
             to: addDelivery.notification,
             sound: 'default',
             title: 'Notificación de GUMI',
-            body: `se te a asignado un encargo `,
+            body: `Tienes una nueva asignación `,
             data: {},
           });
         Alert.alert(`Encomienda asinada a: ${addDelivery.name}`)
     }
-    const Item = ({ data }) => {
 
+    const validateOrderDelivery = (tasks) => {
+        if(tasks.length > 0){
+            const result = tasks.filter(task => task.ID === route.params.order.ID)
+            console.log('result',result.length)
+            if(result.length > 0){
+            
+               // setAddDelivery()
+                setBtnLabel("Esta Orden ya tiene un delivery asignado")
+                //Alert.alert(`Esta Orden esta asignada`)
+               return false;
+            }
+        }
+        return true;
+       
+    }
+    const Item = ({ data }) => {
+        if(validateOrderDelivery(data.item.task)){
         return (<View key={data.index} style={styles.itemDelivery}>
             <TouchableOpacity style={styles.itemDeliveryContainer} onPress={ addDelivery?.id === data.item.id ? null : () => asinDeliveryForTask(data.item)} >
                 <MaterialIcons name="delivery-dining" size={24} style={styles.btnIconStyle} color={Colors.primary} />
@@ -134,6 +152,7 @@ export default function AsingDelivery({ navigation, route }) {
                 </View>
             </TouchableOpacity>
         </View>)
+        }
     };
   
     return (
@@ -151,9 +170,9 @@ export default function AsingDelivery({ navigation, route }) {
 
                     <View style={styles.rowBetween}>
 
-                        <TouchableOpacity style={styles.btnPrimaryStyle} onPress={addDelivery ? () => getUserFrontDatabase() : null}>
+                        <TouchableOpacity style={styles.btnPrimaryStyle } onPress={addDelivery ? () => getUserFrontDatabase() : null}>
                             <MaterialIcons name="delivery-dining" size={24} style={styles.btnIconStyle} color="white" />
-                            <Text style={styles.btnTextStyle}>Asignar: {addDelivery?.name}</Text>
+                            <Text style={styles.btnTextStyle}>{btnLabel} {addDelivery?.name}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.btnSecundaryStyle} onPress={() => navigation.navigate('Camera')}>
                             <Ionicons name="camera-outline" size={24} style={styles.btnIconStyle} color="white" />
@@ -211,7 +230,7 @@ const styles = StyleSheet.create({
         width: "100%",
         marginVertical: 10,
         flexDirection: "row",
-        coloir: "#ffffff"
+        color: "#ffffff"
     },
 
     btnPrimaryStyle: {
@@ -224,10 +243,21 @@ const styles = StyleSheet.create({
         width: "100%",
         marginVertical: 10,
         flexDirection: "row",
-        coloir: "#ffffff"
+        color: "#ffffff"
     },
 
-
+    btnPrimaryStyleNull: {
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        backgroundColor: Colors.Blueligth ,
+        padding: 12,
+        borderRadius: 8,
+        width: "100%",
+        marginVertical: 10,
+        flexDirection: "row",
+        color: "#dddddd"
+    },
     title: {
         textAlign: "center",
         fontSize: 22,

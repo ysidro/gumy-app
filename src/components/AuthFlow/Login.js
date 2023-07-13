@@ -126,7 +126,7 @@ export default function Login() {
         onPress={() => admAuth({ email, password })}
       />
 
-      <Button title="Cambiar Delivery" onPress={() => dispatch(setAuthState('firebase')) }/>
+      <TouchableOpacity style={styles.btnSwitchProfile}  onPress={() => dispatch(setAuthState('firebase')) }><Text style={styles.btnSwitchProfileLabel}>Cambiar Delivery</Text></TouchableOpacity>
     
     </View>
   );
@@ -146,6 +146,13 @@ const styles = StyleSheet.create({
   btnShowPassword:{
     padding:10,
     fontWeight: "bold",
+    color: Colors.secundary,
+  },
+  btnSwitchProfile:{
+    marginTop: 30,
+  },
+  btnSwitchProfileLabel:{
+    padding:10,
     color: Colors.secundary,
   },
   errorAlert: {

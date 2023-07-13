@@ -36,8 +36,6 @@ React.useEffect(() => {
     console.error('Failed to get the current user:', err);
   }
 // Call the getCurrentUser function whenever you want to check the current user
-
-
 },[])
 
   const Item = ({data}) =>  (
@@ -47,16 +45,13 @@ React.useEffect(() => {
       <View style={globalStyles.rowBetween}>
         <View style={globalStyles.row5}>
           <Text style={globalStyles.lisLabel}>Doc ID: {data.item.DocID}</Text>
-         
-          
         </View>
         <Text style={globalStyles.listContentText}>{data.item.Items[0].Name} </Text>
-       
       </View>
       <View style={globalStyles.row5}>
       <Text style={globalStyles.listContentText}>SKU: {data.item.Items[0].ItemSKU} </Text>
         </View>
-      
+  
     </View>
     </TouchableOpacity>
   ); 
@@ -64,11 +59,10 @@ React.useEffect(() => {
   return (
     <SafeAreaView style={style.content}>
 
-     { delivery.task.length > 0 ? <FlatList
+    { delivery.task.length > 0 ? <FlatList
         data={delivery.task}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
-      
       />
       :  
       <View style={style.content}>

@@ -16,7 +16,7 @@ import BottonTabs from "./BottonTabs";
 
 export default function DasboardStack() {
     const screenParams = {
-            title:"Gumy Tire Supply",
+            title:"Gumi Tire Supply",
             headerTitleAlign:"center",
             presentation:"modal",
             headerShown: false,

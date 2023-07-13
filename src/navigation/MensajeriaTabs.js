@@ -6,8 +6,8 @@ const MensajeriaStack = createStackNavigator();
 import {Colors} from "../constants/Colors"
 //import Delivery from "../screens/Delivery/Delivery"
 //import DeliveryDetails from "../screens/Delivery/DeliveryDetails"
-import DeliveryHome from "../screens/Delivery/DeliveryHome"
-import DeliveryTask from "../screens/Delivery/DeliveryTask"
+import DeliveryHome from "../screens/DeliveryProfile/DeliveryHome"
+import DeliveryTask from "../screens/DeliveryProfile/DeliveryTask"
 import GummyCamera from "../screens/Camera";
 export default function MensajeriaTabs({navigation}) {
     const screenParams = {
@@ -24,7 +24,7 @@ export default function MensajeriaTabs({navigation}) {
         options={{
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer() }>
-              <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secundary} />
+              <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secundary} />
             </TouchableOpacity>
             ),
           tabBarIcon:({color}) => (

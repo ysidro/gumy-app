@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet,TouchableOpacity, Button } from "react-native";
+import { View, Text, Image, StyleSheet,TouchableOpacity,Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import {useSelector, useDispatch } from "react-redux";
 
@@ -49,6 +49,7 @@ export default function Delivery() {
 
       signInWithEmailAndPassword(auth, email, password)
       .then(user => {
+        console.log("user login", user)
           SecureStore.setItemAsync("uToken", user._tokenResponse.idToken);
           SecureStore.setItemAsync("userRoll", "firebase");
           dispatch(signIn(user._tokenResponse.idToken));
@@ -57,15 +58,27 @@ export default function Delivery() {
           setAlert(false);
           setIsLoading(false);
 
-      }).catch(err => Alert.error("Login Error",err.message));
+      }).catch((error) => {
+        console.log("FirebaseError",error)
+        Alert.alert( `Credenciales inválidas, ${error}`)
+        setAlertMessage(
+          `Credenciales inválidas, revisar e intentar de nuevo.`
+        );
+        setAlert(true);
+        setIsLoading(false);
+      
+        // ..
+      });
 
 
     } catch (err) {
       setIsLoading(false);
+    
       console.log(err);
+      
     }
   }
-  const Alert = () => (
+  const CustomAlert = () => (
     <View style={styles.contentAlert}>
       <Text style={styles.textAlert}>
         Los campos deben ser validos para continuar.
@@ -93,14 +106,16 @@ export default function Delivery() {
         <Text style={styles.btnShowPassword}>Ver Password</Text>
       </TouchableOpacity>
       
-      {alert ? <Alert /> : ""}
+      {alert ? <CustomAlert /> : ""}
       
       <CustomButtons
         title={"Login"}
         onPress={() => admAuth({ email, password })}
       />
 
-      <Button title="Cambiar a ADM" onPress={() => dispatch(setAuthState('signIn')) }/>
+      <TouchableOpacity style={styles.btnSwitchProfile} onPress={() => dispatch(setAuthState('signIn')) }>
+        <Text style={styles.btnSwitchProfileLabel}>Cambiar a ADM</Text>
+        </TouchableOpacity>
     
     </View>
   );
@@ -120,6 +135,13 @@ const styles = StyleSheet.create({
   btnShowPassword:{
     padding:10,
     fontWeight: "bold",
+    color: Colors.secundary,
+  },
+  btnSwitchProfile:{
+    marginTop: 30,
+  },
+  btnSwitchProfileLabel:{
+    padding:10,
     color: Colors.secundary,
   },
   errorAlert: {

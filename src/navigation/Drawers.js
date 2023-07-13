@@ -1,5 +1,6 @@
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView } from "@react-navigation/drawer"
-
+import {AntDesign, FontAwesome} from "@expo/vector-icons"
+import {TouchableOpacity} from 'react-native'
 import Stock from "../screens/Stock/Stock"
 import Store from "../screens/Store/Store"
 import Admin from "../screens/Admin/Admin"
@@ -7,6 +8,7 @@ import DasboardStack from "./DasboardStack"
 import DeliveryTabs from "./DeliveryTabs"
 import CustomerTabs from "./CustomerTabs"
 import Onboarding from "../screens/Onboarding"
+import {Colors} from "../constants/Colors"
 const DrawerNav = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -41,7 +43,7 @@ export default function Drawers() {
       options={{headerShown:false, title: 'Mensajería',
     }} />
 
-      <DrawerNav.Screen name="Admin" component={Admin} />
+      <DrawerNav.Screen name="Admin" component={Admin}  />
       <DrawerNav.Screen name="Onboarding" 
                         component={Onboarding}
                         options={{headerShown:false}}

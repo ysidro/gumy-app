@@ -30,7 +30,7 @@ export default function BottonTabs() {
       options={{
         headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.openDrawer() }>
-          <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secundary} />
+          <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secundary} />
         </TouchableOpacity>
         ),
         tabBarIcon:({color}) => (

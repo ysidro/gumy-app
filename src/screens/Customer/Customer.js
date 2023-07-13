@@ -27,7 +27,7 @@ export default function Customer({ navigation }) {
     getTokenID()
   },[])
 
-  const pushCustomer = () =>{
+  const pushScroll = () =>{
     setSkip(skip + 1)
   }
 
@@ -138,7 +138,7 @@ export default function Customer({ navigation }) {
         data={customerData}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
-        onEndReached={pushCustomer}
+        onEndReached={pushScroll}
         onEndReachedThreshold={.5}
         ListFooterComponent={renderFooter}
       />

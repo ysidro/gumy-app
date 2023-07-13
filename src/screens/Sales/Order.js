@@ -97,20 +97,24 @@ export default function Order({navigation}) {
       <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('OrderDetails',{orderID : data.item.ID}) }>
 
        <View style={globalStyles.rowBetween}>
-       {data.item.AuthorizationStatusDesc ?  <View style={labelContainer}><Text style={AuthorizationStatusDesc}>{data.item.AuthorizationStatusDesc}</Text></View> : ""}
-     
-       {data.item.DocumentTypeName ?  <Text>{data.item.DocumentTypeName}</Text> : ""}
+       {data.item.AuthorizationStatusDesc ?  
+       <View style={labelContainer}>
+          <Text style={AuthorizationStatusDesc}>Estatus: {data.item.AuthorizationStatusDesc}</Text>
+       </View> : ""}
+       <View >
+       {data.item.DocumentTypeName ?  <Text>Prioridad: {data.item.PriorityDesc} / {data.item.DocumentTypeName}</Text> : ""}
+       </View>
        
       </View>
 
       <View style={globalStyles.rowBetween}>
         <Text style={globalStyles.listTitleText}>{data.item.RelationshipName}</Text>
-        <Text style={globalStyles.listContentText}>{data.item.FiscalID}</Text>
+        {data.item.FiscalID ? <Text style={globalStyles.listContentText}>No. Fiscal:{data.item.FiscalID}</Text> : ""}
         
       </View>
       
       <View style={globalStyles.rowBetween}>
-        <Text style={globalStyles.listContentText}>${data.item.TotalAmount.toLocaleString()} {data.item.CurrencyID}</Text>
+        <Text style={globalStyles.listContentText}>{data.item.CurrencyID}$ {data.item.TotalAmount.toLocaleString()}</Text>
         
         <Text>Días {data.item.Days} </Text>
       </View>
