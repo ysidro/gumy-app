@@ -3,7 +3,7 @@ import {AntDesign, FontAwesome} from "@expo/vector-icons"
 import {TouchableOpacity} from 'react-native'
 import Stock from "../screens/Stock/Stock"
 import Store from "../screens/Store/Store"
-import Admin from "../screens/Admin/Admin"
+import AdminTabs from "./AdminTabs"
 import DasboardStack from "./DasboardStack"
 import DeliveryTabs from "./DeliveryTabs"
 import CustomerTabs from "./CustomerTabs"
@@ -35,15 +35,14 @@ export default function Drawers() {
                         options={{headerShown:false}} />
       
       <DrawerNav.Screen name="ClientesTabs" component={CustomerTabs} 
-                options={{headerShown:false, title: 'Clientes',
-                  }} />
+                options={{headerShown:false, title: 'Clientes'}} />
       <DrawerNav.Screen name="Almacen" component={Stock} />
-      <DrawerNav.Screen name="Tienda" component={Store} />
+      {/* <DrawerNav.Screen name="Tienda" component={Store} /> */}
       <DrawerNav.Screen name="Delivery" component={DeliveryTabs}
       options={{headerShown:false, title: 'Mensajería',
     }} />
 
-      <DrawerNav.Screen name="Admin" component={Admin}  />
+      <DrawerNav.Screen name="AdminTabs" component={AdminTabs}  options={{headerShown:false, title: 'Administración',}}   />
       <DrawerNav.Screen name="Onboarding" 
                         component={Onboarding}
                         options={{headerShown:false}}
