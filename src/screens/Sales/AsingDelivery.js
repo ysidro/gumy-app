@@ -23,11 +23,6 @@ export default function AsingDelivery({ navigation, route }) {
     useEffect(() => {
         getAllUsersFormDatabase()
     },[])
-    
-    useEffect(() => {
-        sendPushNotification()
-    },[notification])
-    
 
     async function sendPushNotification() {
         console.log('Push Notification',notification)
@@ -46,46 +41,52 @@ export default function AsingDelivery({ navigation, route }) {
         try {
             const userRef = collection(db, 'users')
             const snapshot = await getDocs(userRef);
-
             const users = [];
+            let itsAssigned = true;
+
             snapshot.forEach((doc) => {
                 users.push({ id: doc.id, ...doc.data() });
             });
+  
+           users.map((user) => {
+             if(!validateOrderDelivery(user.task))
+             {
+                setBtnLabel(`Esta Tarea esta asignada a ${user.name}`);
+                itsAssigned = false;
+             }
+           })
+        if(itsAssigned){
             setDelivery(users);
-           // console.log("Users:", users);
+        }
 
         } catch (err) {
             console.error('any fail.', err)
         }
     }
 
-    async function getUserFrontDatabase(){
-        collection(db, 'users');
-        const userRef = doc(db,'users', addDelivery.id);
-        //console.log(addDelivery)
-        // setNotification({
-        //     to: addDelivery.notifications,
-        //     sound: 'default',
-        //     title: 'Notificación de GUMI',
-        //     body: `Ha sido asignado un encargo, Doc ID: ${addDelivery.DocID} `,
-        //     data: {},
-        //   });
-
-        if(userRef.exists){
+    async function updateUserTask(){
+        try {
+            collection(db, 'users');
+            const userRef = doc(db,'users', addDelivery.id);
             await updateDoc(userRef,addDelivery);
-            //console.log('asing delivery, get user exist')
-            saveDeliveryTask();
-        }else{
-           await setDoc(userRef,addDelivery);
-           // console.log('asing delivery, save user to data base');
-            saveDeliveryTask();
+            Alert.alert(`Encomienda asinada a: ${addDelivery.name}`);
+            sendPushNotification();
+
+            setAddDelivery(null)
+        } catch (err) {
+           // console.log('asing delivery, save user to data base', err);
+          
+            Alert.alert(`No hemos podido asignar la tarea a: ${addDelivery.name}`);
         }
+
     }
-    
-    const asinDeliveryForTask = (deliveryTarget) =>{
-       
-        const tasks = deliveryTarget.task.length;
-        deliveryTarget.task[tasks] = {"AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
+
+    function selectDeliveryForOrder(deliverySelected){
+        const tasks = deliverySelected.task.length;
+
+        if(validateOrderDelivery(deliverySelected.task)){
+
+        deliverySelected.task[tasks] = {"AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
         "BillingStatusDesc" : route.params.order.BillingStatusDesc, 
         "CalculatedNetAmount" : route.params.order.CalculatedNetAmount, 
         "CalculatedTaxAmount" : route.params.order.CalculatedTaxAmount, 
@@ -93,7 +94,7 @@ export default function AsingDelivery({ navigation, route }) {
         "CalculatedTotalAmountBeforeRetentions" : route.params.order.CalculatedTotalAmountBeforeRetentions, 
         "CurrencyID" : route.params.order.CurrencyID, 
         "DocDate" : route.params.order.DocDate, 
-        "DocID" : route.params.order.DocID, 
+       "DocID" : route.params.order.DocID, 
         "DocType" : route.params.order.DocType, 
         "DocumentTypeName" : route.params.order.DocumentTypeName, 
         "Documents" : route.params.order.Documents, 
@@ -112,47 +113,45 @@ export default function AsingDelivery({ navigation, route }) {
         "TaxAmount" : route.params.order.TaxAmount, 
         "TextAmount" : route.params.order.TextAmount, 
         "TotalAmount" : route.params.order.TotalAmount};
-        console.log(deliveryTarget)
-        setAddDelivery(deliveryTarget)
-    }
-    const saveDeliveryTask = () => {
-        setNotification({
-            to: addDelivery.notification,
-            sound: 'default',
-            title: 'Notificación de GUMI',
-            body: `Tienes una nueva asignación `,
-            data: {},
-          });
-        Alert.alert(`Encomienda asinada a: ${addDelivery.name}`)
+        }
+        setAddDelivery(deliverySelected)
+
+        if(deliverySelected.notifications){
+            setNotification({
+                to: deliverySelected.notifications,
+                sound: 'default',
+                title: 'Notificación de Gumi',
+                body: `Ha sido asignado un encargo, Doc ID: ${route.params.order.DocID} `,
+                data: {},
+            });
+        }
     }
 
     const validateOrderDelivery = (tasks) => {
-        if(tasks.length > 0){
+        
             const result = tasks.filter(task => task.ID === route.params.order.ID)
-            console.log('result',result.length)
+          //  console.log('result',tasks.length,tasks);
             if(result.length > 0){
-            
-               // setAddDelivery()
-                setBtnLabel("Esta Orden ya tiene un delivery asignado")
                 //Alert.alert(`Esta Orden esta asignada`)
                return false;
             }
-        }
+        
         return true;
        
     }
+
     const Item = ({ data }) => {
-        if(validateOrderDelivery(data.item.task)){
+        //if(validateOrderDelivery(data.item.task)){
         return (<View key={data.index} style={styles.itemDelivery}>
-            <TouchableOpacity style={styles.itemDeliveryContainer} onPress={ addDelivery?.id === data.item.id ? null : () => asinDeliveryForTask(data.item)} >
-                <MaterialIcons name="delivery-dining" size={24} style={styles.btnIconStyle} color={Colors.primary} />
+            <TouchableOpacity style={ styles.itemDeliveryContainer} onPress={ addDelivery?.id === data.item.id ? null : () => selectDeliveryForOrder(data.item) } >
+                <MaterialIcons name="delivery-dining" size={40} style={styles.btnIconStyle} color={Colors.primary} />
                 <View style={styles.itemDeliveryDetail}>
-                    <Text>{data.item.name}</Text>
-                    <Text>{data.item.email}</Text>
+                    <Text style={styles.labelName}>{data.item.name}</Text>
+                    <Text  style={styles.labelEmail}>{data.item.email}</Text>
                 </View>
             </TouchableOpacity>
         </View>)
-        }
+    // }
     };
   
     return (
@@ -170,7 +169,7 @@ export default function AsingDelivery({ navigation, route }) {
 
                     <View style={styles.rowBetween}>
 
-                        <TouchableOpacity style={styles.btnPrimaryStyle } onPress={addDelivery ? () => getUserFrontDatabase() : null}>
+                        <TouchableOpacity style={addDelivery ?  styles.btnPrimaryStyle  : styles.btnPrimaryStyleNull } onPress={addDelivery ? () => updateUserTask() : null}>
                             <MaterialIcons name="delivery-dining" size={24} style={styles.btnIconStyle} color="white" />
                             <Text style={styles.btnTextStyle}>{btnLabel} {addDelivery?.name}</Text>
                         </TouchableOpacity>
@@ -199,8 +198,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         paddingTop: 5,
     },
-    btnIconStyle: {
-
+    btnIconStyle: { },
+    labelName:{
+        fontWeight: 300,
+        fontSize: 22,
+        color: Colors.primary
+    },
+    labelEmail:{
+        fontWeight: 'bold',
+        fontSize: 10,
+        color:"#000000"
     },
     itemDelivery: {
         backgroundColor: 'white',

@@ -31,8 +31,10 @@ export default function RootNavigator() {
   useEffect(() =>{
     //dispatch(authState(SecureStore.getItemAsync('userRoll'))) 
     const unsubscribeAuth = onAuthStateChanged(auth, async user => {
+      const pushNotificationToken =   await AsyncStorage.getItem('@pushNotificationToken');
+      console.log("user", user)
       if (user){
-        const pushNotificationToken =   await AsyncStorage.getItem('@pushNotificationToken');
+        
           const userToSave = {
             id: user.uid,
             notifications: pushNotificationToken,
@@ -55,7 +57,7 @@ export default function RootNavigator() {
 
       //  console.log('user no auth')
       }
-     
+     console.log(pushNotificationToken);
       return unsubscribeAuth;
     });
   },[])
@@ -87,12 +89,12 @@ export default function RootNavigator() {
       const userRef = doc(collRef,user.id);
       const snapshot = await getDoc(userRef);
     // user.notifications = notifications
-    //  console.log("user.notifications", user)
+    
     if(snapshot.exists()){
 
       dispatch(setTodos(snapshot.data().task))
       dispatch(setAuthState('firebase'))
-      console.log('get user exist')
+      console.log('firebase get user exist')
       return;
       
     }
@@ -112,7 +114,7 @@ export default function RootNavigator() {
   }
 
   if(isLoading) return <Spash/>;
-
+ // console.log('root nav', authState)
   if(authState == 'firebase') 
   {
     return (

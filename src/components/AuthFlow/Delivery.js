@@ -49,7 +49,7 @@ export default function Delivery() {
 
       signInWithEmailAndPassword(auth, email, password)
       .then(user => {
-        console.log("user login", user)
+        console.log("Firebase user login", user)
           SecureStore.setItemAsync("uToken", user._tokenResponse.idToken);
           SecureStore.setItemAsync("userRoll", "firebase");
           dispatch(signIn(user._tokenResponse.idToken));

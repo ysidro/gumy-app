@@ -3,7 +3,6 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import * as SecureStore from 'expo-secure-store'
 import { signOut } from '../features/auth/auth'
-import { signOut as singOutFirebase } from 'firebase/auth'
 
 import { globalStyles } from '../styles/global'
 
