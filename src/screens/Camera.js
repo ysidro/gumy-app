@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignContent: "center",
-        backgroundColor: Colors.secundary,
+        backgroundColor: Colors.secondary,
         padding: 12,
         borderRadius: 8,
         width: "100%",

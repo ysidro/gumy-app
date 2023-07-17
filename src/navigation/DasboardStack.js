@@ -12,9 +12,9 @@ import SelectProduct from "../screens/Sales/SelectProduct";
 import AsingDelivery from "../screens/Sales/AsingDelivery";
 import GummyCamera from "../screens/Camera";
 import ViewsReport from "../screens/Sales/ViewsReport";
+import Onboarding from "../screens/Onboarding"
 import BottonTabs from "./BottonTabs";
-
-export default function DasboardStack() {
+export default function DasboardStack({ route, navigation }) {
     const screenParams = {
             title:"Gumi Tire Supply",
             headerTitleAlign:"center",
@@ -38,6 +38,10 @@ export default function DasboardStack() {
             <HomeStack.Screen name="Camera" component={GummyCamera}/>
             <HomeStack.Screen name="ViewsReport" component={ViewsReport}/>
             <HomeStack.Screen name="Settings" component={Settings}/>
+            <HomeStack.Screen name="Onboarding" 
+                        component={Onboarding}
+                        options={{headerShown:false}}
+                        />
         </HomeStack.Group>
     </HomeStack.Navigator>
   )

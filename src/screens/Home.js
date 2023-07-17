@@ -1,12 +1,12 @@
 import React, {useState,useEffect} from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Button } from 'react-native'
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { restoreToken } from '../features/auth/auth'
 import { setNotificationToken } from '../features/user/user'
-import Onboarding from "./Onboarding"
+
 import ServicesSales from '../services/Sales'
 import { globalStyles } from '../styles/global'
 
@@ -72,6 +72,7 @@ export default function Home({navigation}) {
     <View style={globalStyles.screenContainer}>
       <Text style={globalStyles.title}>Home</Text>
       <Text>{name}</Text>
+
       <ServicesSales/>
     </View>
   )

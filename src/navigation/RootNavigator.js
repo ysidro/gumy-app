@@ -32,7 +32,7 @@ export default function RootNavigator() {
     //dispatch(authState(SecureStore.getItemAsync('userRoll'))) 
     const unsubscribeAuth = onAuthStateChanged(auth, async user => {
       const pushNotificationToken =   await AsyncStorage.getItem('@pushNotificationToken');
-      console.log("user", user)
+     
       if (user){
         
           const userToSave = {

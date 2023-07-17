@@ -9,14 +9,15 @@ import * as Device from "expo-device"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function Onboarding() {
     const navigator = useNavigation();
+
     function handlePress() {
         registerForPushNotificationsAsync().then(async token => {
             await AsyncStorage.setItem('@pushNotificationToken', token)
             console.log('Push notification true',token)
-            navigator.navigate('Home')
+            navigator.navigate('Dasboart')
         }).catch(error => {
             console.error("error", error)
-            navigator.navigate('Home')
+            navigator.navigate('Dasboart')
         })
     }
 
@@ -96,13 +97,13 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: 'bold',
         marginBottom: iphoneHeight > 800 ? 20 : 50,
-        color: Colors.secundary,
+        color: Colors.secondary,
     },
     subTitle: {
         fontSize: 15,
         fontWeight: 'bold',
         lineHeight: 22,
-        color: Colors.secundary,
+        color: Colors.secondary,
     },
     subHeadLine: {
         fontSize: 12,

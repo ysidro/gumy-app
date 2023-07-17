@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList, Alert } from 'react-native'
+import { useSelector, useDispatch } from "react-redux"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Skeleton } from 'moti/skeleton'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+//import { setNotificationToken } from '../../features/user/user'
 import { db } from '../../firebaseConfig';
 import { collection, addDoc, setDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
+import { globalStyles } from '../../styles/global';
 import { Colors } from '../../constants/Colors'
 
 
 export default function AsingDelivery({ navigation, route }) {
+    const { notifications } = useSelector(state => state.user)
+    const dispatch = useDispatch()
+
     const [addDelivery, setAddDelivery] = useState(null);
     const [delivery, setDelivery] = useState([]);
     const [btnLabel, setBtnLabel] = useState("Asignar a ");
+    const [userNotificationToken, setUserNotificationToken] = useState(null)
     const [notification, setNotification] = useState(
         {
             to: '',
@@ -22,10 +31,11 @@ export default function AsingDelivery({ navigation, route }) {
 
     useEffect(() => {
         getAllUsersFormDatabase()
-    },[])
+    },[]);
+
 
     async function sendPushNotification() {
-        console.log('Push Notification',notification)
+
         await fetch('https://exp.host/--/api/v2/push/send', {
           method: 'POST',
           headers: {
@@ -83,10 +93,11 @@ export default function AsingDelivery({ navigation, route }) {
 
     function selectDeliveryForOrder(deliverySelected){
         const tasks = deliverySelected.task.length;
-
         if(validateOrderDelivery(deliverySelected.task)){
 
-        deliverySelected.task[tasks] = {"AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
+        deliverySelected.task[tasks] = {
+        "AssignedBy" : notifications,
+        "AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
         "BillingStatusDesc" : route.params.order.BillingStatusDesc, 
         "CalculatedNetAmount" : route.params.order.CalculatedNetAmount, 
         "CalculatedTaxAmount" : route.params.order.CalculatedTaxAmount, 
@@ -160,13 +171,23 @@ export default function AsingDelivery({ navigation, route }) {
                 <View style={styles.modalContentContainer}>
                     <Text style={styles.subTitle}>{route.params.order.RelationshipName}</Text>
                     <Text style={styles.title}>Selecionar Mensajero</Text>
+                    {delivery ? 
                     <View style={styles.rowBetween}>
                         <FlatList
                             data={delivery}
                             renderItem={(item) => <Item data={item} />}
                         />
-                    </View>
-
+                    </View> 
+                    :
+                    <View  style={styles.itemDelivery}>
+                        <View style={styles.itemDeliveryDetail}>
+                            <View style={{marginBottom:10}}>
+                            <Skeleton width={"100%"} colorMode={'ligth'}   height={20} />
+                            </View>  
+                            <Skeleton width={"100%"} colorMode={'ligth'}   height={10} />
+                        </View> 
+                    </View> 
+                    }
                     <View style={styles.rowBetween}>
 
                         <TouchableOpacity style={addDelivery ?  styles.btnPrimaryStyle  : styles.btnPrimaryStyleNull } onPress={addDelivery ? () => updateUserTask() : null}>
@@ -211,7 +232,7 @@ const styles = StyleSheet.create({
     },
     itemDelivery: {
         backgroundColor: 'white',
-        borderColor: Colors.secundary,
+        borderColor: Colors.secondary,
         borderWidth: 1,
         borderRadius: 8,
         padding: 10,
@@ -219,7 +240,7 @@ const styles = StyleSheet.create({
     },
     itemDeliveryContainer: {
         display: "flex",
-        justifyContent: "start",
+        justifyContent: "flex-start",
         alignContent: "center",
         flexWrap: "nowrap",
         flexDirection: "row",
@@ -231,7 +252,7 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignContent: "center",
-        backgroundColor: Colors.secundary,
+        backgroundColor: Colors.secondary,
         padding: 12,
         borderRadius: 8,
         width: "100%",
@@ -257,7 +278,7 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignContent: "center",
-        backgroundColor: Colors.Blueligth ,
+        backgroundColor: Colors.grey,
         padding: 12,
         borderRadius: 8,
         width: "100%",

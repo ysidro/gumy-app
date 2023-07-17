@@ -3,6 +3,11 @@ import { StyleSheet } from "react-native";
 import { Colors } from "../constants/Colors";
 
 export const globalStyles = StyleSheet.create({
+  content: {
+    justifyContent: 'center',
+    marginTop: 15,
+    width: "100%",
+},
     screenContainer:{
         flex: 1,
         backgroundColor: Colors.ligth,
@@ -44,7 +49,7 @@ export const globalStyles = StyleSheet.create({
         alignContent: 'center',
       },
       constentList:{
-          borderBottomColor: Colors.secundary,
+          borderBottomColor: Colors.secondary,
           borderBottomWidth:1,
           marginBottom:5,
           marginLeft:10,
@@ -55,11 +60,11 @@ export const globalStyles = StyleSheet.create({
       listTitle:{
           fontWeight:"bold",
           fontSize:26,
-          color: Colors.Blueligth,
+          color: Colors.Bluebright,
           margin:10,
       },
       listTitleText:{
-          color:Colors.secundary,
+          color:Colors.secondary,
           fontWeight:"bold",
       },
       listContentText:{
@@ -69,7 +74,7 @@ export const globalStyles = StyleSheet.create({
       lisstTotals:{
           fontWeight:"bold",
           fontSize: 18,
-          color: Colors.Blueligth
+          color: Colors.Bluebright
       },
       lisLabel: {
         fontWeight: "bold",
@@ -155,7 +160,7 @@ export const salesResume = StyleSheet.create({
         fontWeight: "bold",
       },
       listSubTitleText: {
-        color: Colors.secundary,
+        color: Colors.secondary,
         fontWeight: "bold",
       },
       

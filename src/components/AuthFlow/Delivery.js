@@ -135,14 +135,14 @@ const styles = StyleSheet.create({
   btnShowPassword:{
     padding:10,
     fontWeight: "bold",
-    color: Colors.secundary,
+    color: Colors.secondary,
   },
   btnSwitchProfile:{
     marginTop: 30,
   },
   btnSwitchProfileLabel:{
     padding:10,
-    color: Colors.secundary,
+    color: Colors.secondary,
   },
   errorAlert: {
     color: Colors.ligth,

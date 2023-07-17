@@ -1,8 +1,8 @@
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView } from "@react-navigation/drawer"
 import {AntDesign, FontAwesome} from "@expo/vector-icons"
-import {TouchableOpacity} from 'react-native'
+//import {TouchableOpacity} from 'react-native'
 import Stock from "../screens/Stock/Stock"
-import Store from "../screens/Store/Store"
+//import Store from "../screens/Store/Store"
 import AdminTabs from "./AdminTabs"
 import DasboardStack from "./DasboardStack"
 import DeliveryTabs from "./DeliveryTabs"
@@ -28,6 +28,7 @@ function CustomDrawerContent(props) {
 export default function Drawers() {
   return (
     <DrawerNav.Navigator  
+    initialRouteName="Home"
     drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <DrawerNav.Screen name="Home" 

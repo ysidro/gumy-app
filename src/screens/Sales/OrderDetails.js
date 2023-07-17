@@ -207,7 +207,7 @@ const style = StyleSheet.create({
         color: Colors.grey,
     },
     listTitleText: {
-        color: Colors.secundary,
+        color: Colors.secondary,
         fontSize: 18,
         fontWeight: "bold",
     },
@@ -222,7 +222,7 @@ const style = StyleSheet.create({
         fontWeight: 'bold',
     },
     regularButton: {
-        backgroundColor: Colors.secundary,
+        backgroundColor: Colors.secondary,
         borderRadius: 8,
         padding: 14,
     },

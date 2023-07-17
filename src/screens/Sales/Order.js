@@ -101,12 +101,15 @@ export default function Order({navigation}) {
        <View style={labelContainer}>
           <Text style={AuthorizationStatusDesc}>Estatus: {data.item.AuthorizationStatusDesc}</Text>
        </View> : ""}
-       <View >
+       <Text>Días {data.item.Days} </Text>
+      </View>
+      <View style={globalStyles.rowBetween}>
+      <View >
        {data.item.DocumentTypeName ?  <Text>Prioridad: {data.item.PriorityDesc} / {data.item.DocumentTypeName}</Text> : ""}
        </View>
+       <CustomFormartDate DocDate={data.item.DocDate}/>
        
-      </View>
-
+</View>
       <View style={globalStyles.rowBetween}>
         <Text style={globalStyles.listTitleText}>{data.item.RelationshipName}</Text>
         {data.item.FiscalID ? <Text style={globalStyles.listContentText}>No. Fiscal:{data.item.FiscalID}</Text> : ""}
@@ -115,18 +118,12 @@ export default function Order({navigation}) {
       
       <View style={globalStyles.rowBetween}>
         <Text style={globalStyles.listContentText}>{data.item.CurrencyID}$ {data.item.TotalAmount.toLocaleString()}</Text>
-        
-        <Text>Días {data.item.Days} </Text>
       </View>
 
       <View style={globalStyles.rowBetween}>
-       {data.item.LocationName ?  <Text>{data.item.LocationName}</Text> : ""}
-       <CustomFormartDate DocDate={data.item.DocDate}/>
-       
+      {data.item.LocationName ?  <Text>{data.item.LocationName}</Text> : ""}
       </View> 
-      <View style={globalStyles.rowBetween}>
-      
-      </View> 
+  
       
       
     </TouchableOpacity>  

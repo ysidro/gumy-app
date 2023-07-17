@@ -22,7 +22,7 @@ export default function CustomerTabs({navigation}) {
         options={{
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer() }>
-              <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secundary} />
+              <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secondary} />
             </TouchableOpacity>
             )
         }} />
