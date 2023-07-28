@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef,useState } from 'react'
 import {
     View,
     Text,
     SafeAreaView, StyleSheet,
     FlatList,
-    ScrollView,
-    Alert,
+    TouchableOpacity,
+    Alert
 } from 'react-native'
 
+import { BottomSheetModal,  BottomSheetModalProvider} from "@gorhom/bottom-sheet";
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
-
-import { db } from '../../firebaseConfig';
-import { collection, query, where, getDocs ,updateDoc } from 'firebase/firestore';
 
 import { globalStyles } from "../../styles/global";
 import { Colors } from '../../constants/Colors';
@@ -22,46 +20,30 @@ import { restoreToken } from '../../features/auth/auth'
 import CustomButtons from "../../components/CustomButtons";
 import BottomModal from '../../components/BottomModal'
 
-export default function OrderDetails({ route, navigation }) {
+export default function QuoteDetails({ route, navigation }) {
+    const Authorize = "Authorize";
+    const Reject = "Reject";
+    const MarkPendingAuthorization = "MarkPendingAuthorization";
+
     const orderID = route.params.orderID
     const [orderData, setOrderData] = useState([]);
     const [loadingData, setLoadingData] = useState(null);
-    const [hasDelivery, setHasDelivery] = useState(false)
-
+    const [isOpen, setIsOpen] = useState(false);
+    const bottomSheetModalRef = useRef(null);
+    const snapPoints = ["45%","48%"];
+    const [justifica, setJustifica] = useState(null);
     const dispatch = useDispatch()
 
-    async function getAllUsersFormDatabase() {
-        try {
-
-            const usersRef = collection(db, 'deliveryTasks');
-            const q = query(usersRef, where('ID', '==', orderID ));
-            //const q = query(usersRef);
-            const querySnapshot = await getDocs(q);
-        
-            const matchingUsers = [];
-            querySnapshot.forEach((doc) => {
-              const taskExists = doc.data();
-              //const taskExists = user.task.some((taskObj) => taskObj.ID === orderID);
-           
-              
-                matchingUsers.push(taskExists);
-            });
-
-             if(matchingUsers.length){
-                 setHasDelivery(matchingUsers)
-               }
-
-            return matchingUsers;
-
-        } catch (err) {
-            console.error('any fail.', err)
-        }
+  
+    function handlePresentModal() {
+      bottomSheetModalRef.current?.present();
+      setTimeout(() => {
+        setIsOpen(true);
+      }, 100);
     }
 
     useEffect(() => {
         getValueFor('uToken', orderID)
-        getAllUsersFormDatabase()
-        console.log("user");
     }, [])
 
     async function getValueFor(key, orderID) {
@@ -78,13 +60,11 @@ export default function OrderDetails({ route, navigation }) {
                     redirect: 'follow'
                 };
 
-                fetch(`https://api.admcloud.net/api/SalesOrders/${orderID}?token=${result}`, requestOptions)
+                fetch(`https://api.admcloud.net/api/Quotes/${orderID}?token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                    
                         setOrderData(result.data)
                         setLoadingData(true)
-
                     })
                     .catch(error => console.log('error', error));
             } else {
@@ -94,6 +74,34 @@ export default function OrderDetails({ route, navigation }) {
         }
         catch (err) {
             console.error('any fail.', err);
+        }
+    }
+
+    async function UpdateOrderStatus(action) {
+        try {
+            let result = await SecureStore.getItemAsync('uToken');
+  
+            if (result !== null) {
+                dispatch(restoreToken('uToken'))
+                var requestOptions = {
+                    method: 'PUT',
+                    body: "",
+                    redirect: 'follow'
+                };
+                fetch(`https://api.admcloud.net/api/Quotes/${action}?id=${orderID}&token=${result}`, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    Alert.alert(`El Status de esta order a sido actualizada`);
+                })
+                .catch(error => console.log('error', error));
+                
+                bottomSheetModalRef.current?.present();
+                setTimeout(() => {
+                  setIsOpen(false);
+                }, 100);
+            }
+        } catch (error) {
+            console.error('any fail.', error);
         }
     }
 
@@ -115,11 +123,10 @@ export default function OrderDetails({ route, navigation }) {
 
     const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
     return (
+        <BottomSheetModalProvider>
         <SafeAreaView style={style.content}>
             {loadingData ?
                 <>
-                    
-
                     <View style={style.cartContent}>
                         <View style={style.cartItems}>
                             <Text style={globalStyles.subTitle}>Orden de Compra</Text>
@@ -151,19 +158,14 @@ export default function OrderDetails({ route, navigation }) {
                             <Text style={style.listTitle}>{orderData.TextAmount}</Text>
                         </View>
 
-
                     </View>
-
-
-
                     <FlatList
                         data={orderData.Items}
                         renderItem={(item) => <Item data={item} />}
                         keyExtractor={item => item.ID}
                     />
                     <View style={globalStyles.rowBetween}>
-                       
-                        <CustomButtons title={  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"} onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null } />
+                        <CustomButtons title={"Actualizar Cotización"} onPress={() => handlePresentModal() } />
                     </View>
                 </>
                 :
@@ -205,11 +207,37 @@ export default function OrderDetails({ route, navigation }) {
                     </View>
                 </View>
             }
+            <BottomSheetModal
+                style={style.modalShadow}
+                ref={bottomSheetModalRef}
+                index={1}
+                snapPoints={snapPoints}
+                backgroundStyle={{ borderRadius: 12, backgroundColor:"#eeeeee" }}
+                onDismiss={() => setIsOpen(false)}>
+                    <View  style={style.bottomSheet} >
+
+                        <TouchableOpacity style={style.btnPrimaryStyle} onPress={() => UpdateOrderStatus(Authorize)}>
+                                <Text style={style.btnTextStyle}>Autorizar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={style.btnWarningStyle} onPress={() => UpdateOrderStatus(Reject)}>
+                                <Text style={style.btnTextStyle}>Rejectar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={style.btnSecondaryStyle} onPress={() => UpdateOrderStatus(MarkPendingAuthorization)}>
+                                <Text style={style.btnTextStyle}>Pendiente Autorización</Text>
+                        </TouchableOpacity>
+                    </View>
+                </BottomSheetModal>
         </SafeAreaView>
+        </BottomSheetModalProvider>
     )
 }
 
 const style = StyleSheet.create({
+    bottomSheet:{
+        backgroundColor: "#eee",
+        height: '100%',
+        paddingTop: 26,
+    },
     content: {
         justifyContent: 'center',
         flex: 1,
@@ -263,6 +291,61 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         width: "100%",
         padding: 16,
+    },
+    btnPrimaryStyle: {
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        backgroundColor: Colors.primary,
+        padding: 12,
+        borderRadius: 8,
+        width: "auto",
+        marginHorizontal: 15,
+        marginVertical: 10,
+        flexDirection: "row",
+    },
+    btnSecondaryStyle: {
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        backgroundColor: Colors.secondary,
+        padding: 12,
+        borderRadius: 8,
+        width: "auto",
+        marginHorizontal: 15,
+        marginVertical: 10,
+        flexDirection: "row",
+    },
+    btnWarningStyle: {
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        backgroundColor: Colors.red,
+        padding: 12,
+        borderRadius: 8,
+        width: "auto",
+        marginHorizontal: 15,
+        marginVertical: 10,
+        flexDirection: "row",
+    },
+    btnTextStyle:{
+        color: Colors.white,
+        fontWeight: "bold",
+        fontSize: 18,
+    },
+    modalBackgroundColor:{
+        backgroundColor: "#eeeeee",
+    },  
+    modalShadow:{
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 15.65,
+        elevation: 2, 
+        backgroundColor: "#eeeeee",
     }
 
 })

@@ -6,7 +6,7 @@ import { Skeleton } from 'moti/skeleton'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 //import { setNotificationToken } from '../../features/user/user'
 import { db } from '../../firebaseConfig';
-import { collection, addDoc, setDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
+import { collection, where, setDoc, doc,addDoc, query, getDocs } from 'firebase/firestore';
 import { globalStyles } from '../../styles/global';
 import { Colors } from '../../constants/Colors'
 
@@ -52,22 +52,22 @@ export default function AsingDelivery({ navigation, route }) {
             const userRef = collection(db, 'users')
             const snapshot = await getDocs(userRef);
             const users = [];
-            let itsAssigned = true;
+            
 
             snapshot.forEach((doc) => {
                 users.push({ id: doc.id, ...doc.data() });
             });
   
-           users.map((user) => {
-             if(!validateOrderDelivery(user.task))
-             {
-                setBtnLabel(`Esta Tarea esta asignada a ${user.name}`);
-                itsAssigned = false;
-             }
-           })
-        if(itsAssigned){
+        //    users.map((user) => {
+        //      if(!validateOrderDelivery(user.task))
+        //      {
+        //         setBtnLabel(`Esta Tarea esta asignada a ${user.name}`);
+        //         itsAssigned = false;
+        //      }
+        //    })
+       
             setDelivery(users);
-        }
+        
 
         } catch (err) {
             console.error('any fail.', err)
@@ -76,79 +76,98 @@ export default function AsingDelivery({ navigation, route }) {
 
     async function updateUserTask(){
         try {
-            collection(db, 'users');
-            const userRef = doc(db,'users', addDelivery.id);
-            await updateDoc(userRef,addDelivery);
-            Alert.alert(`Encomienda asinada a: ${addDelivery.name}`);
+            const deliveryRef = collection(db, 'deliveryTasks');
+            //const deliveryRef = doc(db,'deliveryTasks', route.params.order.ID);
+            
+            //const deliveryRef = getDocs(doc(db,'deliveryTasks', route.params.order.ID));
+            // if(deliveryRef){
+            //     return;
+            // }
+            await setDoc(doc(db,'deliveryTasks', route.params.order.ID), addDelivery);
+            Alert.alert(`Encomienda asinada a: ${delivery.name}`);
             sendPushNotification();
-
+            
             setAddDelivery(null)
         } catch (err) {
-           // console.log('asing delivery, save user to data base', err);
-          
+            console.log('asing delivery, save user to data base', err);
             Alert.alert(`No hemos podido asignar la tarea a: ${addDelivery.name}`);
         }
 
     }
 
-    function selectDeliveryForOrder(deliverySelected){
-        const tasks = deliverySelected.task.length;
-        if(validateOrderDelivery(deliverySelected.task)){
+    async function selectDeliveryForOrder(deliverySelected){
+    
+        if(await validateOrderDelivery()){
 
-        deliverySelected.task[tasks] = {
-        "AssignedBy" : notifications,
-        "AuthorizationStatusDesc" : route.params.order.AuthorizationStatusDesc, 
-        "BillingStatusDesc" : route.params.order.BillingStatusDesc, 
-        "CalculatedNetAmount" : route.params.order.CalculatedNetAmount, 
-        "CalculatedTaxAmount" : route.params.order.CalculatedTaxAmount, 
-        "CalculatedTotalAmount" : route.params.order.CalculatedTotalAmount, 
-        "CalculatedTotalAmountBeforeRetentions" : route.params.order.CalculatedTotalAmountBeforeRetentions, 
-        "CurrencyID" : route.params.order.CurrencyID, 
-        "DocDate" : route.params.order.DocDate, 
-       "DocID" : route.params.order.DocID, 
-        "DocType" : route.params.order.DocType, 
-        "DocumentTypeName" : route.params.order.DocumentTypeName, 
-        "Documents" : route.params.order.Documents, 
-        "EmployeeID" : route.params.order.EmployeeID, 
-        "ID" : route.params.order.ID, 
-        "InternalPriorityColor" : route.params.order.InternalPriorityColor, 
-        "InternalPriorityDesc" : route.params.order.InternalPriorityDesc, 
-        "Items" : route.params.order.Items, 
-        "LineBasedAuthorizationStatusDesc" : route.params.order.LineBasedAuthorizationStatusDesc, 
-        "LocationID" : route.params.order.LocationID, 
-        "PaymentTermID" : route.params.order.PaymentTermID, 
-        "RelationshipID" : route.params.order.RelationshipID, 
-        "RelationshipName" : route.params.order.RelationshipName, 
-        "Status" : route.params.order.Status, 
-        "StatusDesc" : route.params.order.StatusDesc, 
-        "TaxAmount" : route.params.order.TaxAmount, 
-        "TextAmount" : route.params.order.TextAmount, 
-        "TotalAmount" : route.params.order.TotalAmount};
-        }
-        setAddDelivery(deliverySelected)
+            const tasks  = {
+            AssignedBy : notifications,
+            DeliveryID : deliverySelected.id,
+            DeliveryStatus : "Assigned",
+            AuthorizationStatusDesc : route.params.order.AuthorizationStatusDesc, 
+            BillingStatusDesc : route.params.order.BillingStatusDesc, 
+            CalculatedNetAmount : route.params.order.CalculatedNetAmount, 
+            CalculatedTaxAmount : route.params.order.CalculatedTaxAmount, 
+            CalculatedTotalAmount : route.params.order.CalculatedTotalAmount, 
+            CalculatedTotalAmountBeforeRetentions : route.params.order.CalculatedTotalAmountBeforeRetentions, 
+            CurrencyID : route.params.order.CurrencyID, 
+            DocDate : route.params.order.DocDate, 
+            DocID : route.params.order.DocID, 
+            DocType : route.params.order.DocType, 
+            DocumentTypeName : route.params.order.DocumentTypeName, 
+            Documents : route.params.order.Documents, 
+            EmployeeID : route.params.order.EmployeeID, 
+            ID : route.params.order.ID, 
+            InternalPriorityColor : route.params.order.InternalPriorityColor, 
+            InternalPriorityDesc : route.params.order.InternalPriorityDesc, 
+            Items : route.params.order.Items, 
+            LineBasedAuthorizationStatusDesc : route.params.order.LineBasedAuthorizationStatusDesc, 
+            LocationID : route.params.order.LocationID, 
+            PaymentTermID : route.params.order.PaymentTermID, 
+            RelationshipID : route.params.order.RelationshipID, 
+            RelationshipName : route.params.order.RelationshipName, 
+            Status : route.params.order.Status, 
+            StatusDesc : route.params.order.StatusDesc, 
+            TaxAmount : route.params.order.TaxAmount, 
+            TextAmount : route.params.order.TextAmount, 
+            TotalAmount : route.params.order.TotalAmount
+            };
 
-        if(deliverySelected.notifications){
-            setNotification({
-                to: deliverySelected.notifications,
-                sound: 'default',
-                title: 'Notificación de Gumi',
-                body: `Ha sido asignado un encargo, Doc ID: ${route.params.order.DocID} `,
-                data: {},
-            });
+            setAddDelivery(tasks)
+            if(deliverySelected.notifications){
+                setNotification({
+                    to: deliverySelected.notifications,
+                    sound: 'default',
+                    title: 'Notificación de Gumi',
+                    body: `Ha sido asignado un encargo, Doc ID: ${route.params.order.DocID} `,
+                    data: {},
+                });
+            }else{
+                Alert.alert(`${deliverySelected.name ? deliverySelected.name  : deliverySelected.email} no tiene las notificaciones activas, favor notificar via telefonica`)
+            }
+            setBtnLabel(`Esta Tarea esta asignada a ${deliverySelected.name ? deliverySelected.name  : deliverySelected.email}`);
+        }else{
+            console.log("ya esta asignada")
+            Alert.alert(`ya esta asignada a ${deliverySelected.name ? deliverySelected.name  : deliverySelected.email}, favor notificar via telefonica`)
         }
+
     }
 
-    const validateOrderDelivery = (tasks) => {
-        
-            const result = tasks.filter(task => task.ID === route.params.order.ID)
-          //  console.log('result',tasks.length,tasks);
-            if(result.length > 0){
-                //Alert.alert(`Esta Orden esta asignada`)
-               return false;
-            }
-        
-        return true;
-       
+    const validateOrderDelivery =  async () => {
+        const tasksHistory = [];
+        const deliveryTasksRef = collection(db, "deliveryTasks");
+        let itsAssigned = true;
+        // Create a query against the collection.
+        const q = query(deliveryTasksRef, where("ID", "==", route.params.order.ID));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+                const task = doc.data();
+                tasksHistory.push(task);
+        });
+
+        if(tasksHistory.length > 0){
+            itsAssigned = false;
+        }
+        return itsAssigned;
     }
 
     const Item = ({ data }) => {

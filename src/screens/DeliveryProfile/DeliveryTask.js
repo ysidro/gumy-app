@@ -1,7 +1,9 @@
 import React, { useEffect,useRef, useState } from 'react'
 import { View, Text, Alert, StyleSheet, ScrollView,TouchableOpacity, useWindowDimensions} from 'react-native'
 import "react-native-gesture-handler";
-import { Ionicons } from '@expo/vector-icons';
+import { db } from '../../firebaseConfig';
+import { doc, setDoc,getDoc } from 'firebase/firestore';
+import { Ionicons,MaterialIcons } from '@expo/vector-icons';
 import { Skeleton } from 'moti/skeleton'
 import CustomInputs from '../../components/CustomInputs'
 import { BottomSheetModal,  BottomSheetModalProvider,} from "@gorhom/bottom-sheet";
@@ -16,7 +18,7 @@ export default function DeliveryTask({ route, navigation }) {
   const { width } = useWindowDimensions();
   const [isOpen, setIsOpen] = useState(false);
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = ["25%", "48%", "75%"];
+  const snapPoints = ["48%", "75%"];
   const [justifica, setJustifica] = useState(null);
   function handlePresentModal() {
     bottomSheetModalRef.current?.present();
@@ -25,19 +27,77 @@ export default function DeliveryTask({ route, navigation }) {
     }, 100);
   }
 
-  function handleJustifyModal() {
+  async function handleConfirmModal(action) {
+  try {
+    taskItem.DeliveryStatus = action
+    await setDoc(doc(db, 'deliveryTasks',  taskItem.ID), taskItem);
+    const state = {
+      to: taskItem.AssignedBy,
+      sound: 'default',
+      title: 'Orden Confirmada',
+      body: `El delivery ha confirmado la orden la orden`,
+      data: {},
+    }
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(state),
+    });
+    Alert.alert(`Orden Confirmada`)
+  } catch (error) {
+    console.log("handleConfirmModal",error)
+  }
+  }
+
+  async function handleJustifyModal(action) {
     if(justifica){
     bottomSheetModalRef.current?.present();
-    Alert.alert("Esta Orden ha Declinada")
+    
+  try {
+
+    const state = {
+      to: taskItem.AssignedBy,
+      sound: 'default',
+      title: 'Orden Declinada',
+      body: `a declinado la orden por: ${justifica}`,
+      data: {},
+    }
+    taskItem.DeliveryStatus =  action;
+    taskItem.DeliveryComments = justifica;
+    console.log(taskItem.ID,justifica)
+    //const deliveryRef =  await getDoc(doc(db, 'deliveryTasks',taskItem.ID));
+    await setDoc(doc(db, 'deliveryTasks',  taskItem.ID), taskItem);
+
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(state),
+    });
+
+    Alert.alert(`Esta Orden ha Declinada`)
+
+
     setTimeout(() => {
       setIsOpen(false);
     }, 0);
+    
+  }catch(err){
+    console.error("deliveryTasks err", err)
+  }
+    
+ 
   }else{
     Alert.alert("Debes justificar el porque declinas esta tarea")
   }
   }
-
-
 
 
   return (
@@ -67,10 +127,6 @@ export default function DeliveryTask({ route, navigation }) {
                         <View style={globalStyles.rowBetween}>
                             
                                 <Text>Cantidad: {v.Quantity} {v.UOMName}/s </Text>
-                              
-                               
-                           
-                            
                         </View>
                     </View>
                 ))
@@ -81,10 +137,13 @@ export default function DeliveryTask({ route, navigation }) {
                
                 <Text style={styles.btnTextStyle}>Declinar pedido</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnSecondaryStyle} onPress={() => navigation.navigate('Camera')}>
+             {taskItem.DeliveryStatus === "Confirm" ?  <TouchableOpacity style={styles.btnSecondaryStyle} onPress={() => navigation.navigate('Camera')}>
                 <Ionicons name="camera-outline" size={24}  color="white" />
                 <Text style={styles.btnTextStyle}>Capturar Documento</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> : <TouchableOpacity style={styles.btnSecondaryStyle} onPress={() => handleConfirmModal("Confirm")}>
+                <MaterialIcons name="delivery-dining" size={24}  color="white" />
+                <Text style={styles.btnTextStyle}>Confirmar</Text>
+              </TouchableOpacity>}
             </View>
       </ScrollView>
       <BottomSheetModal
@@ -100,7 +159,7 @@ export default function DeliveryTask({ route, navigation }) {
           
           <CustomInputs label={"Justifica porque Declinas la Orden"} value={justifica} onChangeText={setJustifica} />
           
-          <TouchableOpacity style={styles.btnSecondaryStyle} onPress={() => handleJustifyModal()}>
+          <TouchableOpacity style={styles.btnSecondaryStyle} onPress={() => handleJustifyModal("Rejected")}>
                 <Text style={styles.btnTextStyle}>Notificar</Text>
           </TouchableOpacity>
         </View>

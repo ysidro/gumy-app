@@ -6,8 +6,10 @@ const HomeStack = createStackNavigator();
 import Sales from "../screens/Sales/Sales";
 import Settings from "../screens/Settings";
 import Order from "../screens/Sales/Order";
-import CrearOrder from "../screens/Sales/CrearOrder";
+import Quotes from "../screens/Sales/Quote";
+import CreateOrder from "../screens/Sales/CreateOrder";
 import OrderDetails from "../screens/Sales/OrderDetails";
+import QuoteDetails from "../screens/Sales/QuoteDetails";
 import SelectProduct from "../screens/Sales/SelectProduct";
 import AsingDelivery from "../screens/Sales/AsingDelivery";
 import GummyCamera from "../screens/Camera";
@@ -31,7 +33,9 @@ export default function DasboardStack({ route, navigation }) {
         <HomeStack.Group screenOptions={{headerShown: true,}}>
             <HomeStack.Screen name="Ventas" component={Sales}/>
             <HomeStack.Screen name="Order" component={Order}/>
-            <HomeStack.Screen name="CrearOrden" component={CrearOrder}/>
+            <HomeStack.Screen name="Quotes" component={Quotes}/>
+            <HomeStack.Screen name="QuoteDetails" component={QuoteDetails}/>
+            <HomeStack.Screen name="CreateOrder" component={CreateOrder}/>
             <HomeStack.Screen name="SelectProduct" component={SelectProduct}/>
             <HomeStack.Screen name="OrderDetails" component={OrderDetails}/>
             <HomeStack.Screen name="AsingDelivery" component={AsingDelivery}/>
