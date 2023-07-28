@@ -22,12 +22,9 @@ export default function CustomerTabs({navigation}) {
         options={{
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer() }>
-              <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secundary} />
+              <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secondary} />
             </TouchableOpacity>
-            ),
-          tabBarIcon:({color}) => (
-          <AntDesign name="setting" size={24} color={color} />
-          )
+            )
         }} />
 
         <CustomerStack.Screen name="Cliente" component={CustomerDetails} />

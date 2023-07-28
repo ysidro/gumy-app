@@ -1,6 +1,10 @@
 import { View, StyleSheet,Text } from 'react-native'
-import React  from 'react'
+import React, {useEffect,useState}  from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
+
+import { useSelector, useDispatch } from "react-redux"
+
+import { updateFormField } from '../redux/FormSlice'
 
 import { Colors } from "../constants/Colors";
 import { useFetch } from '../hooks/useFetch';
@@ -8,23 +12,67 @@ import { useFetch } from '../hooks/useFetch';
 export default function ListCustomers({
     onChange,
     label,
+    tokenID
   }){
 
-    let raw = "";
-    var requestOptions = {
-        method: 'GET',
-        body: raw,
-        redirect: 'follow'
-    };
+    const dispatch = useDispatch()
+    const form = useSelector((state) => state.form);
 
-    const URL_DETAILED = `Customers`
-    const URL_PARAMETER = `skip=0`
-    const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
-  
+      const [customer,setCustomers] = useState([])
+
+      const URL_DETAILED = `Customers`
+      const URL_PARAMETER = `skip=0`
+      const requestOptions = {
+      method: 'GET',
+        body: '',
+        redirect: 'follow'
+      };
+
+      const {isLoading, error, responseJSON} = useFetch(URL_DETAILED, URL_PARAMETER, requestOptions)
+        
+      useEffect(()=>{
+        
+        if(!isLoading){
+          setCustomers(responseJSON.data)
+        }
+
+      },[isLoading])
+
+      useEffect(()=>{
+          getRelationshipData(tokenID)
+      },[form.RelationshipID])
+    
+      async function getRelationshipData(tokenID) {
+        try {
+                var requestOptions = {
+                    method: 'GET',
+                    body: '',
+                    redirect: 'follow'
+                };
+                fetch(`https://api.admcloud.net/api/Customers/${form.RelationshipID}?token=${tokenID}`, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        if(result?.data){
+                            dispatch(updateFormField({ "fieldName": "ShipToAddressID", "value": result.data.Addresses[0] ? result.data.Addresses[0].FullName : "" }));
+                            dispatch(updateFormField({ "fieldName": "BillToAddressID", "value": result.data.Addresses[0]  ? result.data.Addresses[0].FullName  : ""  }));
+                            dispatch(updateFormField({ "fieldName": "EmployeeID", "value": result.data.SalesRepID }));
+                            dispatch(updateFormField({ "fieldName": "PaymentTermID", "value": result.data.PaymentTermID }));
+                            dispatch(updateFormField({ "fieldName": "CurrencyID", "value": result.data.CurrencyID }));
+                        }
+
+                    })
+                    .catch(error => console.log('Customer error', error));
+            
+        }
+        catch (err) {
+            console.error('getRelationshipData any fail.', err);
+        }
+    }
+
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
-            data={responseJSON?.data}
+            data={customer}
             defaultButtonText={label}
             buttonStyle={style.dropdown2BtnStyle}
             search
@@ -37,12 +85,30 @@ export default function ListCustomers({
             }}
             searchPlaceHolder={`Buscar ${label}`}
             searchPlaceHolderColor={'#F8F8F8'}
+            searchInputTxtColor={'#fffa'}
             searchInputStyle={style.dropdown3searchInputStyleStyle}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
+            
             onSelect={(selectedItem, index) => {
+        
+              dispatch(updateFormField({ "fieldName": "RelationshipID", "value": selectedItem.ID }));
+              dispatch(updateFormField({ "fieldName": "LocationID", "value": selectedItem.LocationID  }));
               onChange(selectedItem)
+            }}
+            onChangeSearchInputText={(item, index) => {
+
+              var requestOptions = {
+                method: 'GET',
+                redirect: 'follow'
+              };
+              
+              fetch(`https://api.admcloud.net/api/Customers/Extended/?search=${item}&skip=0&token=${tokenID}`, requestOptions)
+                .then(response => response.json())
+                .then(result => setCustomers(result.data))
+                .catch(error => console.log('error', error));
+            
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {
             
@@ -84,6 +150,7 @@ const style = StyleSheet.create({
        
         textAlign: 'center',
         fontWeight: 'bold',
+        
       },
       dropdown2DropdownStyle: {
         backgroundColor: '#fff',

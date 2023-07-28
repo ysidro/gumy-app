@@ -39,7 +39,7 @@ export default function SaleReport() {
           .catch(error => console.log('error', error));
       } else {
         dispatch(restoreToken(null))
-        console.log('no data');
+        console.log('Detailed  salres report no data');
       }
     }
     catch (err) {
@@ -60,7 +60,7 @@ export default function SaleReport() {
   return (
     <>
       <View >
-        <Text style={globalStyles.title}>Sales</Text>
+        <Text style={globalStyles.title}>Ventas</Text>
       </View>
       <SafeAreaView style={style.content}>
         {loadingData ? <FlatList

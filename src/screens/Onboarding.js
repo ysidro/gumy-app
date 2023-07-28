@@ -9,14 +9,15 @@ import * as Device from "expo-device"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function Onboarding() {
     const navigator = useNavigation();
+
     function handlePress() {
         registerForPushNotificationsAsync().then(async token => {
             await AsyncStorage.setItem('@pushNotificationToken', token)
-            console.log('Push notification true')
-            navigator.navigate('Home')
+            console.log('Push notification true',token)
+            navigator.navigate('Dasboart')
         }).catch(error => {
             console.error("error", error)
-            navigator.navigate('Home')
+            navigator.navigate('Dasboart')
         })
     }
 
@@ -43,8 +44,9 @@ export default function Onboarding() {
                 alert('fail to get token');
                 return;
             }
-            token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.EXPO_PROYECT_ID })).data;
-            console.log('token', token);
+            token = (await Notifications.getExpoPushTokenAsync()).data;
+            
+            
 
         } else {
             return;
@@ -55,11 +57,12 @@ export default function Onboarding() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Bienvenido a Gummy</Text>
+            <Text style={styles.subTitle}>Bienvenido a</Text>
+            <Text style={styles.title}>GUMI TIRE SUPPLY SRL</Text>
             <View style={styles.featureContainer}>
                 <MaterialCommunityIcons name="check-all" size={42} color={Colors.primary} />
                 <View style={{ flex: 1, marginLeft: 16 }}>
-                    <Text style={styles.subTitle}>Manegar Tareas Diarias</Text>
+                    <Text style={styles.subTitle}>Manejo de Tareas Diarias</Text>
                     <Text style={styles.subHeadLine}>Esta app te noficará cuando pasen cosas importantes dentro del sistema.</Text>
                 </View>
             </View>
@@ -85,22 +88,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: "flex",
-        backgroundColor: Colors.ligth,
+        backgroundColor: Colors.primaryText,
         alignItems: 'center',
         justifyContent: 'center',
 
     },
     title: {
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: 'bold',
         marginBottom: iphoneHeight > 800 ? 20 : 50,
-        color: Colors.secundary,
+        color: Colors.secondary,
     },
     subTitle: {
         fontSize: 15,
         fontWeight: 'bold',
         lineHeight: 22,
-        color: Colors.secundary,
+        color: Colors.secondary,
     },
     subHeadLine: {
         fontSize: 12,

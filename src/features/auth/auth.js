@@ -4,7 +4,7 @@ const initialState = {
     authState: 'signIn',
     userToken: null,
     isLoading: true,
-    isSignout: false,
+    isSignOut: false,
   };
   
 
@@ -18,11 +18,12 @@ const initialState = {
         state.isLoading = false;
       },
       signIn: (state, action) => {
-        state.isSignout = false;
+        state.isSignOut = false;
         state.userToken = action.payload;
       },
       signOut: state => {
-        state.isSignout = true;
+        state.isSignOut = true;
+        state.authState = 'signIn',
         state.userToken = null;
       },
       setAuthState: (state, action) => {
@@ -32,5 +33,5 @@ const initialState = {
   });
 
 
-  export const { restoreToken, signIn, signOut, setAuthState } = authSlice.actions;
+export const { restoreToken, signIn, signOut, setAuthState } = authSlice.actions;
 export default authSlice.reducer;

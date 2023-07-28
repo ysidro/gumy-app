@@ -4,7 +4,8 @@ import {
     Text,
     SafeAreaView, StyleSheet,
     FlatList,
-    ScrollView
+    ScrollView,
+    Alert,
 } from 'react-native'
 
 import { useSelector, useDispatch } from "react-redux"
@@ -12,22 +13,55 @@ import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
 
+import { db } from '../../firebaseConfig';
+import { collection, query, where, getDocs ,updateDoc } from 'firebase/firestore';
+
 import { globalStyles } from "../../styles/global";
 import { Colors } from '../../constants/Colors';
 import { restoreToken } from '../../features/auth/auth'
 import CustomButtons from "../../components/CustomButtons";
+import BottomModal from '../../components/BottomModal'
 
 export default function OrderDetails({ route, navigation }) {
     const orderID = route.params.orderID
     const [orderData, setOrderData] = useState([]);
     const [loadingData, setLoadingData] = useState(null);
+    const [hasDelivery, setHasDelivery] = useState(false)
 
     const dispatch = useDispatch()
 
+    async function getAllUsersFormDatabase() {
+        try {
 
+            const usersRef = collection(db, 'deliveryTasks');
+            const q = query(usersRef, where('ID', '==', orderID ));
+            //const q = query(usersRef);
+            const querySnapshot = await getDocs(q);
+        
+            const matchingUsers = [];
+            querySnapshot.forEach((doc) => {
+              const taskExists = doc.data();
+              //const taskExists = user.task.some((taskObj) => taskObj.ID === orderID);
+           
+              
+                matchingUsers.push(taskExists);
+            });
+
+             if(matchingUsers.length){
+                 setHasDelivery(matchingUsers)
+               }
+
+            return matchingUsers;
+
+        } catch (err) {
+            console.error('any fail.', err)
+        }
+    }
 
     useEffect(() => {
         getValueFor('uToken', orderID)
+        getAllUsersFormDatabase()
+        console.log("user");
     }, [])
 
     async function getValueFor(key, orderID) {
@@ -44,9 +78,10 @@ export default function OrderDetails({ route, navigation }) {
                     redirect: 'follow'
                 };
 
-                fetch(`https://api.admcloud.net/api/PurchaseOrders/${orderID}?token=${result}`, requestOptions)
+                fetch(`https://api.admcloud.net/api/SalesOrders/${orderID}?token=${result}`, requestOptions)
                     .then(response => response.json())
                     .then(result => {
+                    
                         setOrderData(result.data)
                         setLoadingData(true)
 
@@ -54,7 +89,7 @@ export default function OrderDetails({ route, navigation }) {
                     .catch(error => console.log('error', error));
             } else {
                 dispatch(restoreToken(null))
-                console.log('no data');
+                console.log('SalesOrders no data');
             }
         }
         catch (err) {
@@ -127,7 +162,8 @@ export default function OrderDetails({ route, navigation }) {
                         keyExtractor={item => item.ID}
                     />
                     <View style={globalStyles.rowBetween}>
-                        <CustomButtons title={"Autorizar"} onPress={() => navigation.navigate('Order')} />
+                       
+                        <CustomButtons title={  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"} onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null } />
                     </View>
                 </>
                 :
@@ -204,7 +240,7 @@ const style = StyleSheet.create({
         color: Colors.grey,
     },
     listTitleText: {
-        color: Colors.secundary,
+        color: Colors.secondary,
         fontSize: 18,
         fontWeight: "bold",
     },
@@ -219,7 +255,7 @@ const style = StyleSheet.create({
         fontWeight: 'bold',
     },
     regularButton: {
-        backgroundColor: Colors.secundary,
+        backgroundColor: Colors.secondary,
         borderRadius: 8,
         padding: 14,
     },

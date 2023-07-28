@@ -17,7 +17,6 @@ export default function Inputs({
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
-
       />
     </View>
   )
@@ -25,7 +24,7 @@ export default function Inputs({
 
 const styles = StyleSheet.create({
   container: {
-    width: "95%",
+    width: Dimensions.get("window").width - 20,
     height: 45,
     justifyContent: 'center',
     margin: 10,

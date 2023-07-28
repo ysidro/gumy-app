@@ -1,18 +1,17 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import SelectDropdown from 'react-native-select-dropdown'
-
+import { useSelector, useDispatch } from "react-redux"
+import { updateFormField } from '../redux/FormSlice'
 import { useFetch } from '../hooks/useFetch';
 import { Colors } from "../constants/Colors";
 
 export default function Currencies({
-    onChangeText,
-    value,
     label,
-
   }) {
-
-
+    const dispatch = useDispatch()
+    const form = useSelector((state) => state.form);
+    
     let raw = "";
     var requestOptions = {
         method: 'GET',
@@ -26,21 +25,23 @@ export default function Currencies({
     const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
 
     if(!isLoading) {  
-      filteredCurrencies = responseJSON.data.filter(currency => currency.ID === value);  
+      filteredCurrencies = responseJSON.data.filter(currency => currency.ID === form.CurrencyID);  
     }
-   
+  
   return (
     <View style={style.inputContainer}>
           <SelectDropdown
             data={!isLoading ? responseJSON.data : []}
-            defaultButtonText={ value ? filteredCurrencies[0]?.Name : label}
+            defaultButtonText={ form.CurrencyID ? filteredCurrencies[0]?.Name : label}
             buttonStyle={style.dropdown2BtnStyle}
-            value={value}
+            value={form.CurrencyID}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
             onSelect={(selectedItem, index) => {
-              onChangeText([selectedItem.ExchangeRate,selectedItem.ID])
+              dispatch(updateFormField({ "fieldName": "CurrencyID", "value": selectedItem.ID }));
+              dispatch(updateFormField({ "fieldName": "ExchangeRate", "value": selectedItem.ExchangeRate }));
+              
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
                 return  selectedItem.Name;

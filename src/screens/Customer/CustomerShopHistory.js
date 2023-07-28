@@ -25,48 +25,7 @@ export default function CustomerShopHistory({route}) {
     const URL_DETAILED = `Sales/SalesByItemDetailed/`
     const URL_PARAMETER = `customerID=${customerID}`
     const {isLoading, error, responseJSON} = useFetch(URL_DETAILED,URL_PARAMETER, requestOptions)
-   
 
-    // const [customerData, setCustomerData] = useState([]);
-    // const [loadingData, setLoadingData] = useState(null);
-
-    // const dispatch = useDispatch()
-
-    // useEffect(() => {
-    //     getValueFor('uToken', customerID)
-    // }, [])
-
-    // async function getValueFor(key, customerID) {
-    //     try {
-
-    //     let result = await SecureStore.getItemAsync(key);
-    //     if (result !== null) {
-    //         dispatch(restoreToken(key))
-    //         var raw = "";
-
-    //         var requestOptions = {
-    //         method: 'GET',
-    //         body: raw,
-    //         redirect: 'follow'
-    //         };
-
-    //         fetch(`https://api.admcloud.net/api/Sales/SalesByItemDetailed/?token=${result}&customerID=${customerID}`, requestOptions)
-    //         .then(response => response.json())
-    //         .then(result => {
-    //             setCustomerData(result.data)
-    //             setLoadingData(true)
-
-    //         })
-    //         .catch(error => console.log('error', error));
-    //     } else {
-    //         dispatch(restoreToken(null))
-    //         console.log('no data');
-    //     }
-    //     }
-    //     catch (err) {
-    //     console.error('any fail.', err);
-    //     }
-    // }
 
      const Item = ({data}) => (
         <View style={globalStyles.touchList}>

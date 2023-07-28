@@ -10,7 +10,7 @@ export default function CustomHeader({Title}) {
   return (
     <View style={{ height:90,
                     width:"100%",
-                    backgroundColor:Colors.secundary,
+                    backgroundColor:Colors.secondary,
                     paddingHorizontal:20,
                     paddingTop:20,
                     justifyContent:"center",
@@ -20,7 +20,7 @@ export default function CustomHeader({Title}) {
                       </TouchableOpacity>
       <Text style={{ fontSize:20,
                     fontWeight:"bold",
-                    color: Colors.Blueligth}}>{Title}</Text>
+                    color: Colors.Bluebright}}>{Title}</Text>
     </View>
   )
 }

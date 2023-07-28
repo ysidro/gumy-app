@@ -1,4 +1,4 @@
-import Pressable from "react-native";
+
 import { useNavigation } from '@react-navigation/native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import {AntDesign, FontAwesome} from "@expo/vector-icons"
@@ -15,7 +15,6 @@ const ButtonTabsNavs = createBottomTabNavigator()
 export default function BottonTabs() {
     const navigation = useNavigation()
     const screenParams = {
-       
         headerTitleAlign:"center",
         presentation: "modal",
         tabBarActiveTinColor: Colors.primary,
@@ -31,7 +30,7 @@ export default function BottonTabs() {
       options={{
         headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.openDrawer() }>
-          <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secundary} />
+          <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secondary} />
         </TouchableOpacity>
         ),
         tabBarIcon:({color}) => (
@@ -44,14 +43,15 @@ export default function BottonTabs() {
         name="Sales" 
         component={Sales}
         options={{
-          tabBarBadge:0,
+         // tabBarBadge:0,
+         title:"Ventas",
           tabBarBadgeStyle:{
-            backgroundColor: Colors.secundary,
-            color:Colors.Blueligth,
+            backgroundColor: Colors.secondary,
+            color:Colors.Bluebright,
           },
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer() }>
-              <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secundary} />
+              <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secondary} />
             </TouchableOpacity>
             ),
           tabBarIcon:({color}) => (
@@ -65,7 +65,7 @@ export default function BottonTabs() {
       options={{
         headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.openDrawer() }>
-            <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secundary} />
+            <FontAwesome name="align-left" size={16} style={{marginLeft:15}} color={Colors.secondary} />
           </TouchableOpacity>
           ),
         tabBarIcon:({color}) => (

@@ -6,6 +6,7 @@ import { Skeleton } from 'moti/skeleton'
 
 import { restoreToken } from '../../features/auth/auth'
 import { globalStyles,salesResume } from '../../styles/global'
+import { Colors } from '../../constants/Colors'
 import CustomFormartDate from '../../components/CustomFormartDate'
 
 export default function ViewsReport() {
@@ -48,7 +49,7 @@ export default function ViewsReport() {
         .catch(error => console.log('error', error));
     } else {
       dispatch(restoreToken(null))
-      console.log('no data');
+      console.log('Detailed no data');
     }
     }
     catch(err){
@@ -72,7 +73,7 @@ export default function ViewsReport() {
   return (
     <>
     <View >
-       <Text style={globalStyles.title}>Resporte de ventas</Text>
+       <Text style={style.title}>Reporte de ventas</Text>
     </View>
 
   <SafeAreaView style={style.content}>
@@ -98,5 +99,13 @@ const style = StyleSheet.create({
       justifyContent: 'center',
       marginTop:15,
       width:"100%",
+  },
+  title:{
+    textAlign: 'center',
+    fontSize:22,
+    paddingTop:15,
+    paddingBottom:5,
+    color: Colors.primary,
+    fontWeight: 'bold',
   },
 })
