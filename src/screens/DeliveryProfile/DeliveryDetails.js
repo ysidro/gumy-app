@@ -18,7 +18,7 @@ export default function DeliveryDetails({ route, navigation }) {
     const [customerData, setCustomerData] = useState([]);
     const [loadingData, setLoadingData] = useState(null);
 
-    
+   
     const dispatch = useDispatch()
 
     useEffect(() => {

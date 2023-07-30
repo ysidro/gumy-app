@@ -124,7 +124,58 @@ export const globalStyles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-      }
+      },
+      itemDeliveryContainer: {
+        display: "flex",
+        justifyContent: "flex-start",
+        alignContent: "center",
+        flexWrap: "nowrap",
+        flexDirection: "row",
+    },
+    itemDeliveryBtnContainer: {
+        display: "flex",
+        justifyContent: "center",
+        width: "100%",
+        alignContent: "center",
+        flexWrap: "nowrap",
+        flexDirection: "row",
+    },
+      btnSecundaryStyle: {
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        backgroundColor: Colors.secondary,
+        padding: 12,
+        borderRadius: 8,
+        width: "100%",
+        marginVertical: 15,
+        flexDirection: "row",
+        color: "#ffffff"
+    },
+    btnPrimaryStyle: {
+      display: "flex",
+      justifyContent: "center",
+      alignContent: "center",
+      backgroundColor: Colors.primary,
+      padding: 12,
+      borderRadius: 8,
+      width: "100%",
+      marginVertical: 10,
+      flexDirection: "row",
+      color: "#ffffff"
+  },
+  btnPrimaryStyleNull: {
+      display: "flex",
+      justifyContent: "center",
+      alignContent: "center",
+      backgroundColor: Colors.grey,
+      padding: 12,
+      borderRadius: 8,
+      width: "100%",
+      marginVertical: 10,
+      flexDirection: "row",
+      color: "#dddddd"
+  },
 })
 
 export const salesResume = StyleSheet.create({

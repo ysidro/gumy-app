@@ -76,21 +76,16 @@ export default function AsingDelivery({ navigation, route }) {
 
     async function updateUserTask(){
         try {
-            const deliveryRef = collection(db, 'deliveryTasks');
-            //const deliveryRef = doc(db,'deliveryTasks', route.params.order.ID);
-            
-            //const deliveryRef = getDocs(doc(db,'deliveryTasks', route.params.order.ID));
-            // if(deliveryRef){
-            //     return;
-            // }
+
             await setDoc(doc(db,'deliveryTasks', route.params.order.ID), addDelivery);
-            Alert.alert(`Encomienda asinada a: ${delivery.name}`);
+            Alert.alert(`Encomienda asinada a: ${delivery.name ? delivery.name : delivery.email }`);
             sendPushNotification();
             
-            setAddDelivery(null)
+            setAddDelivery(null);
+            navigation.goBack();
         } catch (err) {
             console.log('asing delivery, save user to data base', err);
-            Alert.alert(`No hemos podido asignar la tarea a: ${addDelivery.name}`);
+            Alert.alert(`No hemos podido asignar la tarea a: ${delivery.name ? delivery.name : delivery.email}`);
         }
 
     }
@@ -151,6 +146,14 @@ export default function AsingDelivery({ navigation, route }) {
         }
 
     }
+    const handlerCamera = () => {
+
+       if(!validateOrderDelivery()){
+        navigation.navigate('Camera', {task: route.params.order})
+       }else{
+        Alert.alert('Asigne un delivery primero')
+       }
+    }
 
     const validateOrderDelivery =  async () => {
         const tasksHistory = [];
@@ -167,6 +170,7 @@ export default function AsingDelivery({ navigation, route }) {
         if(tasksHistory.length > 0){
             itsAssigned = false;
         }
+        console.log(itsAssigned);
         return itsAssigned;
     }
 
@@ -211,9 +215,9 @@ export default function AsingDelivery({ navigation, route }) {
 
                         <TouchableOpacity style={addDelivery ?  styles.btnPrimaryStyle  : styles.btnPrimaryStyleNull } onPress={addDelivery ? () => updateUserTask() : null}>
                             <MaterialIcons name="delivery-dining" size={24} style={styles.btnIconStyle} color="white" />
-                            <Text style={styles.btnTextStyle}>{btnLabel} {addDelivery?.name}</Text>
+                            <Text style={styles.btnTextStyle}>{btnLabel} {delivery.name ? delivery.name : delivery.email}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnSecundaryStyle} onPress={() => navigation.navigate('Camera')}>
+                        <TouchableOpacity style={styles.btnSecundaryStyle} onPress={() => handlerCamera() }>
                             <Ionicons name="camera-outline" size={24} style={styles.btnIconStyle} color="white" />
                             <Text style={styles.btnTextStyle}>Capturar Documento</Text>
                         </TouchableOpacity>

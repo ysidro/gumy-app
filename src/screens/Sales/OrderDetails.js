@@ -21,6 +21,7 @@ import { Colors } from '../../constants/Colors';
 import { restoreToken } from '../../features/auth/auth'
 import CustomButtons from "../../components/CustomButtons";
 import BottomModal from '../../components/BottomModal'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function OrderDetails({ route, navigation }) {
     const orderID = route.params.orderID
@@ -161,9 +162,12 @@ export default function OrderDetails({ route, navigation }) {
                         renderItem={(item) => <Item data={item} />}
                         keyExtractor={item => item.ID}
                     />
-                    <View style={globalStyles.rowBetween}>
-                       
-                        <CustomButtons title={  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"} onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null } />
+                    <View style={globalStyles.itemDeliveryBtnContainer}>
+                        <TouchableOpacity style={!hasDelivery ? globalStyles.btnSecundaryStyle  : globalStyles.btnPrimaryStyleNull}
+                          onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null }>
+                            <Text style={{color:"#ffffff"}}>{  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"}</Text>
+                        </TouchableOpacity>
+                        {/* <CustomButtons title={  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"} onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null } /> */}
                     </View>
                 </>
                 :
