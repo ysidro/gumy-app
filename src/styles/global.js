@@ -140,6 +140,20 @@ export const globalStyles = StyleSheet.create({
         flexWrap: "nowrap",
         flexDirection: "row",
     },
+    btnWarning:{
+      display: "flex",
+      justifyContent: "center",
+      alignContent: "center",
+      backgroundColor: Colors.white,
+      padding: 12,
+      borderRadius: 8,
+      marginHorizontal: 10,
+      marginVertical: 5,
+      flexDirection: "row",
+      color: "#ffffff",
+      borderColor: Colors.primary,
+      borderWidth:1,
+    },
       btnSecundaryStyle: {
         display: "flex",
         justifyContent: "center",
@@ -218,4 +232,82 @@ export const salesResume = StyleSheet.create({
       lisstTotals: {
         fontWeight: "bold",
       },
+})
+
+export const searchStyle = StyleSheet.create({
+
+  dropdown2BtnStyle: {
+      width: '95%',
+      height: 45,
+      justifyContent: 'flex-start',
+      margin: 10,
+      padding: 5,
+      backgroundColor: Colors.ligth,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: Colors.primary,
+      
+      zIndex: 100,
+    },
+    viewContainer: { marginHorizontal: 16, zIndex: 1 },
+    androidContainer: {
+      minHeight: 500,
+      marginBottom: -428,
+    },
+
+    BtnTxtStyle: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+      
+    },
+    dropdown2DropdownStyle: {
+      backgroundColor: '#fff',
+      borderBottomLeftRadius: 12,
+      borderBottomRightRadius: 12,
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12,
+    },
+    dropdown2RowStyle: {
+      backgroundColor: '#fff', 
+      borderBottomColor: '#C5C5C5'},
+    dropdown2RowTxtStyle: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+      color: "#fff",
+    },
+    dropdown3searchInputStyleStyle: {
+      backgroundColor: Colors.primary,
+      borderBottomWidth: 1,
+      color: "#fff",
+      borderBottomColor: '#FFF',
+    },
+    dropdown3RowChildStyle: {
+      flex: 1,
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      alignItems: 'flex-start',
+      paddingHorizontal: 8,
+    },
+    dropdown3RowTxt: {
+      color: Colors.primary,
+      textAlign: 'left',
+      fontWeight: 'bold',
+      fontSize: 14,
+      marginHorizontal: 12,
+      width: "100%",
+    },
+    dropdown3BtnChildStyle: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 0,
+    },
+    dropdown3BtnTxt: {
+      textAlign: 'left',
+      fontWeight: 'bold',
+      fontSize: 14,
+      marginHorizontal: 0,
+    },
+
 })

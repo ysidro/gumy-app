@@ -4,9 +4,8 @@ import * as SecureStore from 'expo-secure-store';
 import { useSelector, useDispatch } from "react-redux"
 import { db, auth } from '../../firebaseConfig';
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
-import { collection, query, where, getDocs  } from 'firebase/firestore';
+import { collection, query, where ,onSnapshot  } from 'firebase/firestore';
 import { signOut } from '../../features/auth/auth'
-
 import { globalStyles } from '../../styles/global'
 
 export default function DeliveryHome({navigation}) {
@@ -15,8 +14,8 @@ export default function DeliveryHome({navigation}) {
   const [listTask,setListTask] = React.useState([]);
 
   React.useEffect(() => {
-      getAllUsersTaskFormDatabase();
-},[delivery])
+        getAllUsersTaskFormDatabase();
+  },[delivery])
 
 React.useEffect(() => {
 
@@ -41,18 +40,20 @@ React.useEffect(() => {
 
 async function getAllUsersTaskFormDatabase() {
   try {
-    console.log('getAllUsersTaskFormDatabase fail.')
-      const deliveryTasksRef = collection(db, 'deliveryTasks');
+
+   
+    const taskRecord = [];
+    const deliveryTasksRef = collection(db, 'deliveryTasks');
+    const q = query(deliveryTasksRef, where('DeliveryID', '==', delivery.id ));
+
+    onSnapshot(q, (querySnapshot) => {
       const taskRecord = [];
-      const q = query(deliveryTasksRef, where('DeliveryID', '==', delivery.id ));
-      const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         const taskExists = doc.data();
-        console.log(taskExists);
         taskRecord.push(taskExists);
       });
-
-      setListTask(taskRecord)
+      setListTask(taskRecord);
+    });
 
   } catch (err) {
       console.error('getAllUsersTaskFormDatabase fail.', err)

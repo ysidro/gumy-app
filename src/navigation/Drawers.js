@@ -7,6 +7,7 @@ import AdminTabs from "./AdminTabs"
 import DasboardStack from "./DasboardStack"
 import DeliveryTabs from "./DeliveryTabs"
 import CustomerTabs from "./CustomerTabs"
+import AllDelivery from "../screens/Delivery/AllDelivery"
 import Onboarding from "../screens/Onboarding"
 import {Colors} from "../constants/Colors"
 const DrawerNav = createDrawerNavigator();
@@ -39,7 +40,7 @@ export default function Drawers() {
                 options={{headerShown:false, title: 'Clientes'}} />
       <DrawerNav.Screen name="Almacen" component={Stock} />
       {/* <DrawerNav.Screen name="Tienda" component={Store} /> */}
-      <DrawerNav.Screen name="Delivery" component={DeliveryTabs}
+      <DrawerNav.Screen name="Delivery" component={AllDelivery}
       options={{headerShown:false, title: 'Mensajería',
     }} />
 

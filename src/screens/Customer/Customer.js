@@ -125,23 +125,25 @@ export default function Customer({ navigation }) {
 
     <SafeAreaView style={style.content}>
 
+     
+ 
+      {!loadingData ? <View style={style.contentSkeleton}>
+        <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
+      </View>: <>
       <ListCustomers
                         value={searchCustomer}
                         onChange={(value) => setSearchCustomer(value)}
                         label={"Cliente"}
                         tokenID={tokenID}
                     />
- 
-      {!loadingData ? <View style={style.contentSkeleton}>
-        <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
-      </View>: <FlatList
+       <FlatList
         data={customerData}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
         onEndReached={pushScroll}
         onEndReachedThreshold={.5}
         ListFooterComponent={renderFooter}
-      />
+      /></>
       }
     </SafeAreaView>
 

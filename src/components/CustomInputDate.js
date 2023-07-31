@@ -8,8 +8,11 @@ const InputDate = ({
   label,
   value,
   onChangeText,
+  inputWidth,
+  minimumDate,
+  maximumDate,
 }) => {
-
+  console.log(inputWidth)
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [showIos, setShowIos] = useState(false);
@@ -42,13 +45,13 @@ const InputDate = ({
 
   return (
     <>
-    <View style={showIos ? styles.containerOpen : styles.container}>
+    <View style={[showIos ? styles.containerOpen : styles.container, {  width: inputWidth ? inputWidth : '95%' }]}>
 
       <TouchableOpacity
         
         onPressIn={showDatepicker}
-      >
-        <Text>{new Date(value).toLocaleDateString('es-ES')}</Text>
+      > 
+        <Text> {label} {new Date(value).toLocaleDateString('es-ES')}</Text>
       </TouchableOpacity>
      
     </View>
@@ -62,7 +65,8 @@ const InputDate = ({
             value={new Date(value)}
             mode={mode}
             is24Hour={false}
-            minimumDate={new Date()}
+            minimumDate={ minimumDate ? new Date() : null }
+            maximumDate={ maximumDate ? null : new Date() }
             onChange={onChange}
           />
          {showIos ? <Button title="Confirmar" onPress={()=>hiddeDatepicker()} /> :""}
@@ -75,7 +79,7 @@ const InputDate = ({
 const styles = StyleSheet.create({
   containerOpen: {
     width: '95%',
-    height:  350,
+    height:  365,
     justifyContent: 'center',
     margin: 10,
     padding: 10,
