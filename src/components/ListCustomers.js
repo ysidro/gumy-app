@@ -1,14 +1,11 @@
 import { View, StyleSheet,Text } from 'react-native'
 import React, {useEffect,useState}  from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
-
 import { useSelector, useDispatch } from "react-redux"
-
 import { updateFormField } from '../redux/FormSlice'
-
 import { Colors } from "../constants/Colors";
 import { useFetch } from '../hooks/useFetch';
-
+import { searchStyle } from '../styles/global'
 export default function ListCustomers({
     onChange,
     label,
@@ -59,7 +56,6 @@ export default function ListCustomers({
                             dispatch(updateFormField({ "fieldName": "PaymentTermID", "value": result.data.PaymentTermID }));
                             dispatch(updateFormField({ "fieldName": "CurrencyID", "value": result.data.CurrencyID }));
                         }
-
                     })
                     .catch(error => console.log('Customer error', error));
             
@@ -70,26 +66,26 @@ export default function ListCustomers({
     }
 
   return (
-    <View style={style.inputContainer}>
+    <View style={searchStyle.inputContainer}>
           <SelectDropdown
             data={customer}
             defaultButtonText={label}
-            buttonStyle={style.dropdown2BtnStyle}
+            buttonStyle={searchStyle.dropdown2BtnStyle}
             search
             renderCustomizedRowChild={(item,index) => {
               return (
-                <View style={style.dropdown3RowChildStyle}>
-                  <Text style={style.dropdown3RowTxt}>{item.Name}</Text>
+                <View style={searchStyle.dropdown3RowChildStyle}>
+                  <Text style={searchStyle.dropdown3RowTxt}>{item.Name}</Text>
                 </View>
               );
             }}
             searchPlaceHolder={`Buscar ${label}`}
             searchPlaceHolderColor={'#F8F8F8'}
             searchInputTxtColor={'#fffa'}
-            searchInputStyle={style.dropdown3searchInputStyleStyle}
-            dropdownStyle={style.dropdown2DropdownStyle}
-            rowStyle={style.dropdown2RowStyle}
-            rowTextStyle={style.dropdown2RowTxtStyle}
+            searchInputStyle={searchStyle.dropdown3searchInputStyleStyle}
+            dropdownStyle={searchStyle.dropdown2DropdownStyle}
+            rowStyle={searchStyle.dropdown2RowStyle}
+            rowTextStyle={searchStyle.dropdown2RowTxtStyle}
             
             onSelect={(selectedItem, index) => {
         
@@ -113,8 +109,8 @@ export default function ListCustomers({
             renderCustomizedButtonChild={(selectedItem, index) => {
             
               return (
-                <View style={style.dropdown3BtnChildStyle}>
-                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar ${label}`}</Text>
+                <View style={searchStyle.dropdown3BtnChildStyle}>
+                  <Text style={searchStyle.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar ${label}`}</Text>
                 </View>
               );
             }}
@@ -146,8 +142,7 @@ const style = StyleSheet.create({
         marginBottom: -428,
       },
 
-     BtnTxtStyle: {
-       
+      BtnTxtStyle: {
         textAlign: 'center',
         fontWeight: 'bold',
         

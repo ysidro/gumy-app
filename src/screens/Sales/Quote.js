@@ -8,12 +8,16 @@ import { restoreToken } from '../../features/auth/auth'
 import CustomFormartDate from '../../components/CustomFormartDate'
 import { globalStyles } from '../../styles/global'
 
+import SearchAny from '../../components/SearchAny'
+
 export default function Quote({navigation}) {
   const [salesData, setSalesData] = useState([]);
   const [ids, setIds] = useState(new Set());
-  const [loadingData, setLoadingData] = useState(null);
+  const [loadingData, setLoadingData] = useState(false);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [tokenID, setTokenID] = useState(null);
+  const [searchSelected, setSearchSelected] = useState(null);
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -30,6 +34,14 @@ export default function Quote({navigation}) {
       setSkip(skip + 1)
   }
 
+  useEffect(() => {
+    if(searchSelected){
+  
+      navigation.navigate('QuoteDetails',{orderID : searchSelected.ID})
+    }
+
+  },[searchSelected])
+
   async function getValueFor(key) {
     try {
       let result = await SecureStore.getItemAsync(key);
@@ -42,7 +54,7 @@ export default function Quote({navigation}) {
           body: raw,
           redirect: 'follow'
         };
-      
+        setTokenID(result)
         fetch(`https://api.admcloud.net/api/Quotes?token=${result}&skip=${skip}`, requestOptions)
           .then(response => response.json())
           .then(result => {
@@ -52,7 +64,7 @@ export default function Quote({navigation}) {
             setIds(newIds);
             
             setLoading(false);
-            setLoadingData(true)
+            setLoadingData(true);
 
           })
           .catch(error => console.log('error', error));
@@ -109,7 +121,7 @@ export default function Quote({navigation}) {
 </View>
       <View style={globalStyles.rowBetween}>
         <Text style={globalStyles.listTitleText}>{data.item.RelationshipName}</Text>
-        {data.item.FiscalID ? <Text style={globalStyles.listContentText}>No. Fiscal:{data.item.FiscalID}</Text> : ""}
+        {data.item.FiscalID ? <Text style={globalStyles.listContentText}>No.:{data.item.DocID}</Text> : ""}
         
       </View>
       
@@ -133,7 +145,10 @@ export default function Quote({navigation}) {
 
       <SafeAreaView style={style.content}>
         <Text style={globalStyles.title}>Cotizaciones</Text>
-        {loadingData ? <FlatList
+        <SearchAny searchIn="Quotes" data={salesData} tokenID={tokenID} searchSelected={(value) => setSearchSelected(value)} /> 
+        {loadingData ? 
+        <>
+        <FlatList
           data={salesData}
           renderItem={(item) => <Item data={item} />}
           keyExtractor={item => item.ID}
@@ -141,7 +156,7 @@ export default function Quote({navigation}) {
           onEndReachedThreshold={.5}
           ListFooterComponent={renderFooter}
 
-        /> : <View style={globalStyles.contentSkeleton}>
+        /></>: <View style={globalStyles.contentSkeleton}>
           <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
           <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
           <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
