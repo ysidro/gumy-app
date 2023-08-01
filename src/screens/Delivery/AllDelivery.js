@@ -26,40 +26,34 @@ export default function AllDelivery({navigation}) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    getValueFor('uToken')
+    getAllTaskFormDatabase();
     
   }, [])
 
-  async function getValueFor(key) {
+  async function getAllTaskFormDatabase() {
     try {
-      
-      let result = await SecureStore.getItemAsync(key);
-      if (result !== null) {
-        dispatch(restoreToken(key))
-        var raw = "";
+  
+     
+      const taskRecord = [];
+      const deliveryTasksRef = collection(db, 'deliveryTasks');
+      const tasksSnapshot = await getDocs(deliveryTasksRef);
+      const tasksData = tasksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-        var requestOptions = {
-          method: 'GET',
-          body: raw,
-          redirect: 'follow'
-        };
+      // Obtener todas las imágenes relacionadas con las tareas
+      const taskImagePromises = tasksData.map(async (task) => {
+        const imagesRef = collection(db, 'files');
+        const imagesSnapshot = await getDocs(query(imagesRef, where('id', '==', task.Documents)));
+        const imagesData = imagesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        return { ...task, images: imagesData };
+      });
 
-        fetch(`https://api.admcloud.net/api/Dispatchs?token=${result}&skip=0`, requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            
-            setDeliveryData(result.data)
-            setLoadingData(true)
-            
-          })
-          .catch(error => console.log('error', error));
-      } else {
-        dispatch(restoreToken(null))
-        console.log('Dispatchs no data');
-      }
-    }
-    catch (err) {
-      console.error('Dispatchs any fail.', err);
+      // Esperar a que todas las promesas de imágenes se resuelvan
+      const tasksWithImages = await Promise.all(taskImagePromises);
+
+      setTasks(tasksWithImages);
+  
+    } catch (err) {
+        console.error('getAllUsersTaskFormDatabase fail.', err)
     }
   }
 

@@ -3,7 +3,7 @@ import { View, Text, FlatList, SafeAreaView, StyleSheet, TouchableOpacity,Activi
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
-
+import { MotiView } from 'moti';
 import { restoreToken } from '../../features/auth/auth'
 import CustomFormartDate from '../../components/CustomFormartDate'
 import InputDate from "../../components/CustomInputDate"
@@ -19,11 +19,11 @@ export default function Order({navigation}) {
   const [loading, setLoading] = useState(false);
   const [tokenID, setTokenID] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
-  const [DateFrom,setDateFrom] = useState(new Date("2001-01-02"));
+  const [DateFrom,setDateFrom] = useState(new Date("2001-01-02T00:00:00"));
   const [DateTo,setDateTo] = useState(new Date());
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = ["70%", "70%"];
+  const snapPoints = ["80%", "80%"];
   const { width } = useWindowDimensions();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,14 +40,17 @@ export default function Order({navigation}) {
   }, [])
 
   useEffect(() => {
-    console.log(DateFrom,DateTo)
-    getValueFor('uToken')
-  }, [DateFrom,DateTo])
-
-  useEffect(() => {
     setLoading(true);
     getValueFor('uToken')
   }, [skip])
+
+  const handlerFilder = () => {
+    console.log("handlerFilder");
+    setLoading(true);
+    setLoadingData(false)
+    getValueFor('uToken');
+    bottomSheetModalRef.current?.close()
+  }
 
   useEffect(() => {
     if(searchSelected){
@@ -69,7 +72,7 @@ export default function Order({navigation}) {
       if (result !== null) {
         dispatch(restoreToken(key))
         var raw = "";
-
+        
         var requestOptions = {
           method: 'GET',
           body: raw,
@@ -77,7 +80,8 @@ export default function Order({navigation}) {
         };
         setTokenID(result)
         // DateFrom=2023-07-28T00:00:00&DateTo=2023-07-28T00:00:00
-        fetch(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=${skip}&DateFrom=${DateFrom}T00:00:00&DateTo=${DateTo}T00:00:00`, requestOptions)
+        console.log(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=${skip}&DateFrom=${new Date(DateFrom).toLocaleDateString('en-CA')}T00:00:00&DateTo=${new Date(DateTo).toLocaleDateString('en-CA')}T00:00:00`)
+        fetch(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=${skip}&DateFrom=2023-07-06T00:00:00&DateTo=2023-07-06T00:00:00`, requestOptions)
           .then(response => response.json())
           .then(result => {
            
@@ -85,7 +89,7 @@ export default function Order({navigation}) {
             const newIds = new Set([...ids, ...filteredData.map(item => item.id)]);
             setSalesData([...salesData, ...filteredData]);
             setIds(newIds);
-            console.log('salesData',salesData)
+          
             setLoading(false);
             setLoadingData(true)
 
@@ -161,7 +165,7 @@ export default function Order({navigation}) {
       
     </TouchableOpacity>  
     )};
-
+    const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
 // onChange={(value) => setSearchCustomer(value)}
   return (
     <BottomSheetModalProvider>
@@ -188,11 +192,43 @@ export default function Order({navigation}) {
           onEndReachedThreshold={.5}
           ListFooterComponent={renderFooter}
 
-        /></> : <View style={globalStyles.contentSkeleton}>
-          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
-          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
-          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
+        /></> : <View style={style.contentSkeleton}>
+        <Skeleton width={"100%"} colorMode={'ligth'} height={35} />
+        <View style={style.cartContent}>
+            <View style={style.cartItems}>
+                <Spacer height={30} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={10} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={10} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={10} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            </View>
         </View>
+    </View>
         }
       </SafeAreaView>
       <BottomSheetModal
@@ -217,6 +253,9 @@ export default function Order({navigation}) {
                       label={"Hasta"} minimumDate={false} maximumDate={true}  /> 
 
               </View>
+              <TouchableOpacity onPress={()=>{handlerFilder()}}>
+                  <Text>Cerrar Modal</Text>
+              </TouchableOpacity>
         </BottomSheetModal>
     </BottomSheetModalProvider>
   )

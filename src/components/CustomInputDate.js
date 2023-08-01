@@ -12,7 +12,6 @@ const InputDate = ({
   minimumDate,
   maximumDate,
 }) => {
-  console.log(inputWidth)
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [showIos, setShowIos] = useState(false);
@@ -20,6 +19,7 @@ const InputDate = ({
     if(Platform.OS === 'android'){
       setShow(false);
     }
+ 
     onChangeText(selectedDate);
 
   };
@@ -65,6 +65,7 @@ const InputDate = ({
             value={new Date(value)}
             mode={mode}
             is24Hour={false}
+            format="YYYY-MM-DD"
             minimumDate={ minimumDate ? new Date() : null }
             maximumDate={ maximumDate ? null : new Date() }
             onChange={onChange}

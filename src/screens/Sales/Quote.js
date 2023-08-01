@@ -36,10 +36,10 @@ export default function Quote({navigation}) {
 
   useEffect(() => {
     if(searchSelected){
-      //console.log("searchSelected of search",searchSelected.ID);
-      navigation.navigate('OrderDetails',{orderID : searchSelected.ID})
+  
+      navigation.navigate('QuoteDetails',{orderID : searchSelected.ID})
     }
-    //navigation.navigate('OrderDetails',{orderID : data.item.ID})
+
   },[searchSelected])
 
   async function getValueFor(key) {

@@ -18,12 +18,14 @@ export default function DeliveryTask({ route, navigation }) {
   const items = route.params.items;
 
   const [device, setDevice] = useState(false);
+  const [taskStatus, setTaskStatus] = useState(false);
+  const [justified, setJustifica] = useState(null);
+  
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = ["48%", "75%"];
   const { width } = useWindowDimensions();
   const [isOpen, setIsOpen] = useState(false);
-  const bottomSheetModalRef = useRef(null);
-  const [taskStatus, setTaskStatus] = useState(false);
-  const snapPoints = ["48%", "75%"];
-  const [justified, setJustifica] = useState(null);
+
   function handlePresentModal() {
     bottomSheetModalRef.current?.present();
     setTimeout(() => {
