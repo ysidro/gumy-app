@@ -1,9 +1,7 @@
 import { View, StyleSheet,Text,ActivityIndicator,Alert } from 'react-native'
 import React, {useState}  from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
-
 import { Colors } from "../constants/Colors";
-import { useEffect } from 'react'
 
 export default function DropDownListItems({
     listItems,
@@ -15,14 +13,15 @@ export default function DropDownListItems({
   }){
 
     const [isSearching, setIsSearching] = useState(false)
-
+    const [listData, setListData] = useState(listItems)
 
   
 
   return (
     <View style={style.inputContainer}>
+    
           <SelectDropdown
-            data={listItems}
+            data={listData}
             defaultButtonText={label}
             buttonStyle={style.dropdown2BtnStyle}
             search
@@ -30,7 +29,8 @@ export default function DropDownListItems({
               
               return (
                 <View style={style.dropdown3RowChildStyle}>
-                  <Text style={style.dropdown3RowTxt}>{item.SKU} - {item.Name} </Text>
+                     {isSearching ? <ActivityIndicator/> : null}<Text style={style.dropdown3RowTxt}>{item.SKU} - {item.Name} </Text>
+                  
                 </View>
               );
             }}
@@ -38,13 +38,12 @@ export default function DropDownListItems({
             searchPlaceHolderColor={'#F8F8F8'}
             searchInputTxtColor={'#fffa'}
             renderDropdownIcon={isOpened => {
-              return <>{isSearching ? <ActivityIndicator/> : null}</>;
+              return <>{isSearching ? <><ActivityIndicator/><Text style={[style.dropdown3RowTxt,{padding:10}]}>Buscar {label} por Sku / Nombre</Text></> : <Text style={[style.dropdown3RowTxt,{padding:10}]}>Buscar {label} por Sku / Nombre</Text>}</>;
             }}
             searchInputStyle={style.dropdown3searchInputStyleStyle}
             dropdownStyle={style.dropdown2DropdownStyle}
             rowStyle={style.dropdown2RowStyle}
             rowTextStyle={style.dropdown2RowTxtStyle}
-            
             onSelect={(selectedItem, index) => {
             
               onChange(selectedItem)
@@ -57,44 +56,44 @@ export default function DropDownListItems({
                   method: 'GET',
                   redirect: 'follow'
                 };
-                
-                
+
+             
 
                 fetch(`https://api.admcloud.net/api/Items/?sku=${item}&token=${tokenID}`, requestOptions)
                   .then(response => response.json())
                   .then(result => {
-                    
-                    if(result.success) {
+                 
+                    if(result.data) {
                       setIsSearching(false)
+                      setListData([result.data])
                     }
+
                     if(result.message !== null)
                     {
-
-                      Alert.alert("Notificación",`${result.message}`,)
+                      Alert.alert("Notificación",`${result.message}`)
                       setIsSearching(false)
-
                     }
 
-                    if(result.data !== null){
-                      setListItems([result.data])
-                    }
-
-                    if(result.data !== null && result.success && result.message !== null){
-                      Alert.alert("Notificación",
-                      "No hemos podido localizar la información de este producto",)
+                    if(result.data === null && result.success && result.message === null){
+                      setIsSearching(false)
                     }
                     
                   })
                   .catch(error => console.log('error', error));
+
+           
             
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {
-            
-              return (
-                <View style={style.dropdown3BtnChildStyle}>
-                  <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar ${label}`}</Text>
-                </View>
-              );
+              
+              if(selectedItem){
+           
+                return (
+                  <View style={style.dropdown3BtnChildStyle}>
+                    <Text style={style.dropdown3BtnTxt}>{selectedItem ? selectedItem.Name : `Buscar por SKU`}</Text>
+                  </View>
+                );
+              }
             }}
             
           />

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView,Alert } from 'react-native'
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 
-import { updateFormField, clearFormsFields } from '../redux/FormSlice'
+import { updateFormField,  clearFormsFields } from '../redux/FormSlice'
 import { restoreToken } from "../features/auth/auth"
 
 import { globalStyles } from '../styles/global'
@@ -58,7 +58,7 @@ export default function AddQuotesForm({navigation}) {
     };
 
     const handleNavigateToSelectProduct = () => {
-        console.log('navigateToSelectProduct' , form);
+     
         if(!form.LocationID){
             Alert.alert("Favor seleccione una Ubicación valida para continuar");
             return

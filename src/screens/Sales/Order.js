@@ -75,16 +75,15 @@ export default function Order({navigation}) {
         
         var requestOptions = {
           method: 'GET',
-          body: raw,
           redirect: 'follow'
         };
         setTokenID(result)
-        // DateFrom=2023-07-28T00:00:00&DateTo=2023-07-28T00:00:00
-        console.log(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=${skip}&DateFrom=${new Date(DateFrom).toLocaleDateString('en-CA')}T00:00:00&DateTo=${new Date(DateTo).toLocaleDateString('en-CA')}T00:00:00`)
-        fetch(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=${skip}&DateFrom=2023-07-06T00:00:00&DateTo=2023-07-06T00:00:00`, requestOptions)
+        
+
+        fetch(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=${skip}`, requestOptions)
           .then(response => response.json())
           .then(result => {
-           
+            console.log(result)
             const filteredData = result.data.filter(item => !ids.has(item.id));
             const newIds = new Set([...ids, ...filteredData.map(item => item.id)]);
             setSalesData([...salesData, ...filteredData]);
@@ -141,12 +140,12 @@ export default function Order({navigation}) {
        <Text>Días {data.item.Days} </Text>
       </View>
       <View style={globalStyles.rowBetween}>
-      <View >
-       {data.item.DocumentTypeName ?  <Text>Prioridad: {data.item.PriorityDesc} / {data.item.DocumentTypeName}</Text> : ""}
-       </View>
-       <CustomFormartDate DocDate={data.item.DocDate}/>
-       
-</View>
+            <View >
+            {data.item.DocumentTypeName ?  <Text>Prioridad: {data.item.PriorityDesc} / {data.item.DocumentTypeName}</Text> : ""}
+            </View>
+            <CustomFormartDate DocDate={data.item.DocDate}/>
+            
+      </View>
       <View style={globalStyles.rowBetween}>
         <Text style={globalStyles.listTitleText}>{data.item.RelationshipName}</Text>
         {data.item.DocID ? <Text style={globalStyles.listContentText}>No.:{data.item.DocID}</Text> : ""}
@@ -176,14 +175,14 @@ export default function Order({navigation}) {
         {loadingData ? <> 
           <SearchAny searchIn="SalesOrders" data={salesData} tokenID={tokenID} searchSelected={(value) => setSearchSelected(value)} /> 
           
-          <TouchableOpacity style={globalStyles.btnWarning} onPress={() => handlePresentModal()}>
+          {/* <TouchableOpacity style={globalStyles.btnWarning} onPress={() => handlePresentModal()}>
           <View style={[globalStyles.rowBetween,{marginHorizontal:20,width:"90%"}]} > 
           
             <Text>Desde {DateFrom.toLocaleDateString()} </Text>
             <Text>Hasta  {DateTo.toLocaleDateString()} </Text>
           
           </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <FlatList
           data={salesData}
           renderItem={(item) => <Item data={item} />}

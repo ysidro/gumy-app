@@ -70,8 +70,7 @@ export default function GummyCamera({route, navigation }) {
         uploadTask.on(
             "state_changed",
             (snapshot) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
               
                 setProgress(progress.toFixed());
             },
@@ -117,7 +116,10 @@ export default function GummyCamera({route, navigation }) {
           
           if(DeliveryStatus === "Completed"){
             Alert.alert(`🎉 Orden marcada como completada 🎉`)
-            navigation.goBack();
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Mensajeria' }],
+              });
           }
           
           

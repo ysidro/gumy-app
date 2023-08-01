@@ -10,9 +10,9 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
-
-import { collection, query, where ,onSnapshot  } from 'firebase/firestore';
-
+import { MotiView } from 'moti';
+import { collection, query, where ,onSnapshot,getDocs } from 'firebase/firestore';
+import { db, auth } from '../../firebaseConfig';
 
 import { restoreToken } from '../../features/auth/auth'
 import { globalStyles,salesResume } from '../../styles/global'
@@ -27,7 +27,6 @@ export default function AllDelivery({navigation}) {
 
   useEffect(() => {
     getAllTaskFormDatabase();
-    
   }, [])
 
   async function getAllTaskFormDatabase() {
@@ -50,7 +49,8 @@ export default function AllDelivery({navigation}) {
       // Esperar a que todas las promesas de imágenes se resuelvan
       const tasksWithImages = await Promise.all(taskImagePromises);
 
-      setTasks(tasksWithImages);
+      setDeliveryData(tasksWithImages);
+      setLoadingData(true)
   
     } catch (err) {
         console.error('getAllUsersTaskFormDatabase fail.', err)
@@ -59,27 +59,28 @@ export default function AllDelivery({navigation}) {
 
 
   const Item = ({ data }) => (
-    <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('Detalle',{deliveryID : data.item.ID, locationID : data.item.LocationID }) }>
-       <View style={globalStyles.rowBetween}>
-        <View >
-        <Text style={globalStyles.lisLabel}>{data.item.DocID}</Text>
-          <Text style={globalStyles.subTitle}>{data.item.RelationshipName}</Text>
-          <Text style={globalStyles.lisLabel}>{data.item.LocationName}</Text>
-         
-          <Text style={globalStyles.listTitleText}>{data.item.StatusDesc}</Text>
+    <TouchableOpacity style={globalStyles.touchList} onPress={() => navigation.navigate('AdmDeliveryDetails',{task : data.item, items: data.item.Items }) }>
+    <View style={globalStyles.touchList}>
+      <Text style={globalStyles.listTitleText}>Status: {data.item.AuthorizationStatusDesc}</Text>
+      <Text style={globalStyles.lisLabel}>Delivery Status: {data.item.DeliveryStatus}</Text>
+      <Text style={globalStyles.listTitleText}>Cliente: {data.item.RelationshipName}</Text>
+      <View style={globalStyles.rowBetween}>
+        <View style={globalStyles.row5}>
+          <Text style={globalStyles.lisLabel}>Doc ID: {data.item.DocID}</Text>
         </View>
-        <View >
-          <Text style={style.lisstTotals}>${data.item.TotalAmount.toLocaleString()}</Text>
-          <CustomFormartDate style={salesResume.listSubTitleText} DocDate={data.item.DocDate}/>
-        
-        </View>
+        <Text style={globalStyles.listContentText}>{data.item.Items[0].Name} </Text>
       </View>
+      <View style={globalStyles.row5}>
+      <Text style={globalStyles.listContentText}>SKU: {data.item.Items[0].ItemSKU} </Text>
+        </View>
+  
+    </View>
     </TouchableOpacity>
     
 
   );
 
-
+  const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
   return (
     <>
      
@@ -90,8 +91,42 @@ export default function AllDelivery({navigation}) {
           keyExtractor={item => item.ID}
 
         /> : <View style={style.contentSkeleton}>
-          <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
+        <Skeleton width={"95%"} colorMode={'ligth'} height={35} />
+        <View style={style.cartContent}>
+            <View style={style.cartItems}>
+                <Spacer height={30} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={10} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={10} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={10} />
+                <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            </View>
+            <View style={style.cartItems}>
+                <Spacer height={5} />
+                <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            </View>
         </View>
+    </View>
         }
       </SafeAreaView>
     </>
@@ -102,6 +137,7 @@ const style = StyleSheet.create({
   content:{
     justifyContent: 'center',
     marginTop:15,
+    padding:10,
     width:"100%",
 },
   contentSkeleton: {

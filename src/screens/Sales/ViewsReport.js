@@ -41,7 +41,7 @@ export default function ViewsReport() {
             //     acc[curr.SalesRepName].value += curr.TotalAmount;
             //     return acc;
             //   }, {}));
-            
+            console.log(result.data)
               setSalesData(result.data)
               setLoadingData(true)
              
@@ -60,10 +60,13 @@ export default function ViewsReport() {
   const Item = ({data}) => (
     <View style={globalStyles.touchList}>
       <Text style={globalStyles.listContentText}>{data.item.RelationshipName}</Text>
-      <Text style={salesResume.listSubTitleText}>{data.item.SalesRepName}</Text>
+      <View style={globalStyles.rowBetween}> 
+        <Text style={salesResume.listSubTitleText}>{data.item.SalesRepName}</Text>
+        <Text style={salesResume.listSubTitleText}>Doc. {data.item.DocID}</Text>
+      </View> 
       <View style={globalStyles.rowBetween}>
         <Text >{data.item.DocumentTypeName}</Text>
-        <Text >${data.item.TotalAmount.toLocaleString()} {data.item.CurrencyID}</Text>
+        <Text >{data.item.CurrencyID}${data.item.TotalAmount.toLocaleString()}</Text>
         <CustomFormartDate style={salesResume.listSubTitleText} DocDate={data.item.DocDate}/>
       </View>
     </View>

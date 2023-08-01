@@ -28,7 +28,6 @@ export default function SearchAny({searchIn, data, tokenID , searchSelected}) {
             buttonStyle={searchStyle.dropdown2BtnStyle}
             search
             renderCustomizedRowChild={(item,index) => {
-             //   console.log("renderCustomizedRowChild",item)
               return (
                 <View style={searchStyle.dropdown3RowChildStyle}>
                   <Text style={searchStyle.dropdown3RowTxt}>{item.DocID}</Text>
@@ -43,15 +42,10 @@ export default function SearchAny({searchIn, data, tokenID , searchSelected}) {
             dropdownStyle={searchStyle.dropdown2DropdownStyle}
             rowStyle={searchStyle.dropdown2RowStyle}
             rowTextStyle={searchStyle.dropdown2RowTxtStyle}
-            
             onSelect={(selectedItem, index) => {
-             
-            //   dispatch(updateFormField({ "fieldName": "RelationshipID", "value": selectedItem.ID }));
-            //   dispatch(updateFormField({ "fieldName": "LocationID", "value": selectedItem.LocationID  }));
                 setItemSelected(true)
                 setLabel(selectedItem.RelationshipName);
                 setSearchTerm(selectedItem)
-                
             }}
             onChangeSearchInputText={(item, index) => {
 
@@ -67,11 +61,14 @@ export default function SearchAny({searchIn, data, tokenID , searchSelected}) {
             
             }}
             renderCustomizedButtonChild={(selectedItem, index) => {
-              return (
-                <View style={searchStyle.dropdown3BtnChildStyle}>
-                  <Text style={searchStyle.dropdown3BtnTxt}>{selectedItem ? `${selectedItem.DocID} / ${selectedItem.RelationshipName}` : `Buscar ${label}`}</Text>
-                </View>
-              );
+
+              if(selectedItem){
+                return (
+                  <View style={searchStyle.dropdown3BtnChildStyle}>
+                    <Text style={searchStyle.dropdown3BtnTxt}>{selectedItem ? `${selectedItem.DocID} / ${selectedItem.RelationshipName}` : `Buscar ${label}`}</Text>
+                  </View>
+                );
+              }
             }}
             
           />

@@ -8,6 +8,7 @@ import DasboardStack from "./DasboardStack"
 import DeliveryTabs from "./DeliveryTabs"
 import CustomerTabs from "./CustomerTabs"
 import AllDelivery from "../screens/Delivery/AllDelivery"
+import AdmDeliveryDetails from "../screens/Delivery/AdmDeliveryDetails"
 import Onboarding from "../screens/Onboarding"
 import {Colors} from "../constants/Colors"
 const DrawerNav = createDrawerNavigator();
@@ -40,9 +41,14 @@ export default function Drawers() {
                 options={{headerShown:false, title: 'Clientes'}} />
       <DrawerNav.Screen name="Almacen" component={Stock} />
       {/* <DrawerNav.Screen name="Tienda" component={Store} /> */}
-      <DrawerNav.Screen name="Delivery" component={AllDelivery}
-      options={{headerShown:false, title: 'Mensajería',
-    }} />
+
+      <DrawerNav.Group screenOptions={{headerShown: true}}>
+          <DrawerNav.Screen name="Delivery" component={AllDelivery}
+          options={{headerShown:true, title: 'Mensajería'}} />
+
+          <DrawerNav.Screen name="AdmDeliveryDetails" component={AdmDeliveryDetails}
+          options={{headerShown:true, title: 'Detalle delivery'}} />
+    </DrawerNav.Group>
 
       <DrawerNav.Screen name="AdminTabs" component={AdminTabs}  options={{headerShown:false, title: 'Administración',}}   />
       <DrawerNav.Screen name="Onboarding" 

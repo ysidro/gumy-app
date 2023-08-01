@@ -11,7 +11,7 @@ import { Colors } from '../../constants/Colors';
 import CustomFormartDate from '../../components/CustomFormartDate'
 import { globalStyles,salesResume } from '../../styles/global'
 
-export default function DeliveryDetails({ route, navigation }) {
+export default function AdmDeliveryDetails({ route, navigation }) {
 
     const deliveryID = route.params.deliveryID
     const locationID = route.params.locationID

@@ -10,6 +10,7 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
+import { MotiView } from 'moti';
 
 import { restoreToken } from '../../features/auth/auth'
 import { globalStyles, salesResume } from '../../styles/global'
@@ -80,30 +81,73 @@ export default function Sales({navigation}) {
     
     )
   }
+
+  const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
   return (
     <SafeAreaView >
       <ScrollView >
-        <View style={salesResume.salesRerportcontent}>
-          <Item data={salesData?.data} months={"P1"}/>
-          <Item data={salesData?.data} months={"P2"}/>
-          <Item data={salesData?.data} months={"P3"}/>
-          <Item data={salesData?.data} months={"P4"}/>
-          <Item data={salesData?.data} months={"P5"}/>
-          <Item data={salesData?.data} months={"P6"}/>
-          <Item data={salesData?.data} months={"P7"}/>
-          <Item data={salesData?.data} months={"P8"}/>
-          <Item data={salesData?.data} months={"P9"}/>
-          <Item data={salesData?.data} months={"P10"}/>
-          <Item data={salesData?.data} months={"P11"}/>
-          <Item data={salesData?.data} months={"P12"}/>
-        </View>
+        {salesData ? 
+            <View style={salesResume.salesRerportcontent}>
+              <Item data={salesData?.data} months={"P1"}/>
+              <Item data={salesData?.data} months={"P2"}/>
+              <Item data={salesData?.data} months={"P3"}/>
+              <Item data={salesData?.data} months={"P4"}/>
+              <Item data={salesData?.data} months={"P5"}/>
+              <Item data={salesData?.data} months={"P6"}/>
+              <Item data={salesData?.data} months={"P7"}/>
+              <Item data={salesData?.data} months={"P8"}/>
+              <Item data={salesData?.data} months={"P9"}/>
+              <Item data={salesData?.data} months={"P10"}/>
+              <Item data={salesData?.data} months={"P11"}/>
+              <Item data={salesData?.data} months={"P12"}/>
+            </View>
+        :
+                <View style={globalStyles.contentSkeleton}>
+                <Skeleton width={"100%"} colorMode={'ligth'} height={35} />
+                <View style={globalStyles.cartContent}>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={30} />
+                        <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                    </View>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={5} />
+                        <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+                    </View>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={10} />
+                        <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                    </View>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={5} />
+                        <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
+                    </View>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={10} />
+                        <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                    </View>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={5} />
+                        <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
+                    </View>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={10} />
+                        <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                    </View>
+                    <View style={globalStyles.cartItems}>
+                        <Spacer height={5} />
+                        <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+                    </View>
+                </View>
+                
+            </View>
+        }
         <View>
         <View style={salesResume.salesRerportcontent}>
           <CustomButtons title='Ordenes' onPress={() => navigation.navigate('Order') } />
           <CustomButtons title='Cotizaciones' onPress={() => navigation.navigate('Quotes') } />  
         </View>
           
-          <CustomButtons title='Nueva Cotización' onPress={() => navigation.navigate('CreateOrder') } />
+          <CustomButtons title='Nueva Cotización' styleButton={'secudary'} onPress={() => navigation.navigate('CreateOrder') } />
           <CustomButtons title='Reporte de Ventas' onPress={() => navigation.navigate('ViewsReport') } />
         </View>
       </ScrollView>

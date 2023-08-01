@@ -103,11 +103,8 @@ export default function SelectProduct({ route, navigation }) {
     }
 
     const handleCurrentInputChange = (value, field) => {
-
-        setSelectedItems(prevState => ({
-            ...prevState,
-            [field]: value,
-        }));
+        console.log("handleCurrentInputChange", value, field)
+        setSelectedItems(prevState => ({ ...prevState, [field]: value }));
     };
 
     const handlerDShowAddItems = () => {
@@ -144,7 +141,11 @@ export default function SelectProduct({ route, navigation }) {
                         dispatch(clearFormsFields());
                         
                         dispatch(updateFormField({ "fieldName": "Items", "value": [] }));
-                        Alert.alert("Notificación", "La orden se a creado exitosamente",)
+                        Alert.alert("Notificación", "La orden se a creado exitosamente")
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Sales' }],
+                          });
                      }else{
                         Alert.alert("Alerta", result.Message ? result.Message : result.message)
                      }
@@ -210,7 +211,6 @@ export default function SelectProduct({ route, navigation }) {
                         redirect: 'follow'
                     };
 
-                    console.log(tokenID);
 
                     fetch(`https://api.admcloud.net/api/Items/${selectedItemID}?token=${result}`, requestOptions)
                         .then(response => response.json())
@@ -260,8 +260,8 @@ export default function SelectProduct({ route, navigation }) {
         if (loadingData) {
             return null;
         }
-        return (<View key={ data.index + data.item.ItemID } style={globalStyles.touchList}>
-
+        return (
+        <View key={ data.index + data.item.ItemID } style={globalStyles.touchList}>
             <Text style={globalStyles.listContentText}>{data.item.Name}</Text>
             <View style={[globalStyles.rowBetween, { marginTop: 8 }]} >
 
@@ -339,7 +339,7 @@ export default function SelectProduct({ route, navigation }) {
 
                                                 <CustomInput
                                                     value={selectedItems.Quantity}
-                                                    onChangeText={value => handleCurrentInputChange(value,'Quantity')}
+                                                    onChangeText={(value) => handleCurrentInputChange(value,'Quantity')}
                                                     label={"Cantidad"} />
 
                                             </View>
@@ -370,7 +370,9 @@ export default function SelectProduct({ route, navigation }) {
                                             </View>
                                             <View>
                                                 <Text style={{ "marginHorizontal": 15, fontWeight: "bold" }}>% Descuento </Text>
-                                                <CustomInput value={selectedItems.DiscountPercent} onChangeText={(value) => handleCurrentInputChange(value, "DiscountPercent")} label={"Descuento"} />
+                                                <CustomInput 
+                                                value={selectedItems.DiscountPercent} 
+                                                onChangeText={(value) => handleCurrentInputChange(value, "DiscountPercent")} label={"Descuento"} />
                                             </View>
                                             <CustomButtons
                                                 title={"Agregar"}

@@ -30,7 +30,7 @@ export default function DasboardStack({ route, navigation }) {
         screenOptions={screenParams}
     >
         <HomeStack.Screen name="Dasboart" component={BottonTabs} />
-        <HomeStack.Group screenOptions={{headerShown: true,}}>
+        <HomeStack.Group screenOptions={{headerShown: true}}>
             <HomeStack.Screen name="Ventas" component={Sales}/>
             <HomeStack.Screen name="Order" component={Order}/>
             <HomeStack.Screen name="Quotes" component={Quotes}/>
