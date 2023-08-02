@@ -69,7 +69,7 @@ export default function SaleReport() {
           keyExtractor={item => item.ID}
 
         /> : <View style={style.contentSkeleton}>
-          <Skeleton width={"95%"} colorMode={'ligth'} height={310} />
+          <Skeleton width={"95%"} colorMode={'light'} height={310} />
         </View>
         }
       </SafeAreaView>

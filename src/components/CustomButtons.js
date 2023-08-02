@@ -19,7 +19,7 @@ export default function CustomButtons({title, onPress, styleButton}) {
     if(styleButton === 'secudary')
     {
         return (
-          <TouchableOpacity style={onPress ?  [globalStyles.btnSecundaryStyle,{width: "96%",margin: 10}] : styles.buttonNull} 
+          <TouchableOpacity style={onPress ?  [globalStyles.btnSecondaryStyle,{width: "96%",margin: 10}] : styles.buttonNull} 
             onPress={onPress}>
               <Text style={ styles.buttonText}>{title}</Text>
           </TouchableOpacity>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     buttonText: {
-      color: Colors.ligth,
+      color: Colors.light,
       fontSize: 16,
       fontWeight: 'bold',
     },

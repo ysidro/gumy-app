@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   textAlert: {
-    color: Colors.ligth,
+    color: Colors.light,
   },
   btnShowPassword:{
     padding:10,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     color: Colors.secondary,
   },
   errorAlert: {
-    color: Colors.ligth,
+    color: Colors.light,
     fontWeight: "bold",
   },
 });

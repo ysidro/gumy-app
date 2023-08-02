@@ -4,7 +4,7 @@ export const Colors = {
     secondary: '#0CA6E0',
     yellow: '#FEF07D',
     Bluebright:'#EAF6F7',
-    ligth:'#F9FFFF',
+    light:'#F9FFFF',
     red:'#C1292E',
     green:'#5cb85c',
     orange:'#f0ad4e',

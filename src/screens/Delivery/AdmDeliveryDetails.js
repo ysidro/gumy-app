@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView,TouchableOpacity } from 'react-native'
 
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
+
+import { db } from '../../firebaseConfig';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 import { restoreToken } from '../../features/auth/auth'
 import { Colors } from '../../constants/Colors';
@@ -13,48 +16,30 @@ import { globalStyles,salesResume } from '../../styles/global'
 
 export default function AdmDeliveryDetails({ route, navigation }) {
 
-    const deliveryID = route.params.deliveryID
-    const locationID = route.params.locationID
-    const [customerData, setCustomerData] = useState([]);
+    const task = route.params.task
+    const [deliveryData, setDeliveryData] = useState(task);
     const [loadingData, setLoadingData] = useState(null);
-
-   
-    const dispatch = useDispatch()
-
     useEffect(() => {
-      getValueFor('uToken', deliveryID)
-    
+     // getValueFor('uToken', deliveryID)
+     setLoadingData(true)
     }, [])
   
-    async function getValueFor(key, deliveryID) {
+    async function handleConfirmModal(action) {
       try {
-  
-        let result = await SecureStore.getItemAsync(key);
-        if (result !== null) {
-          dispatch(restoreToken(key))
-          var raw = "";
-  
-          var requestOptions = {
-            method: 'GET',
-            body: raw,
-            redirect: 'follow'
-          };
-  
-          fetch(`https://api.admcloud.net/api/Dispatchs/${deliveryID}?token=${result}`, requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                
-              setCustomerData(result.data)
-              setLoadingData(true)
-            })
-            .catch(error => console.log('error', error));
-        } else {
-          dispatch(restoreToken(null))
-          console.log('delivery details no data');
+        taskItem.DeliveryStatus = action
+        await setDoc(doc(db, 'deliveryTasks', taskItem.ID), taskItem);
+        const state = {
+          to: taskItem.AssignedBy,
+          sound: 'default',
+          title: 'Orden Confirmada',
+          body: `El delivery ha confirmado la orden la orden`,
+          data: {},
         }
-      }
-      catch (err) {
-        console.error('delivery any fail.', err);
+        await sendNotification(state)
+        setTaskStatus(action);
+        Alert.alert(`Orden Confirmada`)
+      } catch (error) {
+        console.log("handleConfirmModal", error)
       }
     }
 
@@ -66,24 +51,35 @@ export default function AdmDeliveryDetails({ route, navigation }) {
         <ScrollView>
         <View style={style.cartContent}>
         <View style={style.cartItems}>
-            <View ><Text>{customerData.PriorityDesc}</Text></View>
+            <View ><Text>{deliveryData.PriorityDesc}</Text></View>
             <View style={globalStyles.rowBetween}>
-                <Text style={globalStyles.listTitleText}>{customerData.DocID}</Text>
-                <CustomFormartDate style={salesResume.listSubTitleText} DocDate={customerData.DocDate}/>
+                <Text style={globalStyles.listTitleText}>{deliveryData.DocID}</Text>
+                <CustomFormartDate style={salesResume.listSubTitleText} DocDate={deliveryData.DocDate}/>
             </View>
             <View style={globalStyles.rowBetween}>
-            <Text style={globalStyles.subTitle}>{customerData.RelationshipName}</Text>
+            <Text style={globalStyles.subTitle}>{deliveryData.RelationshipName}</Text>
+            <Text style={globalStyles.subTitle}>{deliveryData.deli}</Text>
             </View>
             <View style={globalStyles.rowBetween}>
                 
-                <Text style={globalStyles.lisLabel}>{customerData.LineBasedAuthorizationStatusDesc}</Text>
-                <Text style={globalStyles.lisLabel}>{customerData.BillingStatusDesc}</Text>
+                <Text style={globalStyles.lisLabel}>{deliveryData.LineBasedAuthorizationStatusDesc}</Text>
+                <Text style={globalStyles.lisLabel}>{deliveryData.BillingStatusDesc}</Text>
             </View>
+
+            {deliveryData.DeliveryStatus === "Rejected" ? 
+              <View>
+                <TouchableOpacity style={globalStyles.btnWarning} onPress={() => navigation.navigate('OrderDetails', { orderID:deliveryData.ID })}>
+              <Text>Ver Orden</Text>
+            </TouchableOpacity>
+            <Text> El delivery justifica que: </Text>
+            <Text> {deliveryData.DeliveryComments}</Text>
+              </View>
+            : "" }
            </View>
         </View>
-        { customerData.InternalNotes ? <View style={style.cartContent}>
+        { deliveryData.InternalNotes ? <View style={style.cartContent}>
             <View style={style.cartItems}>
-                <Text>{customerData.InternalNotes}</Text>
+                <Text>{deliveryData.InternalNotes}</Text>
             </View>
         </View> : ""}
         <View style={style.cartContent}>
@@ -92,7 +88,7 @@ export default function AdmDeliveryDetails({ route, navigation }) {
                 <View style={style.cartItems}>
                 <Text style={globalStyles.subTitle}>Desglose pedido</Text></View>
             { 
-                customerData.Items.map((v,i) => (
+                deliveryData.Items.map((v,i) => (
                     <View key={i} style={style.cartItems}>
                         <View style={globalStyles.rowBetween}>
                             <Text style={globalStyles.lisLabel}>{v.ItemSKU}</Text>
@@ -116,39 +112,39 @@ export default function AdmDeliveryDetails({ route, navigation }) {
         
         :
         <View style={style.contentSkeleton}>
-        <Skeleton width={"100%"} colorMode={'ligth'} height={35} />
+        <Skeleton width={"100%"} colorMode={'light'} height={35} />
         <View style={style.cartContent}>
           <View style={style.cartItems}>
             <Spacer height={30}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
           </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"70%"} colorMode={'light'} height={15} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={10}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"50%"} colorMode={'light'} height={15} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={10}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"90%"} colorMode={'light'} height={15} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={10}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"70%"} colorMode={'light'} height={15} />
           </View>
         </View>
       </View>
@@ -203,12 +199,12 @@ const style = StyleSheet.create({
       padding:16,
     },
     mapLinkText:{
-      color: Colors.Blueligth,
+      color: Colors.Bluelight,
       textAlign:'center',
       fontWeight: 'bold',
     },
     regularButton:{
-      backgroundColor: Colors.secundary,
+      backgroundColor: Colors.Secondary,
       borderRadius: 8,
       padding:14,
     },

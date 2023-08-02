@@ -84,39 +84,39 @@ export default function CustomerDetail({ route,navigation }) {
           </View>
         </View> :
         <View style={style.contentSkeleton}>
-        <Skeleton width={"100%"} colorMode={'ligth'} height={35} />
+        <Skeleton width={"100%"} colorMode={'light'} height={35} />
         <View style={style.cartContent}>
           <View style={style.cartItems}>
             <Spacer height={30}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
           </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"70%"} colorMode={'light'} height={15} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={10}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"50%"} colorMode={'light'} height={15} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={10}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"90%"} colorMode={'light'} height={15} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={10}/>
-            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+            <Skeleton width={"20%"} colorMode={'light'} height={10} />
             </View>
           <View style={style.cartItems}>
             <Spacer height={5}/>
-            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+            <Skeleton width={"70%"} colorMode={'light'} height={15} />
           </View>
         </View>
       </View>
@@ -171,7 +171,7 @@ const style = StyleSheet.create({
     padding:16,
   },
   mapLinkText:{
-    color: Colors.Blueligth,
+    color: Colors.Bluelight,
     textAlign:'center',
     fontWeight: 'bold',
   },

@@ -77,7 +77,7 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         margin: 10,
         padding: 10,
-        backgroundColor: Colors.ligth,
+        backgroundColor: Colors.light,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: Colors.primary,

@@ -47,9 +47,9 @@ export default function OrderDetails({ route, navigation }) {
               
                 matchingUsers.push(taskExists);
             });
-
+     
              if(matchingUsers.length){
-                 setHasDelivery(matchingUsers)
+                 setHasDelivery(matchingUsers[0])
                }
 
             return matchingUsers;
@@ -62,7 +62,7 @@ export default function OrderDetails({ route, navigation }) {
     useEffect(() => {
         getValueFor('uToken', orderID)
         getAllUsersFormDatabase()
-        console.log("user");
+       
     }, [])
 
     async function getValueFor(key, orderID) {
@@ -124,7 +124,7 @@ export default function OrderDetails({ route, navigation }) {
                     <View style={style.cartContent}>
                         <View style={style.cartItems}>
                             <Text style={globalStyles.subTitle}>Orden de Compra</Text>
-                            <Text style={globalStyles.title}>{orderData.RelationshipName}</Text>
+                            <Text style={[globalStyles.listTitleText,{fontSize:22}]}>{orderData.RelationshipName}</Text>
                         </View>
                         <View style={style.cartItems}>
                             <View >
@@ -150,6 +150,7 @@ export default function OrderDetails({ route, navigation }) {
 
                             <Spacer height={10} />
                             <Text style={style.listTitle}>{orderData.TextAmount}</Text>
+                            <Text >{orderData.DeliveryStatus}</Text>
                         </View>
 
 
@@ -162,49 +163,55 @@ export default function OrderDetails({ route, navigation }) {
                         renderItem={(item) => <Item data={item} />}
                         keyExtractor={item => item.ID}
                     />
+                    
                     <View style={globalStyles.itemDeliveryBtnContainer}>
-                        <TouchableOpacity style={!hasDelivery ? globalStyles.btnSecundaryStyle  : globalStyles.btnPrimaryStyleNull}
-                          onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null }>
+                    {hasDelivery.DeliveryStatus === "Rejected" ? 
+                          <TouchableOpacity   style={hasDelivery ? globalStyles.btnSecondaryStyle  : globalStyles.btnPrimaryStyleNull}
+                          onPress={() =>  navigation.navigate('AsingDelivery',{order:hasDelivery} ) }>
+                                <Text style={{color:"#ffffff"}}>Re-asignar Orden</Text>
+                            </TouchableOpacity>
+                    :
+                        <TouchableOpacity   style={!hasDelivery ? globalStyles.btnSecondaryStyle  : globalStyles.btnPrimaryStyleNull}
+                                            onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null }>
                             <Text style={{color:"#ffffff"}}>{  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"}</Text>
-                        </TouchableOpacity>
-                        {/* <CustomButtons title={  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"} onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null } /> */}
+                        </TouchableOpacity> }
                     </View>
                 </>
                 :
                 <View style={style.contentSkeleton}>
-                    <Skeleton width={"100%"} colorMode={'ligth'} height={35} />
+                    <Skeleton width={"100%"} colorMode={'light'} height={35} />
                     <View style={style.cartContent}>
                         <View style={style.cartItems}>
                             <Spacer height={30} />
-                            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                            <Skeleton width={"20%"} colorMode={'light'} height={10} />
                         </View>
                         <View style={style.cartItems}>
                             <Spacer height={5} />
-                            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+                            <Skeleton width={"70%"} colorMode={'light'} height={15} />
                         </View>
                         <View style={style.cartItems}>
                             <Spacer height={10} />
-                            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                            <Skeleton width={"20%"} colorMode={'light'} height={10} />
                         </View>
                         <View style={style.cartItems}>
                             <Spacer height={5} />
-                            <Skeleton width={"50%"} colorMode={'ligth'} height={15} />
+                            <Skeleton width={"50%"} colorMode={'light'} height={15} />
                         </View>
                         <View style={style.cartItems}>
                             <Spacer height={10} />
-                            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                            <Skeleton width={"20%"} colorMode={'light'} height={10} />
                         </View>
                         <View style={style.cartItems}>
                             <Spacer height={5} />
-                            <Skeleton width={"90%"} colorMode={'ligth'} height={15} />
+                            <Skeleton width={"90%"} colorMode={'light'} height={15} />
                         </View>
                         <View style={style.cartItems}>
                             <Spacer height={10} />
-                            <Skeleton width={"20%"} colorMode={'ligth'} height={10} />
+                            <Skeleton width={"20%"} colorMode={'light'} height={10} />
                         </View>
                         <View style={style.cartItems}>
                             <Spacer height={5} />
-                            <Skeleton width={"70%"} colorMode={'ligth'} height={15} />
+                            <Skeleton width={"70%"} colorMode={'light'} height={15} />
                         </View>
                     </View>
                 </View>

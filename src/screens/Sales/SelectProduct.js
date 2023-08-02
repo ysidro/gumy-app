@@ -310,7 +310,7 @@ export default function SelectProduct({ route, navigation }) {
                         onEndReachedThreshold={.5}
                         ListHeaderComponent={() => {
                             return <View>
-                                <Text style={globalStyles.secundaryTitle}>{customerData.Name}</Text>
+                                <Text style={globalStyles.SecondaryTitle}>{customerData.Name}</Text>
                                 <DropDownListItems
                                     listItems={listItems}
                                     setListItems={setListItems}
@@ -433,7 +433,7 @@ const style = StyleSheet.create({
         //  justifyContent: 'center',
         margin: 10,
         padding: 10,
-        backgroundColor: Colors.ligth,
+        backgroundColor: Colors.light,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: Colors.primary,

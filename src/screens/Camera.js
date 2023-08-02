@@ -230,7 +230,7 @@ export default function GummyCamera({route, navigation }) {
                       
                     </View>
                 ) : (
-                    <TouchableOpacity style={styles.btnSecundaryStyle}
+                    <TouchableOpacity style={styles.btnSecondaryStyle}
                         onPress={takePicture}>
                             
                         <Ionicons name="camera-outline" size={24} style={styles.btnIconStyle} color="white" />
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: "32%",
     },
-    btnSecundaryStyle: {
+    btnSecondaryStyle: {
         display: "flex",
         justifyContent: "center",
         alignContent: "center",

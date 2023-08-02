@@ -31,7 +31,30 @@ export default function AsingDelivery({ navigation, route }) {
 
     useEffect(() => {
         getAllUsersFormDatabase()
+    
     },[]);
+
+    useEffect(() => {
+        const order = route.params.order
+        if(order.DeliveryStatus === 'Rejected'){
+            order.DeliveryStatus =  "Assigned",
+            setAddDelivery(order)
+            const getDelivery = delivery.filter(delivery => delivery.id === route.params.order.DeliveryID)
+           
+            if(getDelivery[0].notifications){
+                setNotification({
+                    to: getDelivery[0].notifications,
+                    sound: 'default',
+                    title: 'Notificación de Gumi',
+                    body: `Ha sido asignado un encargo, Doc ID: ${route.params.order.DocID} `,
+                    data: {},
+                });
+            }else{
+                Alert.alert(`${getDelivery[0].name ? getDelivery[0].name  : getDelivery[0].email} no tiene las notificaciones activas, favor notificar via telefonica`)
+            }
+            setBtnLabel(`Esta Tarea esta asignada a ${getDelivery[0].name ? getDelivery[0].name  : getDelivery[0].email}`);
+        }
+    },[delivery]);
 
 
     async function sendPushNotification() {
@@ -57,14 +80,7 @@ export default function AsingDelivery({ navigation, route }) {
             snapshot.forEach((doc) => {
                 users.push({ id: doc.id, ...doc.data() });
             });
-  
-        //    users.map((user) => {
-        //      if(!validateOrderDelivery(user.task))
-        //      {
-        //         setBtnLabel(`Esta Tarea esta asignada a ${user.name}`);
-        //         itsAssigned = false;
-        //      }
-        //    })
+
        
             setDelivery(users);
         
@@ -205,9 +221,9 @@ export default function AsingDelivery({ navigation, route }) {
                     <View  style={styles.itemDelivery}>
                         <View style={styles.itemDeliveryDetail}>
                             <View style={{marginBottom:10}}>
-                            <Skeleton width={"100%"} colorMode={'ligth'}   height={20} />
+                            <Skeleton width={"100%"} colorMode={'light'}   height={20} />
                             </View>  
-                            <Skeleton width={"100%"} colorMode={'ligth'}   height={10} />
+                            <Skeleton width={"100%"} colorMode={'light'}   height={10} />
                         </View> 
                     </View> 
                     }

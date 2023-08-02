@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   itemDeliveryDetail: {
       marginLeft: 10,
   },
-  btnSecundaryStyle: {
+  btnSecondaryStyle: {
       display: "flex",
       justifyContent: "center",
       alignContent: "center",
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
       display: "flex",
       justifyContent: "center",
       alignContent: "center",
-      backgroundColor: Colors.Blueligth ,
+      backgroundColor: Colors.Bluelight ,
       padding: 12,
       borderRadius: 8,
       width: "100%",

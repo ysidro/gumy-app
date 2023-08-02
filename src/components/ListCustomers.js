@@ -129,7 +129,7 @@ const style = StyleSheet.create({
         justifyContent: 'flex-start',
         margin: 10,
         padding: 5,
-        backgroundColor: Colors.ligth,
+        backgroundColor: Colors.light,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: Colors.primary,

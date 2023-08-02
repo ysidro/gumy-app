@@ -44,21 +44,21 @@ export default function ServicesSales() {
         keyExtractor={item => item.id}
 
       /> : <View style={globalStyles.contentSkeleton}>
-        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'ligth'} height={20} />
+        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'light'} height={20} />
         <Spacer height={10} />
-        <Skeleton width={"25%"} colorMode={'ligth'} height={20} />
+        <Skeleton width={"25%"} colorMode={'light'} height={20} />
         <Spacer height={20} />
-        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'ligth'} height={20} />
+        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'light'} height={20} />
         <Spacer height={10} />
-        <Skeleton width={"25%"} colorMode={'ligth'} height={20} />
+        <Skeleton width={"25%"} colorMode={'light'} height={20} />
         <Spacer height={20} />
-        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'ligth'} height={20} />
+        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'light'} height={20} />
         <Spacer height={10} />
-        <Skeleton width={"25%"} colorMode={'ligth'} height={20} />
+        <Skeleton width={"25%"} colorMode={'light'} height={20} />
         <Spacer height={20} />
-        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'ligth'} height={20} />
+        <Skeleton backgroundColor={Colors.primary} highlightColor={Colors.secondary} width={"35%"} colorMode={'light'} height={20} />
         <Spacer height={10} />
-        <Skeleton width={"25%"} colorMode={'ligth'} height={20} />
+        <Skeleton width={"25%"} colorMode={'light'} height={20} />
         <Spacer height={20} />
       </View>
       }

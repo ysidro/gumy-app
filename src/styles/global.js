@@ -10,7 +10,7 @@ export const globalStyles = StyleSheet.create({
 },
     screenContainer:{
         flex: 1,
-        backgroundColor: Colors.ligth,
+        backgroundColor: Colors.light,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -28,7 +28,7 @@ export const globalStyles = StyleSheet.create({
         fontWeight: 'bold',
         color: Colors.primary,
     },
-    secundaryTitle:{
+    SecondaryTitle:{
       fontSize: 16,
       marginHorizontal:10,
       fontWeight: 'bold',
@@ -97,10 +97,20 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: Colors.green,
         padding:5,
       },
+      rejectedLabelContainer:{
+        borderRadius: 8,
+        backgroundColor: Colors.red,
+        padding:5,
+      },
       pendingLabelContainer:{
         borderRadius: 8,
         padding:5,
         backgroundColor: Colors.orange,
+      },
+      defaultLabelContainer:{
+        borderRadius: 8,
+        padding:5,
+        backgroundColor: Colors.primary,
       },
     img: {
         width: 100,
@@ -154,7 +164,7 @@ export const globalStyles = StyleSheet.create({
       borderColor: Colors.primary,
       borderWidth:1,
     },
-      btnSecundaryStyle: {
+      btnSecondaryStyle: {
         display: "flex",
         justifyContent: "center",
         alignContent: "center",
@@ -206,7 +216,7 @@ export const salesResume = StyleSheet.create({
         alignContent: 'center',
       },
       constentList: {
-        backgroundColor: Colors.ligth,
+        backgroundColor: Colors.light,
         padding: 10,
         marginBottom: 10,
         marginLeft: 10,
@@ -242,7 +252,7 @@ export const searchStyle = StyleSheet.create({
       justifyContent: 'flex-start',
       margin: 10,
       padding: 5,
-      backgroundColor: Colors.ligth,
+      backgroundColor: Colors.light,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: Colors.primary,

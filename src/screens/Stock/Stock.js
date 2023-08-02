@@ -85,67 +85,67 @@ const pushScroll = () =>{
   const SkeletonLoda = () =>(
     <View style={style.contentSkeleton}> 
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
       <View style={globalStyles.touchList}>
-              <Skeleton width={"100%"} colorMode={'ligth'}  height={18} /> 
+              <Skeleton width={"100%"} colorMode={'light'}  height={18} /> 
               <Spacer height={10}/>
-              <Skeleton width={"20%"} colorMode={'ligth'}  height={10} /> 
+              <Skeleton width={"20%"} colorMode={'light'}  height={10} /> 
               <Spacer height={8}/>
-              <Skeleton width={"45%"} colorMode={'ligth'}  height={15} /> 
+              <Skeleton width={"45%"} colorMode={'light'}  height={15} /> 
       </View>
     </View> 
   )

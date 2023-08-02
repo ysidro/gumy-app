@@ -5,12 +5,10 @@ import Stock from "../screens/Stock/Stock"
 //import Store from "../screens/Store/Store"
 import AdminTabs from "./AdminTabs"
 import DasboardStack from "./DasboardStack"
-import DeliveryTabs from "./DeliveryTabs"
+import AdminDeliveryHistoryTabs from "./AdminDeveliveryTabs"
 import CustomerTabs from "./CustomerTabs"
-import AllDelivery from "../screens/Delivery/AllDelivery"
-import AdmDeliveryDetails from "../screens/Delivery/AdmDeliveryDetails"
 import Onboarding from "../screens/Onboarding"
-import {Colors} from "../constants/Colors"
+
 const DrawerNav = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -42,13 +40,12 @@ export default function Drawers() {
       <DrawerNav.Screen name="Almacen" component={Stock} />
       {/* <DrawerNav.Screen name="Tienda" component={Store} /> */}
 
-      <DrawerNav.Group screenOptions={{headerShown: true}}>
-          <DrawerNav.Screen name="Delivery" component={AllDelivery}
-          options={{headerShown:true, title: 'Mensajería'}} />
+   
+      <DrawerNav.Screen name="Delivery" component={AdminDeliveryHistoryTabs}
+          options={{headerShown:false, title: 'Mensajería'}} />
 
-          <DrawerNav.Screen name="AdmDeliveryDetails" component={AdmDeliveryDetails}
-          options={{headerShown:true, title: 'Detalle delivery'}} />
-    </DrawerNav.Group>
+     
+
 
       <DrawerNav.Screen name="AdminTabs" component={AdminTabs}  options={{headerShown:false, title: 'Administración',}}   />
       <DrawerNav.Screen name="Onboarding" 

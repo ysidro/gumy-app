@@ -157,9 +157,9 @@ export default function Quote({navigation}) {
           ListFooterComponent={renderFooter}
 
         /></>: <View style={globalStyles.contentSkeleton}>
-          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
-          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
-          <Skeleton width={"95%"} colorMode={'ligth'} height={710} />
+          <Skeleton width={"95%"} colorMode={'light'} height={710} />
+          <Skeleton width={"95%"} colorMode={'light'} height={710} />
+          <Skeleton width={"95%"} colorMode={'light'} height={710} />
         </View>
         }
       </SafeAreaView>
