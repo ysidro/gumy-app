@@ -43,8 +43,6 @@ export default function SelectProduct({ route, navigation }) {
 
         getItem('uToken')
 
-
-
     }, [])
 
     useEffect(() => {

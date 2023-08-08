@@ -11,7 +11,7 @@ import CreateOrder from "../screens/Sales/CreateOrder";
 import OrderDetails from "../screens/Sales/OrderDetails";
 import QuoteDetails from "../screens/Sales/QuoteDetails";
 import SelectProduct from "../screens/Sales/SelectProduct";
-import AsingDelivery from "../screens/Sales/AsingDelivery";
+import AssignDelivery from "../screens/Sales/AssignDelivery";
 import GummyCamera from "../screens/Camera";
 import ViewsReport from "../screens/Sales/ViewsReport";
 import Onboarding from "../screens/Onboarding"
@@ -38,7 +38,7 @@ export default function DasboardStack({ route, navigation }) {
             <HomeStack.Screen name="CreateOrder" component={CreateOrder}/>
             <HomeStack.Screen name="SelectProduct" component={SelectProduct}/>
             <HomeStack.Screen name="OrderDetails" component={OrderDetails}/>
-            <HomeStack.Screen name="AsingDelivery" component={AsingDelivery}/>
+            <HomeStack.Screen name="AssignDelivery" component={AssignDelivery}/>
             <HomeStack.Screen name="Camera" component={GummyCamera}/>
             <HomeStack.Screen name="ViewsReport" component={ViewsReport}/>
             <HomeStack.Screen name="Settings" component={Settings}/>

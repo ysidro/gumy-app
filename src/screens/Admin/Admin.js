@@ -5,13 +5,23 @@ import { collection, addDoc, setDoc, doc, updateDoc, getDocs } from 'firebase/fi
 import { Colors } from '../../constants/Colors';
 import { globalStyles } from '../../styles/global'
 import CustomButtons from '../../components/CustomButtons'
-export default function Admin({navigation}) {
+export default function Admin({navigation,route}) {
 
   const [listUsers, setListUsers] = React.useState([])
 
   React.useEffect(() => {
     getAllUsersFormDatabase()
 },[])
+
+//console.log("route",route.params?.newData)
+React.useEffect(() => {
+    // Update the state with the received data when the component mounts or the data changes
+    //if (route.params?.newData) {
+        setListUsers([]);
+        getAllUsersFormDatabase()
+    //}
+    console.log('effect',route.params)
+  }, [route.params?.newData]);
 
   async function getAllUsersFormDatabase() {
     try {
@@ -38,9 +48,15 @@ const Item = ({ data }) => {
   return (<View key={data.index} style={styles.itemDelivery}>
       <TouchableOpacity style={ styles.itemDeliveryContainer} onPress={ null } >
         
-          <View style={styles.itemDeliveryDetail}>
-              <Text style={styles.labelName}>{data.item.name ? data.item.name : "No Name"}</Text>
-              <Text  style={styles.labelEmail}>{data.item.email}</Text>
+          <View style={globalStyles.rowBetween}>
+            <View style={styles.itemDeliveryDetail}>
+                <Text style={styles.labelName}>{data.item.name ? data.item.name : "No Name"}</Text>
+                <Text  style={styles.labelEmail}>{data.item.email}</Text>
+                <Text  style={styles.labelEmail}>{data.item?.rolle}</Text>
+            </View>
+            <View>
+                <Text>{data.item?.token}</Text>
+            </View>
           </View>
       </TouchableOpacity>
   </View>)
@@ -50,13 +66,19 @@ const Item = ({ data }) => {
     <SafeAreaView style={globalStyles.content}>
   
     
-        <View>
+    <View >
+        <View style={{height:"84.6%"}}>
         <FlatList
-                            data={listUsers}
-                            renderItem={(item) => <Item data={item} />}
-                        />
-          <CustomButtons title='Crear Usuario' onPress={() => navigation.navigate('RegisterNewUser') } />
-          </View>
+                
+                data={listUsers}
+                renderItem={(item) => <Item data={item} />}
+                
+            />
+        </View>
+        <View style={{marginBottom:55}}>
+            <CustomButtons title='Crear Usuario' onPress={() => navigation.navigate('RegisterNewUser') } />
+        </View>
+    </View>
  
     </SafeAreaView>
   )

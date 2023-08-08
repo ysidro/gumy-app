@@ -17,8 +17,9 @@ export default function AdminTabs({navigation}) {
         screenOptions={screenParams}
         
     >
-        <AdminStack.Screen name="Administración" component={Admin} 
+        <AdminStack.Screen name="Admin"  component={Admin} 
         options={{
+          title:"Administración",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer() }>
               <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secondary} />

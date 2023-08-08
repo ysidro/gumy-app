@@ -2,8 +2,8 @@ import * as React from 'react'
 import { View, Text,FlatList, SafeAreaView,StyleSheet,TouchableOpacity, ActivityIndicator} from 'react-native'
 import * as SecureStore from 'expo-secure-store';
 import { useSelector, useDispatch } from "react-redux"
-import { db, auth } from '../../firebaseConfig';
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { db, auth } from '../../firebaseConfig';
 import { collection, query, where ,onSnapshot  } from 'firebase/firestore';
 import { signOut } from '../../features/auth/auth'
 import { globalStyles } from '../../styles/global'
@@ -41,8 +41,7 @@ React.useEffect(() => {
 async function getAllUsersTaskFormDatabase() {
   try {
 
-   
-    const taskRecord = [];
+
     const deliveryTasksRef = collection(db, 'deliveryTasks');
     const q = query(deliveryTasksRef, where('DeliveryID', '==', delivery.id ));
 

@@ -27,7 +27,8 @@ export default function OrderDetails({ route, navigation }) {
     const orderID = route.params.orderID
     const [orderData, setOrderData] = useState([]);
     const [loadingData, setLoadingData] = useState(null);
-    const [hasDelivery, setHasDelivery] = useState(false)
+    const [hasDelivery, setHasDelivery] = useState(false);
+    const [deliveryAssigned, setDeliveryAssigned] = useState(null)
 
     const dispatch = useDispatch()
 
@@ -36,21 +37,28 @@ export default function OrderDetails({ route, navigation }) {
 
             const usersRef = collection(db, 'deliveryTasks');
             const q = query(usersRef, where('ID', '==', orderID ));
-            //const q = query(usersRef);
+            //  const q = query(usersRef);
             const querySnapshot = await getDocs(q);
         
             const matchingUsers = [];
             querySnapshot.forEach((doc) => {
-              const taskExists = doc.data();
-              //const taskExists = user.task.some((taskObj) => taskObj.ID === orderID);
-           
-              
+                const taskExists = doc.data();
+            //  const taskExists = user.task.some((taskObj) => taskObj.ID === orderID);
                 matchingUsers.push(taskExists);
             });
-     
-             if(matchingUsers.length){
-                 setHasDelivery(matchingUsers[0])
-               }
+
+            if(matchingUsers.length){
+
+                const usersRef = collection(db, 'users');
+                const q = query(usersRef, where('id', '==', matchingUsers[0].DeliveryID ));
+                const querySnapshot = await getDocs(q); 
+
+                querySnapshot.forEach((doc) => {
+                    setDeliveryAssigned(doc.data())
+                });
+               
+                setHasDelivery(matchingUsers[0])
+            }
 
             return matchingUsers;
 
@@ -62,7 +70,6 @@ export default function OrderDetails({ route, navigation }) {
     useEffect(() => {
         getValueFor('uToken', orderID)
         getAllUsersFormDatabase()
-       
     }, [])
 
     async function getValueFor(key, orderID) {
@@ -115,6 +122,7 @@ export default function OrderDetails({ route, navigation }) {
     );
 
     const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
+
     return (
         <SafeAreaView style={style.content}>
             {loadingData ?
@@ -166,14 +174,14 @@ export default function OrderDetails({ route, navigation }) {
                     
                     <View style={globalStyles.itemDeliveryBtnContainer}>
                     {hasDelivery.DeliveryStatus === "Rejected" ? 
-                          <TouchableOpacity   style={hasDelivery ? globalStyles.btnSecondaryStyle  : globalStyles.btnPrimaryStyleNull}
-                          onPress={() =>  navigation.navigate('AsingDelivery',{order:hasDelivery} ) }>
+                            <TouchableOpacity  style={hasDelivery ? globalStyles.btnSecondaryStyle  : globalStyles.btnPrimaryStyleNull}
+                            onPress={() =>  navigation.navigate('AssignDelivery',{order:hasDelivery, deliveryAssigned:deliveryAssigned} ) }>
                                 <Text style={{color:"#ffffff"}}>Re-asignar Orden</Text>
                             </TouchableOpacity>
                     :
-                        <TouchableOpacity   style={!hasDelivery ? globalStyles.btnSecondaryStyle  : globalStyles.btnPrimaryStyleNull}
-                                            onPress={() => !hasDelivery ? navigation.navigate('AsingDelivery',{order:orderData} ) : null }>
-                            <Text style={{color:"#ffffff"}}>{  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada"}</Text>
+                        <TouchableOpacity style={!hasDelivery ? globalStyles.btnSecondaryStyle  : globalStyles.btnPrimaryStyleNull}
+                                        onPress={() => !hasDelivery ? navigation.navigate('AssignDelivery',{order:orderData} ) : null }>
+                            <Text style={ globalStyles.TextWhite }>{  !hasDelivery ?  "Asignar Encomienda" : "Orden Asignada a"} {deliveryAssigned ? deliveryAssigned.name : null}</Text>
                         </TouchableOpacity> }
                     </View>
                 </>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, SafeAreaView, StyleSheet, ScrollView,TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView,TouchableOpacity,Image } from 'react-native'
 
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
@@ -7,9 +7,7 @@ import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
 
 import { db } from '../../firebaseConfig';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-
-import { restoreToken } from '../../features/auth/auth'
+import { collection,doc, getDoc , query, where ,onSnapshot  } from 'firebase/firestore';
 import { Colors } from '../../constants/Colors';
 import CustomFormartDate from '../../components/CustomFormartDate'
 import { globalStyles,salesResume } from '../../styles/global'
@@ -19,10 +17,42 @@ export default function AdmDeliveryDetails({ route, navigation }) {
     const task = route.params.task
     const [deliveryData, setDeliveryData] = useState(task);
     const [loadingData, setLoadingData] = useState(null);
+    const [imageData, setImageData] = useState(null)
+  
+    
     useEffect(() => {
-     // getValueFor('uToken', deliveryID)
-     setLoadingData(true)
-    }, [])
+      // Función asincrónica para obtener las imágenes por ID
+      const fetchImageData = async () => {
+        try {
+          
+          const imageIds = task.Documents;
+          if(imageIds.length <= 0) { setLoadingData(true)
+            return};
+          const imageCollection = []
+          // Obtener las imágenes según sus IDs
+          const imagePromises = imageIds.map(async (imageId) => {
+            const imageRef = doc(db, 'files', imageId);
+            const imageSnapshot = await getDoc(imageRef);
+            return imageSnapshot.exists() ? imageSnapshot.data() : null;
+          });
+  
+          // Esperar a que todas las promesas de imágenes se resuelvan
+          const imagesData = await Promise.all(imagePromises);
+  
+          // Filtrar las imágenes que existen (pueden haber null para IDs no encontrados)
+          const filteredImages = imagesData.filter((image) => image !== null);
+       
+          setImageData(filteredImages);
+          setLoadingData(true)
+        } catch (error) {
+          console.error('Error al obtener imágenes por ID:', error);
+        }
+      };
+  
+      fetchImageData();
+    }, []);
+  
+
   
     async function handleConfirmModal(action) {
       try {
@@ -42,7 +72,9 @@ export default function AdmDeliveryDetails({ route, navigation }) {
         console.log("handleConfirmModal", error)
       }
     }
-
+   
+    
+  
     const Spacer = ({ height = 16 }) => <MotiView style={{ height }} />
 
   return (
@@ -51,7 +83,9 @@ export default function AdmDeliveryDetails({ route, navigation }) {
         <ScrollView>
         <View style={style.cartContent}>
         <View style={style.cartItems}>
-            <View ><Text>{deliveryData.PriorityDesc}</Text></View>
+            <View ><Text>{deliveryData.PriorityDesc}</Text>
+            <Text>Orden {deliveryData.DeliveryStatus}</Text>
+            </View>
             <View style={globalStyles.rowBetween}>
                 <Text style={globalStyles.listTitleText}>{deliveryData.DocID}</Text>
                 <CustomFormartDate style={salesResume.listSubTitleText} DocDate={deliveryData.DocDate}/>
@@ -69,12 +103,15 @@ export default function AdmDeliveryDetails({ route, navigation }) {
             {deliveryData.DeliveryStatus === "Rejected" ? 
               <View>
                 <TouchableOpacity style={globalStyles.btnWarning} onPress={() => navigation.navigate('OrderDetails', { orderID:deliveryData.ID })}>
-              <Text>Ver Orden</Text>
-            </TouchableOpacity>
-            <Text> El delivery justifica que: </Text>
-            <Text> {deliveryData.DeliveryComments}</Text>
+                  <Text style={globalStyles.TextWhite}>Re-Asignar Orden</Text>
+                </TouchableOpacity>
+            
+                <Text> El delivery justifica que: </Text>
+                <Text> {deliveryData.DeliveryComments}</Text>
               </View>
             : "" }
+            {imageData?.map(img => <Image key={img.id} source={{ uri: img.url }} style={{ width: 300, height: 300, margin:10 }} />
+            )}
            </View>
         </View>
         { deliveryData.InternalNotes ? <View style={style.cartContent}>
@@ -89,7 +126,7 @@ export default function AdmDeliveryDetails({ route, navigation }) {
                 <Text style={globalStyles.subTitle}>Desglose pedido</Text></View>
             { 
                 deliveryData.Items.map((v,i) => (
-                    <View key={i} style={style.cartItems}>
+                    <View key={v.ItemSKU} style={style.cartItems}>
                         <View style={globalStyles.rowBetween}>
                             <Text style={globalStyles.lisLabel}>{v.ItemSKU}</Text>
                             <Text style={globalStyles.lisLabel}>{v.AuthorizationStatusDesc}</Text>

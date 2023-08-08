@@ -154,14 +154,14 @@ export const globalStyles = StyleSheet.create({
       display: "flex",
       justifyContent: "center",
       alignContent: "center",
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.red,
       padding: 12,
       borderRadius: 8,
       marginHorizontal: 10,
-      marginVertical: 5,
+      marginVertical: 15,
       flexDirection: "row",
       color: "#ffffff",
-      borderColor: Colors.primary,
+      borderColor: Colors.red,
       borderWidth:1,
     },
       btnSecondaryStyle: {
@@ -200,6 +200,11 @@ export const globalStyles = StyleSheet.create({
       flexDirection: "row",
       color: "#dddddd"
   },
+  TextWhite:{
+    color: Colors.white,
+    fontWeight: "bold",
+    
+  }
 })
 
 export const salesResume = StyleSheet.create({

@@ -83,7 +83,6 @@ export default function Order({navigation}) {
         fetch(`https://api.admcloud.net/api/SalesOrders?token=${result}&skip=${skip}`, requestOptions)
           .then(response => response.json())
           .then(result => {
-            console.log(result)
             const filteredData = result.data.filter(item => !ids.has(item.id));
             const newIds = new Set([...ids, ...filteredData.map(item => item.id)]);
             setSalesData([...salesData, ...filteredData]);

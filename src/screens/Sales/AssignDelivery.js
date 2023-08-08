@@ -11,14 +11,15 @@ import { globalStyles } from '../../styles/global';
 import { Colors } from '../../constants/Colors'
 
 
-export default function AsingDelivery({ navigation, route }) {
+export default function AssignDelivery({ navigation, route }) {
     const { notifications } = useSelector(state => state.user)
     const dispatch = useDispatch()
 
     const [addDelivery, setAddDelivery] = useState(null);
     const [delivery, setDelivery] = useState([]);
     const [btnLabel, setBtnLabel] = useState("Asignar a ");
-    const [userNotificationToken, setUserNotificationToken] = useState(null)
+    const [orderData, setOrderData] = useState(route.params.order)
+    const [deliveryInOrderSelected, setDeliveryInOrderSelected] = useState(route.params.deliveryAssigned)
     const [notification, setNotification] = useState(
         {
             to: '',
@@ -29,30 +30,36 @@ export default function AsingDelivery({ navigation, route }) {
           }
     );
 
+
+
     useEffect(() => {
         getAllUsersFormDatabase()
-    
+   
+        if( route.params.deliveryAssigned){
+        
+            setDelivery( route.params.deliveryAssigned)
+        }
     },[]);
 
     useEffect(() => {
-        const order = route.params.order
-        if(order.DeliveryStatus === 'Rejected'){
-            order.DeliveryStatus =  "Assigned",
-            setAddDelivery(order)
-            const getDelivery = delivery.filter(delivery => delivery.id === route.params.order.DeliveryID)
-           
-            if(getDelivery[0].notifications){
+
+        if(orderData.DeliveryStatus === 'Rejected'){
+            orderData.DeliveryStatus =  "Assigned",
+            setAddDelivery(orderData)
+           // const getDelivery = delivery.filter(delivery => delivery.id === orderData.DeliveryID)
+     
+            if(deliveryInOrderSelected.notifications){
                 setNotification({
-                    to: getDelivery[0].notifications,
+                    to: deliveryInOrderSelected.notifications,
                     sound: 'default',
                     title: 'Notificación de Gumi',
-                    body: `Ha sido asignado un encargo, Doc ID: ${route.params.order.DocID} `,
+                    body: `Ha sido asignado un encargo, Doc ID: ${orderData.DocID} `,
                     data: {},
                 });
             }else{
-                Alert.alert(`${getDelivery[0].name ? getDelivery[0].name  : getDelivery[0].email} no tiene las notificaciones activas, favor notificar via telefonica`)
+                Alert.alert(`${deliveryInOrderSelected.name ? deliveryInOrderSelected.name  : deliveryInOrderSelected.email} no tiene las notificaciones activas, favor notificar via telefonica`)
             }
-            setBtnLabel(`Esta Tarea esta asignada a ${getDelivery[0].name ? getDelivery[0].name  : getDelivery[0].email}`);
+            setBtnLabel(`Esta Tarea esta asignada a ${deliveryInOrderSelected.name ? deliveryInOrderSelected.name  : deliveryInOrderSelected.email}`);
         }
     },[delivery]);
 
@@ -93,15 +100,15 @@ export default function AsingDelivery({ navigation, route }) {
     async function updateUserTask(){
         try {
 
-            await setDoc(doc(db,'deliveryTasks', route.params.order.ID), addDelivery);
-            Alert.alert(`Encomienda asinada a: ${delivery.name ? delivery.name : delivery.email }`);
+            await setDoc(doc(db,'deliveryTasks', orderData.ID), addDelivery);
+            Alert.alert(`Encomienda asinada a: ${deliveryInOrderSelected.name ? deliveryInOrderSelected.name  : deliveryInOrderSelected.email}`);
             sendPushNotification();
             
             setAddDelivery(null);
-            navigation.goBack();
+            navigation.popToTop();
         } catch (err) {
             console.log('asing delivery, save user to data base', err);
-            Alert.alert(`No hemos podido asignar la tarea a: ${delivery.name ? delivery.name : delivery.email}`);
+            Alert.alert(`No hemos podido asignar la tarea a: ${deliveryInOrderSelected.name ? deliveryInOrderSelected.name  : deliveryInOrderSelected.email}`);
         }
 
     }
@@ -114,45 +121,46 @@ export default function AsingDelivery({ navigation, route }) {
             AssignedBy : notifications,
             DeliveryID : deliverySelected.id,
             DeliveryStatus : "Assigned",
-            AuthorizationStatusDesc : route.params.order.AuthorizationStatusDesc, 
-            BillingStatusDesc : route.params.order.BillingStatusDesc, 
-            CalculatedNetAmount : route.params.order.CalculatedNetAmount, 
-            CalculatedTaxAmount : route.params.order.CalculatedTaxAmount, 
-            CalculatedTotalAmount : route.params.order.CalculatedTotalAmount, 
-            CalculatedTotalAmountBeforeRetentions : route.params.order.CalculatedTotalAmountBeforeRetentions, 
-            CurrencyID : route.params.order.CurrencyID, 
-            DocDate : route.params.order.DocDate, 
-            DocID : route.params.order.DocID, 
-            DocType : route.params.order.DocType, 
-            DocumentTypeName : route.params.order.DocumentTypeName, 
-            Documents : route.params.order.Documents, 
-            EmployeeID : route.params.order.EmployeeID, 
-            ID : route.params.order.ID, 
-            InternalPriorityColor : route.params.order.InternalPriorityColor, 
-            InternalPriorityDesc : route.params.order.InternalPriorityDesc, 
-            Items : route.params.order.Items, 
-            LineBasedAuthorizationStatusDesc : route.params.order.LineBasedAuthorizationStatusDesc, 
-            LocationID : route.params.order.LocationID, 
-            PaymentTermID : route.params.order.PaymentTermID, 
-            RelationshipID : route.params.order.RelationshipID, 
-            RelationshipName : route.params.order.RelationshipName, 
-            Status : route.params.order.Status, 
-            StatusDesc : route.params.order.StatusDesc, 
-            TaxAmount : route.params.order.TaxAmount, 
-            TextAmount : route.params.order.TextAmount, 
-            TotalAmount : route.params.order.TotalAmount
+            AuthorizationStatusDesc : orderData.AuthorizationStatusDesc, 
+            BillingStatusDesc : orderData.BillingStatusDesc, 
+            CalculatedNetAmount : orderData.CalculatedNetAmount, 
+            CalculatedTaxAmount : orderData.CalculatedTaxAmount, 
+            CalculatedTotalAmount : orderData.CalculatedTotalAmount, 
+            CalculatedTotalAmountBeforeRetentions : orderData.CalculatedTotalAmountBeforeRetentions, 
+            CurrencyID : orderData.CurrencyID, 
+            DocDate : orderData.DocDate, 
+            DocID : orderData.DocID, 
+            DocType : orderData.DocType, 
+            DocumentTypeName : orderData.DocumentTypeName, 
+            Documents : orderData.Documents, 
+            EmployeeID : orderData.EmployeeID, 
+            ID : orderData.ID, 
+            InternalPriorityColor : orderData.InternalPriorityColor, 
+            InternalPriorityDesc : orderData.InternalPriorityDesc, 
+            Items : orderData.Items, 
+            LineBasedAuthorizationStatusDesc : orderData.LineBasedAuthorizationStatusDesc, 
+            LocationID : orderData.LocationID, 
+            PaymentTermID : orderData.PaymentTermID, 
+            RelationshipID : orderData.RelationshipID, 
+            RelationshipName : orderData.RelationshipName, 
+            Status : orderData.Status, 
+            StatusDesc : orderData.StatusDesc, 
+            TaxAmount : orderData.TaxAmount, 
+            TextAmount : orderData.TextAmount, 
+            TotalAmount : orderData.TotalAmount
             };
-
+            console.log("ya esta asignada",deliverySelected)
             setAddDelivery(tasks)
             if(deliverySelected.notifications){
                 setNotification({
                     to: deliverySelected.notifications,
                     sound: 'default',
                     title: 'Notificación de Gumi',
-                    body: `Ha sido asignado un encargo, Doc ID: ${route.params.order.DocID} `,
+                    body: `Ha sido asignado un encargo, Doc ID: ${orderData.DocID} `,
                     data: {},
                 });
             }else{
+              
                 Alert.alert(`${deliverySelected.name ? deliverySelected.name  : deliverySelected.email} no tiene las notificaciones activas, favor notificar via telefonica`)
             }
             setBtnLabel(`Esta Tarea esta asignada a ${deliverySelected.name ? deliverySelected.name  : deliverySelected.email}`);
@@ -165,7 +173,7 @@ export default function AsingDelivery({ navigation, route }) {
     const handlerCamera = () => {
 
        if(!validateOrderDelivery()){
-        navigation.navigate('Camera', {task: route.params.order})
+        navigation.navigate('Camera', {task: orderData})
        }else{
         Alert.alert('Asigne un delivery primero')
        }
@@ -176,7 +184,7 @@ export default function AsingDelivery({ navigation, route }) {
         const deliveryTasksRef = collection(db, "deliveryTasks");
         let itsAssigned = true;
         // Create a query against the collection.
-        const q = query(deliveryTasksRef, where("ID", "==", route.params.order.ID));
+        const q = query(deliveryTasksRef, where("ID", "==", orderData.ID));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
                 const task = doc.data();
@@ -186,35 +194,37 @@ export default function AsingDelivery({ navigation, route }) {
         if(tasksHistory.length > 0){
             itsAssigned = false;
         }
-        console.log(itsAssigned);
+  
         return itsAssigned;
     }
 
-    const Item = ({ data }) => {
+    const Item = ({data}) => {
+        console.log(data.item,"data item delivery")
         //if(validateOrderDelivery(data.item.task)){
         return (<View key={data.index} style={styles.itemDelivery}>
             <TouchableOpacity style={ styles.itemDeliveryContainer} onPress={ addDelivery?.id === data.item.id ? null : () => selectDeliveryForOrder(data.item) } >
                 <MaterialIcons name="delivery-dining" size={40} style={styles.btnIconStyle} color={Colors.primary} />
                 <View style={styles.itemDeliveryDetail}>
-                    <Text style={styles.labelName}>{data.item.name}</Text>
+                    <Text style={styles.labelName}>{data.item.name ? data.item.name : "No Name"}</Text>
                     <Text  style={styles.labelEmail}>{data.item.email}</Text>
                 </View>
             </TouchableOpacity>
         </View>)
     // }
     };
-  
+  // orderData.RelationshipName
     return (
         <SafeAreaView style={styles.content}>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContentContainer}>
-                    <Text style={styles.subTitle}>{route.params.order.RelationshipName}</Text>
+                    <Text style={styles.subTitle}>{}</Text>
                     <Text style={styles.title}>Selecionar Mensajero</Text>
                     {delivery ? 
                     <View style={styles.rowBetween}>
                         <FlatList
                             data={delivery}
                             renderItem={(item) => <Item data={item} />}
+                            keyExtractor={item => item.id}
                         />
                     </View> 
                     :

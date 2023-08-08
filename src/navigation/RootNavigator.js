@@ -14,7 +14,7 @@ import { auth } from '../firebaseConfig';
 import { onAuthStateChanged } from "firebase/auth";
 import { setUser, setTodos, setNotificationToken } from '../features/user/user';
 import { db } from '../firebaseConfig';
-import { collection, addDoc, setDoc, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, setDoc, doc, getDoc } from 'firebase/firestore';
 
 import Spash from "../screens/Spash";
 

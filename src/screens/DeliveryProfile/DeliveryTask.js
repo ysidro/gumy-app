@@ -8,6 +8,7 @@ import { Skeleton } from 'moti/skeleton'
 import CustomInputs from '../../components/CustomInputs'
 import { BottomSheetModal, BottomSheetModalProvider, } from "@gorhom/bottom-sheet";
 
+
 import { Colors } from '../../constants/Colors';
 import { globalStyles, salesResume } from '../../styles/global'
 export default function DeliveryTask({ route, navigation }) {

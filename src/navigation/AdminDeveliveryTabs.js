@@ -29,7 +29,11 @@ export default function AdminDeliveryHistoryTabs({navigation}) {
         }} />
 
         <AdminDeliveryHistoryStack.Screen name="AdmDeliveryDetails" component={AdmDeliveryDetails}  options={{ title:"Detalle Asignación" }} />
-        <AdminDeliveryHistoryStack.Screen name="OrderDetails" component={OrderDetails} />
+        <AdminDeliveryHistoryStack.Screen 
+          name="DeliveryOrderDetails" 
+          component={OrderDetails}
+          options={{ title:"Detalle Orden" }}
+           />
       
 
     </AdminDeliveryHistoryStack.Navigator>

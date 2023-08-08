@@ -33,23 +33,12 @@ export default function AllDelivery({ navigation }) {
     try {
 
 
-      const taskRecord = [];
+
       const deliveryTasksRef = collection(db, 'deliveryTasks');
       const tasksSnapshot = await getDocs(deliveryTasksRef);
       const tasksData = tasksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-      // Obtener todas las imágenes relacionadas con las tareas
-      const taskImagePromises = tasksData.map(async (task) => {
-        const imagesRef = collection(db, 'files');
-        const imagesSnapshot = await getDocs(query(imagesRef, where('id', '==', task.Documents)));
-        const imagesData = imagesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        return { ...task, images: imagesData };
-      });
-
-      // Esperar a que todas las promesas de imágenes se resuelvan
-      const tasksWithImages = await Promise.all(taskImagePromises);
-
-      setDeliveryData(tasksWithImages);
+      setDeliveryData(tasksData);
       setLoadingData(true)
 
     } catch (err) {
@@ -119,12 +108,21 @@ export default function AllDelivery({ navigation }) {
     <>
 
       <SafeAreaView style={style.content}>
-        {loadingData ? <FlatList
+        {loadingData ? <View>
+          
+            <TouchableOpacity style={[globalStyles.btnPrimaryStyle,{marginTop:35, width:"95%",marginHorizontal:10}]}>
+            <Text style={globalStyles.TextWhite}>Asignar un Envio</Text>
+          </TouchableOpacity>
+          <FlatList
           data={deliveryData}
           renderItem={(item) => <Item data={item} />}
           keyExtractor={item => item.ID}
 
-        /> : <View style={style.contentSkeleton}>
+        /> 
+        
+       
+
+        </View> : <View style={style.contentSkeleton}>
           <Skeleton width={"95%"} colorMode={'light'} height={35} />
           <View style={style.cartContent}>
             <View style={style.cartItems}>

@@ -29,7 +29,7 @@ export default function DropDownListItems({
               
               return (
                 <View style={style.dropdown3RowChildStyle}>
-                     {isSearching ? <ActivityIndicator/> : null}<Text style={style.dropdown3RowTxt}>{item.SKU} - {item.Name} </Text>
+                    {isSearching ? <ActivityIndicator/> : null}<Text style={style.dropdown3RowTxt}>{item.SKU} - {item.Name} </Text>
                   
                 </View>
               );
@@ -110,7 +110,7 @@ const style = StyleSheet.create({
       justifyContent: 'flex-start',
       margin: 10,
       padding: 5,
-      backgroundColor: Colors.light,
+      backgroundColor: Colors.ligth,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: Colors.primary,
