@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList, Alert } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
 import * as React from 'react'
 import { db } from '../../firebaseConfig';
 import { collection, addDoc, setDoc, doc, updateDoc, getDocs } from 'firebase/firestore';
@@ -6,24 +7,20 @@ import { Colors } from '../../constants/Colors';
 import { globalStyles } from '../../styles/global'
 import CustomButtons from '../../components/CustomButtons'
 export default function Admin({navigation,route}) {
-
+    const isFocused = useIsFocused();
   const [listUsers, setListUsers] = React.useState([])
 
   React.useEffect(() => {
     getAllUsersFormDatabase()
 },[])
 
-//console.log("route",route.params?.newData)
 React.useEffect(() => {
-    // Update the state with the received data when the component mounts or the data changes
-    //if (route.params?.newData) {
         setListUsers([]);
         getAllUsersFormDatabase()
-    //}
-    console.log('effect',route.params)
-  }, [route.params?.newData]);
 
-  async function getAllUsersFormDatabase() {
+}, [isFocused]);
+
+async function getAllUsersFormDatabase() {
     try {
         const userRef = collection(db, 'users')
         const snapshot = await getDocs(userRef);
@@ -33,10 +30,7 @@ React.useEffect(() => {
         snapshot.forEach((doc) => {
             users.push({ id: doc.id, ...doc.data() });
         });
-
-   
         setListUsers(users);
-    
 
     } catch (err) {
         console.error('any fail.', err)
@@ -55,7 +49,7 @@ const Item = ({ data }) => {
                 <Text  style={styles.labelEmail}>{data.item?.rolle}</Text>
             </View>
             <View>
-                <Text>{data.item?.token}</Text>
+                {data.item.token ? <Text>Token: {data.item.token}</Text> : ""}
             </View>
           </View>
       </TouchableOpacity>

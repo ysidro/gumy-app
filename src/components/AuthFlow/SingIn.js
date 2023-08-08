@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 
 import { db } from "../../firebaseConfig"
 import { doc, setDoc,addDoc,collection } from 'firebase/firestore';
@@ -24,8 +24,12 @@ export default function SingIn({setUpdateScreen}) {
   const [token, setToken] = useState("");
   const [passVisible, setPassVisible] = useState(false);
 
+useEffect(() => {
+  setToken(generateRandomNumber());
+},[]);
+
   const handlerFirebaseSubmit = () => {
-    setToken(generateRandomNumber());
+    
 
     if(email === "" && password === ""){
       Alert.alert("Los campos no debe estar vacios")
