@@ -12,6 +12,7 @@ export default function DeliveryHome({navigation}) {
   const dispatch = useDispatch()
   const delivery = useSelector(state => state.user);
   const [listTask,setListTask] = React.useState([]);
+  const [loading,setLoading] = React.useState(true);
 
   React.useEffect(() => {
         getAllUsersTaskFormDatabase();
@@ -46,13 +47,20 @@ async function getAllUsersTaskFormDatabase() {
     const q = query(deliveryTasksRef, where('DeliveryID', '==', delivery.id ));
 
     onSnapshot(q, (querySnapshot) => {
-      const taskRecord = [];
+      if(querySnapshot.empty){
+        setLoading(false)
+        setListTask(null)
+      }else{
+        const taskRecord = [];
       querySnapshot.forEach((doc) => {
         const taskExists = doc.data();
         taskRecord.push(taskExists);
       });
-      setListTask(taskRecord);
+        setListTask(taskRecord);
+        setLoading(false)
+      }
     });
+  
 
   } catch (err) {
       console.error('getAllUsersTaskFormDatabase fail.', err)
@@ -79,22 +87,40 @@ async function getAllUsersTaskFormDatabase() {
     </TouchableOpacity>
   ); 
 
-  return (
-    <SafeAreaView style={style.content}>
-
-    { listTask.length > 0 ? <FlatList
+  if(loading){
+      return (
+          <SafeAreaView style={style.content}>
+          <View style={style.content}>
+          <ActivityIndicator/> 
+        </View>  
+        </SafeAreaView>
+      )
+    }
+  
+  if(listTask){
+    return (
+      <SafeAreaView style={style.content}>
+        <View style={style.content}>
+        <FlatList
         data={listTask}
         renderItem={(item) => <Item data={item} />}
         keyExtractor={item => item.ID}
       />
-      :  
-      <View style={style.content}>
-        <ActivityIndicator/>
-      </View>  
-    }
+        </View> 
+      </SafeAreaView>
+    )
+  }
 
+  return (
+    <SafeAreaView style={style.content}>
+      <View style={style.content}>
+        <View style={globalStyles.constentList}>
+       <Text style={globalStyles.title}>Aun no hay tareas asignadas</Text>
+      </View> 
+      </View> 
     </SafeAreaView>
   )
+
 }
 
 const style = StyleSheet.create({

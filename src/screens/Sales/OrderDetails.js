@@ -32,7 +32,7 @@ export default function OrderDetails({ route, navigation }) {
 
     const dispatch = useDispatch()
 
-    async function getAllUsersFormDatabase() {
+    async function getDeliveryTasksDatabase() {
         try {
 
             const usersRef = collection(db, 'deliveryTasks');
@@ -69,7 +69,7 @@ export default function OrderDetails({ route, navigation }) {
 
     useEffect(() => {
         getValueFor('uToken', orderID)
-        getAllUsersFormDatabase()
+        getDeliveryTasksDatabase()
     }, [])
 
     async function getValueFor(key, orderID) {

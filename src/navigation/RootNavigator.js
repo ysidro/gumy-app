@@ -40,7 +40,6 @@ export default function RootNavigator() {
             notifications: pushNotificationToken,
             name: user.displayName,
             email: user.email,
-            task:[],
             createAt: user.metadata.creationTime,
           }
           dispatch(restoreToken(user.stsTokenManager.accessToken))

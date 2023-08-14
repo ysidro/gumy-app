@@ -126,7 +126,9 @@ export default function Login() {
         onPress={() => admAuth({ email, password })}
       />
 
-      <TouchableOpacity style={styles.btnSwitchProfile}  onPress={() => dispatch(setAuthState('firebase')) }><Text style={styles.btnSwitchProfileLabel}>Cambiar Delivery</Text></TouchableOpacity>
+      <TouchableOpacity style={styles.btnSwitchProfile}  onPress={() => dispatch(setAuthState('firebase')) }><Text style={styles.btnSwitchProfileLabel}>Cambiar a Gumi Services</Text></TouchableOpacity>
+      
+      <TouchableOpacity style={styles.btnSwitchProfile}  onPress={() => dispatch(setAuthState('SingInByToken')) }><Text style={styles.btnSwitchProfileLabel}>Validar Token</Text></TouchableOpacity>
     
     </View>
   );

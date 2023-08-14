@@ -15,7 +15,7 @@ import Spash from "../../screens/Spash";
 
 export default function Delivery() {
   const [email, setEmail] = useState("mensajerovillajuana01@gumitressupply.com");
-  const [password, setPassword] = useState("delivery_villa_0314");
+  const [password, setPassword] = useState("10223344");
   const [passVisible, setPassVisible] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -94,7 +94,7 @@ export default function Delivery() {
         source={require("../../images/icon.png")}
         style={globalStyles.img}
       />
-      <Text style={globalStyles.title}>Gumi Delivery</Text>
+      <Text style={globalStyles.title}>Gumi Services</Text>
       <CustomInput label={"Email"} value={email} onChangeText={setEmail} />
       <CustomInput
         label={"Password"}
@@ -116,6 +116,8 @@ export default function Delivery() {
       <TouchableOpacity style={styles.btnSwitchProfile} onPress={() => dispatch(setAuthState('signIn')) }>
         <Text style={styles.btnSwitchProfileLabel}>Cambiar a ADM</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.btnSwitchProfile}  onPress={() => dispatch(setAuthState('SingInByToken')) }><Text style={styles.btnSwitchProfileLabel}>Validar Token</Text></TouchableOpacity>
     
     </View>
   );

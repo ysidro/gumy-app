@@ -66,21 +66,7 @@ useEffect(() => {
      if(newUserRef){
       setUpdateScreen(true);
      }
-      //  createUserWithEmailAndPassword(auth,email, password)
-      //  .then((userCredential) => {
-      //   // Signed in 
-      //   const user = userCredential.user;
-      //   user.updateProfile({
-      //     displayName: name,
-      //     userRole: "Delivery",
-      //   });
-      //   console.log('User registered:', user);
-      //   // ...
-      // })
-      // .catch((error) => {
-      //   console.log('User registered:', error);
-      //   // ..
-      // });
+      
   
       console.log('User registered:', newUserRef.id);
     } catch (error) {

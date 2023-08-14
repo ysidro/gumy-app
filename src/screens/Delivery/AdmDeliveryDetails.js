@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
 import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
-
+import { useIsFocused } from '@react-navigation/native'
 import { db } from '../../firebaseConfig';
 import { collection,doc, getDoc , query, where ,onSnapshot  } from 'firebase/firestore';
 import { Colors } from '../../constants/Colors';
@@ -13,13 +13,17 @@ import CustomFormartDate from '../../components/CustomFormartDate'
 import { globalStyles,salesResume } from '../../styles/global'
 
 export default function AdmDeliveryDetails({ route, navigation }) {
-
+  const isFocused = useIsFocused();
     const task = route.params.task
     const [deliveryData, setDeliveryData] = useState(task);
     const [loadingData, setLoadingData] = useState(null);
     const [imageData, setImageData] = useState(null)
   
-    
+  useEffect(() => {
+     console.log(route.params)
+
+  }, [isFocused]);
+
     useEffect(() => {
       // Función asincrónica para obtener las imágenes por ID
       const fetchImageData = async () => {

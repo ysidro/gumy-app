@@ -80,7 +80,7 @@ export default function DeliveryTask({ route, navigation }) {
         await sendNotification(state)
 
         Alert.alert(`Esta Orden ha Declinada`)
-
+        navigation.goBack();
 
         setTimeout(() => {
           setIsOpen(false);

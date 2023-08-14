@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { useSelector, useDispatch } from "react-redux"
 import * as SecureStore from 'expo-secure-store'
+import { useIsFocused } from '@react-navigation/native'
 import { Skeleton } from 'moti/skeleton'
 import { MotiView } from 'moti';
 import { collection, query, where, onSnapshot, getDocs } from 'firebase/firestore';
@@ -20,7 +21,7 @@ import CustomFormartDate from '../../components/CustomFormartDate'
 
 
 export default function AllDelivery({ navigation }) {
-
+  const isFocused = useIsFocused();
   const [deliveryData, setDeliveryData] = useState([]);
   const [loadingData, setLoadingData] = useState(null);
   const dispatch = useDispatch()
@@ -28,6 +29,11 @@ export default function AllDelivery({ navigation }) {
   useEffect(() => {
     getAllTaskFormDatabase();
   }, [])
+
+  useEffect(() => {
+    getAllTaskFormDatabase();
+
+}, [isFocused]);
 
   async function getAllTaskFormDatabase() {
     try {
