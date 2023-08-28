@@ -3,7 +3,7 @@ import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView } from "
 
 import Onboarding from "../screens/Onboarding"
 import Settings from "../screens/Settings"
-import MensajeriaTabs from "./MensajeriaTabs"
+import MensajeriaTabs from "./DeliveryBottonTaps"
 const DrawerNav = createDrawerNavigator();
 
 function CustomDrawerContent(props) {

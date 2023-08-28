@@ -6,13 +6,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import AuthStack from "./AuthStack"
 import Drawers from "./Drawers"
 import DeliveryDrawers from "./DeliveryDrawers";
+import VendedorStack from "./VendedorStack";
 
 import { restoreToken } from '../features/auth/auth';
 import { setAuthState } from '../features/auth/auth';
 
 import { auth } from '../firebaseConfig';
 import { onAuthStateChanged } from "firebase/auth";
-import { setUser, setTodos, setNotificationToken } from '../features/user/user';
+import { setUser, setTodos,setAdmToken } from '../features/user/user';
 import { db } from '../firebaseConfig';
 import { collection, setDoc, doc, getDoc } from 'firebase/firestore';
 
@@ -21,7 +22,7 @@ import Spash from "../screens/Spash";
 export default function RootNavigator() {
 
   const { userToken,authState, isLoading } = useSelector(state => state.auth)
-  
+  const { rolle } = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   useEffect(() =>{
@@ -56,7 +57,7 @@ export default function RootNavigator() {
 
       //  console.log('user no auth')
       }
-     console.log(pushNotificationToken);
+     console.log("pushNotificationToken",pushNotificationToken);
       return unsubscribeAuth;
     });
   },[])
@@ -90,8 +91,11 @@ export default function RootNavigator() {
     // user.notifications = notifications
     
     if(snapshot.exists()){
-
-      dispatch(setTodos(snapshot.data().task))
+      dispatch(setTodos(snapshot.data().rolle))
+     
+      if(snapshot.data().adm_token){
+        dispatch(setAdmToken(snapshot.data().adm_token))
+      }
       dispatch(setAuthState('firebase'))
       console.log('firebase get user exist')
       return;
@@ -102,7 +106,7 @@ export default function RootNavigator() {
       // Remove any undefined fields from the user object
      // const cleanedUser = Object.fromEntries(Object.entries(user).filter(([_, value]) => value !== undefined));
       
-      await setDoc(userRef, user);
+      //await setDoc(userRef, user);
       console.log('User saved in the database');
     } else {
       console.error('Invalid user object:', user);
@@ -113,9 +117,18 @@ export default function RootNavigator() {
   }
 
   if(isLoading) return <Spash/>;
- // console.log('root nav', authState)
+  
   if(authState == 'firebase') 
   {
+    
+    if(rolle === 'vendedor'){
+      return (
+        <NavigationContainer>
+          { userToken ? <VendedorStack/> : <AuthStack/>}
+        </NavigationContainer>
+      )
+    }
+
     return (
       <NavigationContainer>
         { userToken ? <DeliveryDrawers/> : <AuthStack/>}

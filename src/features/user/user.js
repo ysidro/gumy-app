@@ -6,6 +6,8 @@ const initialState = {
   email: null,
   notifications:null,
   createdAt: null,
+  rolle:null,
+  adm_token:null,
   task: [],
 };
 
@@ -29,7 +31,10 @@ const userSlice = createSlice({
       state.task = state.task.filter(task => task.id !== action.payload);
     },
     setTodos: (state, action) => {
-      state.task = action.payload;
+      state.rolle = action.payload;
+    },
+    setAdmToken: (state, action) => {
+      state.adm_token = action.payload;
     },
     setNotificationToken: (state, action) => {
       state.notifications = action.payload;
@@ -37,5 +42,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, addTodo, deleteTodo, setTodos, setNotificationToken } = userSlice.actions;
+export const { setUser, addTodo, deleteTodo, setTodos, setAdmToken, setNotificationToken } = userSlice.actions;
 export default userSlice.reducer;

@@ -85,7 +85,8 @@ export default function AssignDelivery({ navigation, route }) {
             
 
             snapshot.forEach((doc) => {
-                users.push({ id: doc.id, ...doc.data() });
+               
+                doc.data().rolle === "delivery" ? users.push({ id: doc.id, ...doc.data() }) : "";
             });
 
        
@@ -98,17 +99,18 @@ export default function AssignDelivery({ navigation, route }) {
     }
 
     async function updateUserTask(){
+     
         try {
-
+   
             await setDoc(doc(db,'deliveryTasks', orderData.ID), addDelivery);
-            Alert.alert(`Encomienda asinada a: ${deliveryInOrderSelected.name ? deliveryInOrderSelected.name  : deliveryInOrderSelected.email}`);
+            Alert.alert(`Encomienda acutalizada con exito`);
             sendPushNotification();
             
             setAddDelivery(null);
             navigation.popToTop();
         } catch (err) {
-            console.log('asing delivery, save user to data base', err);
-            Alert.alert(`No hemos podido asignar la tarea a: ${deliveryInOrderSelected.name ? deliveryInOrderSelected.name  : deliveryInOrderSelected.email}`);
+            console.log('updateUserTask delivery, save user to data base', err);
+            Alert.alert(`No hemos podido asignar la tarea`);
         }
 
     }

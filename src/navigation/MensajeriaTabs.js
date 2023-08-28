@@ -22,14 +22,14 @@ export default function MensajeriaTabs({navigation}) {
     >
         <MensajeriaStack.Screen name="Mensajeria" component={DeliveryHome} 
         options={{
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.openDrawer() }>
-              <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secondary} />
-            </TouchableOpacity>
-            ),
-          tabBarIcon:({color}) => (
-          <AntDesign name="setting" size={24} color={color} />
-          )
+          // headerLeft: () => (
+          //   <TouchableOpacity onPress={() => navigation.openDrawer() }>
+          //     <FontAwesome name="align-left" size={22} style={{marginLeft:25}} color={Colors.secondary} />
+          //   </TouchableOpacity>
+          //   ),
+          // tabBarIcon:({color}) => (
+          // <AntDesign name="setting" size={24} color={color} />
+          // )
         }} />
 
         <MensajeriaStack.Screen name="Detalle" component={DeliveryTask} />

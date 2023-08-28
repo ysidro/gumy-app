@@ -14,7 +14,7 @@ import { Colors } from "../../constants/Colors";
 import Spash from "../../screens/Spash";
 
 export default function Delivery() {
-  const [email, setEmail] = useState("mensajerovillajuana01@gumitressupply.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("10223344");
   const [passVisible, setPassVisible] = useState(false);
   const [alert, setAlert] = useState(false);

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setAuthState } from "../../features/auth/auth";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db,auth } from '../../firebaseConfig';
-import { collection,doc, query, where, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection,doc, query, where, getDocs,setDoc, deleteDoc } from 'firebase/firestore';
 
 import CustomInput from "../CustomInputs";
 import CustomButtons from "../CustomButtons";
@@ -36,6 +36,12 @@ export default function SingInByToken() {
                 });
     }
 
+    function generateRandomNumber() {
+        const min = 100000; // Mínimo valor de 6 dígitos (100000)
+        const max = 999999; // Máximo valor de 6 dígitos (999999)
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+        
+      }
     async function getUsersByToken() {
          const usersRef = collection(db, "users");
      
@@ -93,18 +99,26 @@ export default function SingInByToken() {
 
         createUserWithEmailAndPassword(auth,userData.email, password)
        .then((userCredential) => {
-        removeRegister()
+        
     
         const user = userCredential.user;
-        updateProfile(user,{
+        userData.id = user.uid;
+        userData.token = generateRandomNumber();
+        updateProfile((user),{
             displayName: userData.name,
-            userRole: userData.rolle,
-        });
-        
+            providerId: userData.rolle,
+            tenantId:userData.adm_token
+        }).then(function() {
+            setDoc(doc(db,'users', user.uid), userData);
+        }, function(error) {
+            console.log('updateProfile error',error)
+            // An error happened.
+        });  
+        removeRegister()
         Alert.alert("Cuenta Validada Con exito", "Hora puedes usar la pantalla de login de Gumi Services para hacer login")
       })
       .catch((error) => {
-        console.log('User registered:', error);
+        console.log('User registered erro:', error);
         // ..
       });
     }

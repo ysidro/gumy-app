@@ -9,7 +9,8 @@ import { searchStyle } from '../styles/global'
 export default function ListCustomers({
     onChange,
     label,
-    tokenID
+    tokenID,
+    userID,
   }){
 
     const dispatch = useDispatch()
@@ -18,13 +19,13 @@ export default function ListCustomers({
       const [customer,setCustomers] = useState([])
 
       const URL_DETAILED = `Customers`
-      const URL_PARAMETER = `skip=0`
+      const URL_PARAMETER =  userID  ? `SalesRepID=${userID}&skip=0` : `skip=0`;
       const requestOptions = {
       method: 'GET',
         body: '',
         redirect: 'follow'
       };
-
+    
       const {isLoading, error, responseJSON} = useFetch(URL_DETAILED, URL_PARAMETER, requestOptions)
         
       useEffect(()=>{
@@ -36,11 +37,13 @@ export default function ListCustomers({
       },[isLoading])
 
       useEffect(()=>{
-          getRelationshipData(tokenID)
+          getRelationshipData(tokenID,userID)
       },[form.RelationshipID])
     
-      async function getRelationshipData(tokenID) {
+      async function getRelationshipData(tokenID, userID) {
         try {
+
+              
                 var requestOptions = {
                     method: 'GET',
                     body: '',
