@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { View, Text,FlatList, SafeAreaView,StyleSheet,TouchableOpacity, ActivityIndicator} from 'react-native'
-import * as SecureStore from 'expo-secure-store';
+import { db } from '../../firebaseConfig';
+import { collection,where, addDoc, doc,query, getDocs } from 'firebase/firestore';
 import { useSelector, useDispatch } from "react-redux"
 import {AntDesign, FontAwesome} from "@expo/vector-icons"
 import { globalStyles, salesResume } from '../../styles/global'
@@ -10,13 +11,45 @@ import { Colors } from "../../constants/Colors";
 
 export default function VendeorHome({navigation}) {
 
-  const { name } = useSelector(state => state.user)
+  const { name,id } = useSelector(state => state.user)
   const dispatch = useDispatch()
-
 
   const vendedor = useSelector(state => state.user);
   const [listTask,setListTask] = React.useState([]);
   const [loading,setLoading] = React.useState(true);
+  const [daylySales, setDaylySales] = React.useState(0)
+  const [monthySales, setMonthylySales] = React.useState(0)
+
+  React.useEffect(()=>{
+    getVendedorData();
+  },[])
+
+  async function getVendedorData() {
+    try {
+
+      var date = new Date();
+      var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+
+        const q = query(collection(db, "visitas"), where("vendedor_id", "==", id));
+        const q2 = query(collection(db, "visitas"), where("vendedor_id", "==", id), where("date", ">=", firstDay.toLocaleDateString()), where("date", "<=", lastDay.toLocaleDateString()));
+        
+        const querySnapshot = await getDocs(q);
+        let index = 0;
+        
+        querySnapshot.forEach((doc) => {
+          index++;
+          console.log(doc.id, " => ", doc.data().count);
+        });
+
+        setDaylySales(index);
+        
+    } catch (err) {
+        console.error('any fail.', err)
+    }
+}
+
 
   return (
     <SafeAreaView style={globalStyles.content}>
@@ -28,7 +61,7 @@ export default function VendeorHome({navigation}) {
       <View style={globalStyles.rowBetween}>
             <View>
               <Text style={homeBoardStyle.labelMetas}>Visitas Diarias</Text>
-              <Text style={homeBoardStyle.valueMetas}>  <AntDesign name="team" size={18} color={Colors.primary} /> 0 / 14</Text>
+              <Text style={homeBoardStyle.valueMetas}>  <AntDesign name="team" size={18} color={Colors.primary} /> {daylySales} / 14</Text>
             </View>
             <View>
               <Text style={homeBoardStyle.labelMetas}>Visitas Prospectos</Text>
@@ -36,7 +69,7 @@ export default function VendeorHome({navigation}) {
             </View>
             <View>
               <Text style={homeBoardStyle.labelMetas}>Visitas Mes</Text>
-              <Text style={homeBoardStyle.valueMetas}><AntDesign name="calendar" size={18} color={Colors.primary} /> 30</Text>
+              <Text style={homeBoardStyle.valueMetas}><AntDesign name="calendar" size={18} color={Colors.primary} /> {monthySales}</Text>
             </View>
       </View>
       </View>

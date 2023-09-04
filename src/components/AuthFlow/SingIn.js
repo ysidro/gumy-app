@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import React,{useState,useEffect} from 'react'
 
 import { db } from "../../firebaseConfig"
-import { doc, setDoc,addDoc,collection } from 'firebase/firestore';
+import { addDoc,collection } from 'firebase/firestore';
 
 
 import { globalStyles } from "../../styles/global";

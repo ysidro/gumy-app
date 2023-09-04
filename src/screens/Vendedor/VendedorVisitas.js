@@ -6,27 +6,32 @@ import {AntDesign, FontAwesome} from "@expo/vector-icons"
 import { globalStyles, salesResume } from '../../styles/global'
 import CustomButtons from '../../components/CustomButtons'
 import { Colors } from "../../constants/Colors";
-
+import FormVisitRegister from "../../components/visitasForm/FormVisitRegister"
 import { Skeleton } from 'moti/skeleton'
 import ListCustomers from '../../components/ListCustomers' 
 
 export default function VendeorVisitas({navigation}) {
 
-  const { name, adm_token } = useSelector(state => state.user)
+  const { name, id, adm_token } = useSelector(state => state.user)
   const dispatch = useDispatch()
-
-
-  const vendedor = useSelector(state => state.user);
-  const [listTask,setListTask] = React.useState([]);
   const [loading,setLoading] = React.useState(true);
-  console.log('VendeorVisitas', vendedor)
+
+
+  const [updateScreen, setUpdateScreen] = React.useState(false)
+
+  React.useEffect(() =>{
+    if(updateScreen){
+      navigation.navigate('VendedorHome');
+    }
+  },[updateScreen])
+
   return (
     <SafeAreaView style={globalStyles.content}>
     
       <View style={globalStyles.constentList}>
         <Text style={globalStyles.subTitle}>{name} / Visitas</Text>
       </View> 
-  
+      <FormVisitRegister setUpdateScreen={setUpdateScreen} />
       
     </SafeAreaView>
   )

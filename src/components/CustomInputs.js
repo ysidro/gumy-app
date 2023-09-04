@@ -1,4 +1,4 @@
-import { View, StyleSheet, TextInput,Dimensions } from 'react-native'
+import { View, StyleSheet, TextInput,Dimensions, textarea } from 'react-native'
 import React from 'react'
 
 import { Colors } from '../constants/Colors';
@@ -8,16 +8,18 @@ export default function Inputs({
   value,
   onChangeText,
   secureTextEntry,
+  typeTextArea = false,
 }) {
   return (
     <View style={styles.container}>
-      <TextInput
+       <TextInput
         placeholder={label}
-        style={styles.input}
         value={value}
         onChangeText={onChangeText}
+        multiline={typeTextArea}
         secureTextEntry={secureTextEntry}
-      />
+      /> 
+        
     </View>
   )
 }
@@ -25,7 +27,7 @@ export default function Inputs({
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get("window").width - 20,
-    height: 45,
+    // height: 205,
     justifyContent: 'center',
     margin: 10,
     padding: 10,
@@ -34,4 +36,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.primary,
   },
+ 
+
 });
