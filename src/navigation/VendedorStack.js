@@ -7,6 +7,7 @@ import VendedorBottonTaps from "./VendedorBottonTaps"
 import VendedorVisitas from "../screens/Vendedor/VendedorVisitas"
 import VendedorClientes from "../screens/Vendedor/VendedorClientes"
 import CustomerDetails from "../screens/Vendedor/VendedorClienteDetail"
+import VendedorHistoricoVisitas from "../screens/Vendedor/VendedorHistoricoVisitas"
 
 
 const StackNav = createStackNavigator();
@@ -32,7 +33,7 @@ export default function VendedorStack() {
       <StackNav.Screen name="Visitas" component={VendedorVisitas} />
       <StackNav.Screen name="Clientes" component={VendedorClientes} />
       <StackNav.Screen name="Cliente" component={CustomerDetails} />
-      
+      <StackNav.Screen name="HistoricoVisitas" component={VendedorHistoricoVisitas} />
       
       
       <StackNav.Screen name="PantallaOculta" 

@@ -84,14 +84,14 @@ export default function FormVisitRegister({setUpdateScreen})
     
          const newUserRef =  await addDoc(collection(db, 'visitas'), dataVisita);
          if(newUserRef){
-          setDataVisita({
-            vendedor_id: id,
-            date: new Date(Date.now()).toLocaleDateString("es-ES"),
-            customerData: [],
-            comments: "",
-            sale: true,
-            saleJustification: "",
-          })
+          // setDataVisita({
+          //   vendedor_id: id,
+          //   date: new Date(Date.now()).toLocaleDateString("es-ES"),
+          //   customerData: [],
+          //   comments: "",
+          //   sale: true,
+          //   saleJustification: "",
+          // })
           Alert.alert("Visita Completada")
           setUpdateScreen(true)
          }
